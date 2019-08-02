@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/ribosomeprofiling/riboR_alpha.svg?branch=master)](https://travis-ci.com/ribosomeprofiling/riboR_alpha)
+[![Build Status](https://travis-ci.com/ribosomeprofiling/RiboR.svg?branch=master)](https://travis-ci.com/ribosomeprofiling/RiboR)
 
 # RiboR
 R interface for .ribo files
