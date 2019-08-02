@@ -26,7 +26,7 @@ install:
   - Rscript -e 'if(!"devtools" %in% rownames(installed.packages())) { install.packages("devtools", dependencies = TRUE) }'
   - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
   #- Rscript -e 'install.packages("testthat", dependencies = TRUE)'
-  - Rscript -e 'library(devtools); devtools::install_deps(pkg = "./ribor/", dependencies = TRUE)'
+  - Rscript -e 'library(devtools); devtools::install_deps(pkg = ".", dependencies = TRUE)'
   - Rscript -e 'library(devtools); devtools::install_github("r-lib/testthat")'
 
 script:
