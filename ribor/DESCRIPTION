@@ -1,0 +1,45 @@
+Package: ribor
+Title: An R Interface for Ribo Files 
+Version: 0.99.0
+Authors@R: c(
+    person("Michael", "Geng", email = "michaelgeng@utexas.edu", role = "cre"),
+    person("Hakan", "Ozadam", email = "hakan.ozadam@gmail.com", role = "aut"),
+    person("Can", "Cenik", email = "ccenik@austin.utexas.edu", role = "aut"))
+Description: The ribor package provides an R Interface for .ribo files. It provides functionality to read the .ribo file, which is of HDF5 format, and performs common analyses on its contents.
+License: GPL Version 3
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.6.0)
+biocViews:
+    Software,
+    Infrastructure
+Imports:
+    data.table,
+    dplyr,
+    ggplot2,
+    hash,
+    methods,
+    rhdf5,
+    rlang,
+    stats,
+    tidyr,
+    yaml
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+RoxygenNote: 6.1.1
+VignetteBuilder: knitr
+Collate: 
+    'annotation_functions.R'
+    'check_functions.R'
+    'coverage_functions.R'
+    'ribo_class.R'
+    'ribo_methods.R'
+    'create_ribo.R'
+    'helper_functions.R'
+    'info_functions.R'
+    'metagene_functions.R'
+    'region_count_functions.R'
+    'ribor.R'
+    'rnaseq_functions.R'
