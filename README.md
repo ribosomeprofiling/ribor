@@ -27,3 +27,9 @@ For Ubuntu based distributions, you can use the following command.
 3) Install RiboR from github
 
 `install_github("ribosomeprofiling/ribor")`
+
+
+
+## Documentation
+
+[Here](https://ribosomeprofiling.github.io/ribor/walkthrough.html) is a walk-through of RiboR.
