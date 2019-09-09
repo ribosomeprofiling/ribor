@@ -21,6 +21,7 @@ setMethod(f = "show",
                                   "right span"       = object@right.span,
                                   "transcript count" = length(object@transcript.info),
                                   "has.metadata"     = object@has.metadata,
+                                  "metagene radius"  = object@metagene.radius,
                                   "has.alias"        = !is.empty(object@transcript.alias))
               file.info <- data.table("info" = names(file.values),
                                       " " = file.values)

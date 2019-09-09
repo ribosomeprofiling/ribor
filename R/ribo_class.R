@@ -52,6 +52,7 @@ ribo <- setClass(
                    length.max = "integer",
                    left.span = "integer",
                    right.span = "integer",
+                   metagene.radius = "integer",
                    length.offset = "numeric",
                    has.metadata = "logical",
                    experiment.info = "data.table",

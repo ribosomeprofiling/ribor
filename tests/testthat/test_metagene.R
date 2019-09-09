@@ -166,5 +166,4 @@ CBS_tidy <- get_tidy_metagene(CBS, "stop", 15, 35)
 
 actual <- CBS_tidy[CBS_tidy$position == -47, count]
 expected <- 1L
-test_that("get_tidy_metagene- check random value",
-          expect_equal(actual, expected))
+test_that("get_tidy_metagene- check random value", expect_equal(actual, expected))

@@ -131,5 +131,4 @@ CBS_cov <- get_coverage(CBS,
                         range.upper = 35)
 actual <- rowSums(CBS_cov[ , -1])
 expected <- 846
-test_that("get_coverage- edge case transcript only",
-          expect_equal(actual, expected))
+test_that("get_coverage- edge case transcript only", expect_equal(actual, expected))

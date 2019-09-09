@@ -143,6 +143,7 @@ create_ribo <- function(name, rename = NULL) {
                        length.max      = attributes$length_max,
                        left.span       = attributes$left_span,
                        right.span      = attributes$right_span,
+                       metagene.radius = attributes$metagene_radius,
                        length.offset   = transcript.info[['length.offset']],
                        has.metadata    = has.metadata,
                        experiment.info = get_content_info(ribo.handle),
