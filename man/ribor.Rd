@@ -16,6 +16,18 @@ To get started with the ribor package, please see the vignette page at
 \url{https://ribosomeprofiling.github.io/ribor/walkthrough.html}.
 }
 
+\section{Related Tools}{
+
+For more information on the preprocessing pipeline, please see the link to
+the source code at \url{https://github.com/ribosomeprofiling/riboflow}.
+
+For more information on the .ribo file format, please see its documentation
+page at \url{https://ribopy.readthedocs.io/en/latest/ribo_file_format.html}.
+
+For an alternative to ribor, please see a link to source code of ribopy, 
+a python interface, at \url{https://github.com/ribosomeprofiling/ribopy}.
+}
+
 \section{Package Content}{
 
 \subsection{Generating a ribo object}{
