@@ -30,10 +30,11 @@ For Ubuntu based distributions, you can use the following command.
 
 `install_github("ribosomeprofiling/ribor")`
 
-### Install from Bioconductor 
+### Bioconductor 
 
 To install this package from Bioconductor, start R (version "3.6" or later) and enter:
-`if (!requireNamespace("BiocManager", quietly = TRUE))`
-    `install.packages("BiocManager")`
 
-`BiocManager::install("ribor")`
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ribor")```
