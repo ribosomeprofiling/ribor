@@ -32,4 +32,4 @@ For Ubuntu based distributions, you can use the following command.
 
 ## Documentation
 
-[Here](https://ribosomeprofiling.github.io/ribor/walkthrough.html) is a walk-through of RiboR.
+[Here](https://ribosomeprofiling.github.io/ribor/ribor.html) is a walk-through of RiboR.
