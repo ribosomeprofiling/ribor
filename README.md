@@ -37,4 +37,5 @@ To install this package from Bioconductor, start R (version "3.6" or later) and 
 ```
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("ribor")```
+BiocManager::install("ribor")
+```
