@@ -2,17 +2,17 @@
 title: "A Walk-through of RiboR"
 author: "Michael Geng, Hakan Ozadam, Can Cenik"
 output:
-  'rmarkdown:': html_vignette
-  pdf_document:
-    toc: yes
-    toc_depth: 4
-  md_document:
-    variant: markdown_github
   html_document:
     theme: lumen
     toc: yes
     toc_depth: 4
     toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: 4
+  md_document:
+    variant: markdown_github
+  'rmarkdown:': html_vignette
   word_document:
     toc: yes
     toc_depth: '4'
@@ -30,73 +30,77 @@ knitr::opts_chunk$set(
 
 [Ribosome profiling](https://www.nature.com/articles/nrg3645) 
 is a sequencing based method to study protein synthesis transcriptome-wide.
-Actively translating messenger RNAs are engaged with ribosomes and protein synthesis rates can be approximated by the number of ribosomes that are translating a given mRNA. 
+Actively translating mRNAs are engaged with ribosomes and protein synthesis rates can be approximated by the number of ribosomes that are translating a given mRNA. 
 Ribosome profiling employs an RNase digestion step to recover fragments of RNA protected by ribosomes which are called __Ribosome Protected Footprints (RPFs)__.
 
-Ribosome profiling data analyses involve several quantifications for each transcript. Specifically, the lengths of the RPFs provide valuable biological information (see, for example, [Lareau et al.](https://elifesciences.org/articles/01257) and [Wu et al.](https://www.sciencedirect.com/science/article/pii/S1097276518310633?via%3Dihub)). To facilitate ribosome profiling data analyses as a function of RPF length in a highly efficient manner, we implemented a new data format, called [ribo](https://ribogadgets.readthedocs.io/en/latest/ribo_file_format.html). 
+Ribosome profiling data analyses involve several quantifications for each transcript. Specifically, the lengths of the RPFs provide valuable biological information (see, for example, [Lareau et al.](https://elifesciences.org/articles/01257) and [Wu et al.](https://www.sciencedirect.com/science/article/pii/S1097276518310633?via%3Dihub)). To facilitate ribosome profiling data analyses as a function of RPF length in a highly efficient manner, we implemented a new data format, called [ribo](https://ribopy.readthedocs.io/en/latest/ribo_file_format.html). 
 Files in ribo format are called __.ribo__ files.
 
 
-RiboR package is an R interface for .ribo files. The package offers a suite of reading functions for data-sets in  .ribo files, and provides plotting functions that are most often employed in ribosome profiling analyses.
+RiboR package is an R interface for .ribo files. The package offers a suite of reading functions for .ribo files, and provides plotting functions that are most often employed in ribosome profiling analyses. Using RiboR, one can import .ribo files into the R environment, read ribosome profiling data into data frames and generate essential plots in a few lines of R code.
 
-
-Using RiboR, one can import .ribo files to R environment, read ribosome profiling data into [data tables](https://cran.r-project.org/web/packages/data.table/index.html) and generate essential plots in a few lines of R code.
-
-This document is organized as follows. In the rest of this section, we give an overview of the 
-[Ribo File format](#ribofileformat) and introduce [transcript regions](#transcriptregions).
-Then we provide instructions and requirements for the [installation](installation) of RiboR.
-To start analyzing data, we show how to import a .ribo file to R environment in the section 
-[Getting Started](#gettingstarted).
-Next we explain how to perform essential ribosome profiling data analyses:
+This document is structured into several sections. First, we give an overview of the 
+[Ribo File format](#ribofileformat) and define [transcript regions](#transcriptregions).
+Second, we provide instructions and requirements for the [installation](installation) of RiboR.
+Third, we describe how to import a .ribo file to R environment and demonstrate essential ribosome profiling data analyses in three sections:
 
    * [Length Distribution](#lengthdistribution)
    * [Metagene Analysis](#metageneanalysis)
    * [Region Counts](#regioncounts)
    
-We continue with going over [advanced features](#advancedfeatures). 
-The first advanced feature is renaming transcripts using [aliases](#alias). 
-The second is accessing .ribo [file attributes](#fileattributes).
-As the third feature, we show how to obtain [annotation](#annotation) that defines transcript regions.  
+In the last two sections, we describe some [advanced features](#advancedfeatures)
+including renaming transcripts using [aliases](#alias), accessing .ribo [file attributes](#fileattributes), and getting [region boundaries](#annotation) that define transcript regions.  
 In the [last section](#optionaldata), we explain the three optional types of data, which may exist in a .ribo file.
 
 * [Metadata](#metadata): A .ribo file may contain metadata for each experiment and for the .ribo file itself.
-* [Coverage](#coverage): A .ribo file can be created to keep the nucleotide level transcriptome coverage.
+* [Coverage](#coverage): A .ribo file can keep the nucleotide level transcriptome coverage.
 * [RNA-Seq](#rnaseq): A ribosome profiling experiment can be paired with an RNA-Seq experiment to study ribosome occupancy together with transcript abundance. 
 
-### Ribo File Format {#ribofileformat}
+### .ribo File Format {#ribofileformat}
 
-For a more detailed explanation of the ribo format, we refer to 
-[readthedocs page of ribo](https://ribogadgets.readthedocs.io/en/latest/ribo_file_format.html).
-Briefly, a .ribo file is built on an [HDF5](https://www.hdfgroup.org/solutions/hdf5/) architecture and has a predefined internal structure (Figure 1). 
+.ribo files are built on an [HDF5](https://www.hdfgroup.org/solutions/hdf5/) architecture and has a predefined internal structure (Figure 1). For a more detailed explanation of the ribo format, we refer to 
+[readthedocs page of ribo](https://ribopy.readthedocs.io/en/latest/ribo_file_format.html).
 
 ```{r pressure, echo=FALSE, fig.cap="Figure 1: .ribo File Internal Structure", out.width = '90%', fig.align="center"}
 knitr::include_graphics("ribo_file_structure.jpg")
 ```
 
-While many features are required in .ribo files, quantification from paired RNA-Seq data and nucleotide-level coverage are optional. Therefore, the user needs to check for their availability in  the .ribo file of interest before attempting to retrieve those data.
+While many features are required in .ribo files, quantification from paired RNA-Seq data and nucleotide-level coverage are optional. 
 
 ### Transcript Regions {#transcriptregions}
 
-The region of a transcript translated by ribosomes is called the coding sequence (CDS). Its boundaries are called transcription start / stop sites. The region consisting of the nucleotides, between the 5’ end of the transcript and the start site, not translated to protein, is called 5’ untranslated region (5’UTR). Similarly, the region having the nucleotides between the stop site and the 3’ end of the transcript, is called 3’ untranslated region (3’UTR). To avoid strings and variable names starting with a number and containing an apostrophe character, we use the names UTR5 and UTR3 instead of 5’UTR and 3’UTR respectively.
+The main protein coding region of a transcript is called the coding sequence (CDS). Its boundaries are called transcription start / stop sites. The region consisting of the nucleotides, between the 5’ end of the transcript and the start site, not translated to protein, is called 5’ untranslated region (5’UTR). Similarly, the region having the nucleotides between the stop site and the 3’ end of the transcript, is called 3’ untranslated region (3’UTR). To avoid strings and variable names starting with a number and containing an apostrophe character, we use the names UTR5 and UTR3 instead of 5’UTR and 3’UTR respectively.
 
 ## Installation {#installation}
 
 ### Availability
 The source code of RiboR package is available in a [public Github repository](https://github.com/ribosomeprofiling/ribor).
 
-### Requirements
+### Bioconductor
+RiboR is a [Bioconductor](https://www.bioconductor.org) package. 
+The following R code installs RiboR via Bioconductor.
+```{r install_bioconductor, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("ribor")
+```
+
+### Installation From Source Code
+
+RiboR can also be installed directly using the source code.
+For this, the following are required.
+
 * **R:** RiboR requires **version 3.6 or later**. Previous R versions are known to cause installation or run time problems.
 
 * **Devtools:** Installing the package requires `devtools`, a CRAN package that provides a wide suite of development tools in the R environment. 
 
 To install the package, run the following lines of code.
-```{r, eval = FALSE}
+```{r install_from_github, eval = FALSE}
 install.packages("devtools")
 library("devtools")
 install_github("ribosomeprofiling/ribor")
 ```
-
-### For Linux Users
 
 For Linux distributions, there are some dependencies, required by devtools. 
 Installation of these dependencies is necessary to install devtools.
@@ -108,11 +112,11 @@ sudo apt-get install libxml2-dev libcurl4-openssl-dev libssl-dev -y
 
 ## Getting Started {#gettingstarted}
 We start with loading the RiboR package.
-``` {r, eval = TRUE}
+``` {r import_lib, eval = TRUE}
 library(ribor)
 ```
 #### Generating a ribo object
-To interact with a .ribo file, it is necessary to create a ribo object that provides a direct handle to the file and displays its various attributes. As an example, we processed publicly available ribosome profiling data (GEO accession number [GSE65778](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65778)) from HEK293 cells using [RiboFlow](https://github.com/ribosomeprofiling/riboflow) pipeline to generate the .ribo file in this document. More precisely, we picked two ribosome profiling experiments coming from untreated HEK293 cells (accession numbers: GSM1606107 and GSM1606108) and two RNA-Seq experiments coming from the same line of untreated cells (accession numbers: GSM1606099 and GSM1606100). We paired the ribosome profiling experiment GSM1606107 with RNA-Seq experiment GSM1606099 and GSM1606108 with GSM1606100, when making the example .ribo file in this document. 
+To interact with a .ribo file, it is necessary to create a ribo object that provides a direct handle to the file and displays its various attributes. As an example, we processed publicly available ribosome profiling data (GEO accession number [GSE65778](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65778)) from HEK293 cells using [RiboFlow](https://github.com/ribosomeprofiling/riboflow) pipeline to generate the .ribo file in this document. More precisely, we picked two ribosome profiling experiments coming from untreated HEK293 cells (accession numbers: GSM1606107 and GSM1606108) and two RNA-Seq experiments coming from the same line of untreated cells (accession numbers: GSM1606099 and GSM1606100). Each ribo experiment can be paired with a single RNA-Seq experiment. So we arbitrarily paired the ribosome profiling experiment GSM1606107 with RNA-Seq experiment GSM1606099 and GSM1606108 with GSM1606100, when making the example .ribo file in this document. 
 
 ```{r createRibo}
 #file path to the example ribo file 
@@ -134,7 +138,7 @@ original.ribo
 The above output provides information about the individual experiments that are contained in the given ribo object. In addition, this output displays some of the parameters, that were used in generating the .ribo file, such as left span, right span and metagene radius.
 
 For a detailed explanation of the contents of this output, we refer to the 
-[online documentation of the ribo format](https://ribogadgets.readthedocs.io/en/latest/ribo_file_format.html). 
+[online documentation of the ribo format](https://ribopy.readthedocs.io/en/latest/ribo_file_format.html). 
 
 In what follows, we demonstrate a typical exploration of ribosome profiling data.
 We start with the length distribution of RPFs.
@@ -142,9 +146,9 @@ We start with the length distribution of RPFs.
 ## Length Distribution {#lengthdistribution}
 Several experimental decisions including the choice of RNase can have a significant impact on the RPF length distribution. In addition, this information is generally informative about the quality of the ribosome profiling data.  
 
-We use the function `plot_length_distribution` to generate the distribution of the reads mapping to a specific region. This function has also a boolean argument called `fraction`. When fraction is `FALSE`, the y-axis has the total number of reads mapping to the specified region. When fraction is `TRUE`, the y-axis has the number of reads mapping to the specified region divided by the total number of transcriptome mapping reads.  
+We use the function `plot_length_distribution` to generate the distribution of the reads mapping to a specific region. This function has also a boolean argument called `fraction`. When fraction is `FALSE`, the y-axis displays the total number of reads mapping to the specified region. When fraction is `TRUE`, the y-axis displays the quotient of the same number as above divided by the total number of reads reported in the experiment.
 
-The following code takes the ribo object as input and plots the length distribution of RPFs that mapped to coding regions in the range of 28 to 32 nucleotides.  
+The following code plots the coding region mapping RPF length distribution in the range of 28 to 32 nucleotides. 
 
 ``` {r plot_length_distribution ribo, fig.width = 7}
 plot_length_distribution(x           = original.ribo,
@@ -164,7 +168,7 @@ plot_length_distribution(x           = original.ribo,
                          fraction    = FALSE)
 ```
 
-We can get the numerical values producing the above plot using the function `get_length_distribution` as follows.
+We can extract the numerical values used to produce the above plot using the function `get_length_distribution` as follows.
 The parameters of this function will be explained in more detail later in this document.
 
 ``` {r get_length_dist_basic}
@@ -175,11 +179,11 @@ rc <- get_length_distribution(ribo.object      = original.ribo,
 rc
 ```
 
-It is also possible to generate the above plot from the data.table returned by `get_region_counts`.
+It is also possible to generate the above plot from the data frame returned by `get_region_counts`.
 This can be useful if the user wants to further process the data prior to plotting.
 
-```{r plot_length_distribution_from_datatable}
-# further data table manipulation and filtering can ensue here 
+```{r plot_length_distribution_from_dataframe, eval = FALSE}
+# further data frame manipulation and filtering can ensue here 
 # before calling the plot function
 
 plot_length_distribution(rc, fraction = TRUE)
@@ -187,16 +191,16 @@ plot_length_distribution(rc, fraction = TRUE)
 
 
 ## Metagene Analysis {#metageneanalysis}
-A typical quality control step in ribosome profiling analyses is the inspection of the pileup of sequencing reads with respect to the start and stop site of annotated coding regions. Given that ribosomes are expected to be translating coding regions, these plots are informative about the enrichment at the boundaries of coding regions and also provide information regarding the periodicity of aligned sequencing reads. This type of plot is called a metagene plot as the reads are aggregated around translation start and stop sites across all transcripts.
+A common quality control step in ribosome profiling analyses is the inspection of the pileup of sequencing reads with respect to the start and stop site of annotated coding regions. Given that ribosomes are predominantly translating annotated coding regions, these plots are informative about the enrichment at the boundaries of coding regions and also provide information regarding the periodicity of aligned sequencing reads. This type of plot is called a metagene plot as the reads are aggregated around translation start and stop sites across all transcripts.
 
-The region that is analyzed for these plots is defined by the parameter “metagene radius”. This value is simply the number of nucleotides surrounding the start/stop site that is considered.  For each position, relative to the start/stop site, the coverage values are aggregated across transcripts. The cumulative read coverage is plotted on the y-axis as a function of  the position relative to the start/stop site on the x-axis. 
+The parameter “metagene radius” is the number of nucleotides surrounding the start/stop site and hence defines the region of analysis. For each position, read counts are aggregated across transcripts. This cumulative read coverage (y-axis) is plotted as a function of the position relative to the start/stop site (x-axis).
 
-We can identify the metagene radius used to generate our .ribo file using the `get_info` function.
+We can identify the metagene radius of .ribo file using the `get_info` function.
 ``` {r learn_metagene_radius}
 get_info(original.ribo)$attributes$metagene_radius
 ```
 
-Using `plot_metagene`, we can plot the ribosome occupancy around the start or stop sites as described above. Specifically, the following code will produce the metagene plot at the start site for the experiment GSM1606107. The values on the y-axis are the raw read counts.
+We can plot the ribosome occupancy around the start or stop sites using `plot_metagene`. The following code produces the metagene plot at the start site for the experiment GSM1606107. The values on the y-axis are the raw read counts.
 
 ```{r plot_metagene ribo_start, fig.width = 7}
 plot_metagene(original.ribo,
@@ -208,7 +212,6 @@ plot_metagene(original.ribo,
 
 If we don’t provide a specific value for the the experiments parameter, all available experiments will be plotted. 
 To better compare these experiments, we can normalize the coverage by setting `normalize = TRUE`. 
-We can also change the default title to a different one, for example, by setting `title = "Stop Site Coverage"`. 
 In the following example, in addition to these parameters, we set `site = "stop"` to see the stop site coverage. 
 
 ```{r plot_metagene ribo, fig.width = 7}
@@ -223,14 +226,10 @@ plot_metagene(original.ribo,
 There are two functions that allow the user to obtain metagene coverage data. 
 
 * `get_metagene`
-     * This function returns a data table of metagene coverage.
+     * This function returns a data frame of metagene coverage.
      
 * `get_tidy_metagene`
-     * This function returns a tidy data table of metagene coverage. It is a wrapper of the `get_metagene` function, and in order to keep manageable data table dimensions, it will always sum across the transcripts.
-
-While [tidy data](https://tidyr.tidyverse.org/) is a commonly used standard in R, especially in
-[tidyverse](https://tidyr.tidyverse.org/), in this particular case, it reports each nucleotide position in a separate row. 
-On the other hand, the non-tidy option provides a more compact representation of the metagene data.
+     * This function returns a tidy data frame of metagene coverage. It is a wrapper of the `get_metagene` function, and in order to keep manageable data frame dimensions, it will always sum across the transcripts.
 
 When using `length = TRUE` and `transcript = TRUE`, 
 the user will obtain the most concise data corresponding to the sum of reads 
@@ -249,7 +248,7 @@ meta.start <- get_metagene(ribo.object = original.ribo,
 print(meta.start[ , 1:10])
 ```
 
-To obtain the tidy version of the above data table,
+To obtain the tidy version of the above data frame,
 
 ```{r}
 tidy.meta.start <- get_tidy_metagene(ribo.object = original.ribo,
@@ -275,9 +274,11 @@ meta.start <- get_metagene(ribo.object = original.ribo,
 print(meta.start[, 1:10])
 ```
 
-Now, to preserve the counts at each individual transcript but also sum across the read lengths, we set `transcript = FALSE` and `length = TRUE`.
+If we wish to preserve the read counts for individual transcript sum across a range of read lengths, we set `transcript = FALSE` and `length = TRUE`. While it is possible to set `transcript = FALSE` and `length = FALSE`,
+run times might be slower for this option, 
+and running the function with these options requires a substantial amount of memory.
 
-```{r}
+```{r get_metagene_tr_F_len_T}
 meta.start <- get_metagene(ribo.object = original.ribo, 
                            site        = "start",
                            range.lower = 28,
@@ -289,27 +290,8 @@ meta.start <- get_metagene(ribo.object = original.ribo,
 print(meta.start[1:2, 1:10])
 ```
 
-Lastly, to preserve information about the counts at each individual read length and at each individual transcript,
-use `transcript = FALSE` and `length = FALSE`. 
-Because there are often thousands of transcripts, this is usually the most computationally intense option in the retrieval of the metagene data. 
-The raw data set is read and no summation operation is performed. 
-For a typical ribosome profiling experiment, run times might be slower for this option, 
-and running the function with these options requires a substantial amount of memory.
 
-```{r}
-meta.start <- get_metagene(ribo.object = original.ribo, 
-                           site        = "start",
-                           range.lower = 28,
-                           range.upper = 32,
-                           length      = FALSE,
-                           transcript  = FALSE,
-                           alias       = TRUE)
-
-#print first ten columns and first two rows
-print(meta.start[1:2, 1:10])
-```
-
-We can generate metagene plots using the data tables returned by `get_metagene`.
+As we discussed above for read length analysis, we also provide the option to generate metagene plots using the data frames returned by `get_metagene`.
 ``` {r plot_metagene_from_dt, fig.width = 7}
 plot_metagene(tidy.meta.start, normalize = TRUE)
 ```
@@ -346,7 +328,7 @@ It is well-known that ribosome pauses, or moves slower, around start and stop si
 analyses such as coverage, translation efficiency, periodicity and uniformity analysis with accuracy. 
 To tackle this problem, we introduce two additional regions called __UTR5 junction__ and __UTR3 junction__,
 and modify the definition of the regions UTR5, CDS and UTR3 as shown in Figure 2. 
-This way, we keep regions around start and stop sites seperate when doing such analyses.
+This way, we keep regions around start and stop sites separate when doing such analyses.
 
 ```{r region_definitions, echo=FALSE, fig.cap="Figure 2: Extended Region Definitions", out.width = '90%', fig.align="center"}
 knitr::include_graphics("region_definition.jpg")
@@ -392,19 +374,6 @@ rc
 ```
 
 When presented with the option of preserving the region counts at each individual read length, it may be preferable to present the transcript names as their shortened aliases.
-To get the data only summed across the read lengths, set `length = TRUE` and `transcript = FALSE`.
-
-``` {r get_region_counts length}
-rc <- get_region_counts(original.ribo,
-                        range.lower = 28,
-                        range.upper = 32,
-                        length      = FALSE,
-                        transcript  = TRUE,
-                        region      = c("CDS"))
-rc
-```
-
-When presented with the option of preserving the region counts at each individual read length, it may be preferable to present the transcript names as their shortened aliases.
 
 To get the data only summed across the read lengths, set `length = TRUE` and `transcript = FALSE`. Note that the `alias = TRUE` in this case, and instead of `original.ribo`, we are using `alias.ribo`.
 
@@ -432,7 +401,7 @@ rc <- get_region_counts(original.ribo,
 rc
 ```
 
-By default, the data tables are in tidy form. If non-tidy data set is desired, then set `tidy = FALSE`.
+By default, the data frames are in tidy form. If non-tidy data set is desired, then set `tidy = FALSE`.
 
 ``` {r get_region_counts non-tidy}
 rc <- get_region_counts(original.ribo,
@@ -453,7 +422,7 @@ rc <- get_region_counts(original.ribo,
 rc
 ```
 
-Similar to the case of metagene and length distribution, bar plot above can be generated directly from data tables.
+Similar to the case of metagene and length distribution, bar plot above can be generated directly from data frames.
 
 ``` {r plot_region_counts dt, fig.width = 7}
 rc.info <- get_region_counts(ribo.object = original.ribo,
@@ -461,7 +430,7 @@ rc.info <- get_region_counts(ribo.object = original.ribo,
                              range.lower = 28,
                              range.upper = 32)
 
-# further data table manipulation and filtering can ensue here 
+# further data frame manipulation and filtering can ensue here 
 # before calling the plot function 
 
 plot_region_counts(rc.info)
@@ -550,7 +519,7 @@ alias.ribo
 
 
 ### File Attributes {#fileattributes}
-If we want a returned list of previously printed attributes, then the function `get_info` will return all of the attributes found in the root of the .ribo file as well as information on each of the experiments. For a detailed explanation, see [the readthedocs page of RiboGadgets](https://ribogadgets.readthedocs.io).
+If we want a returned list of previously printed attributes, then the function `get_info` will return all of the attributes found in the root of the .ribo file as well as information on each of the experiments. For a detailed explanation, see [the readthedocs page of RiboPy](https://ribopy.readthedocs.io).
 
 Note that this simply returns a named list of many of the ribo object contents. The returned list organizes the information into three separate values, has.metadata, attributes, and experiment.info. This is a more efficient alternative to simply referencing the values in the ribo object since the method reads directly from the .ribo file handle and not the downstream declared ribo object.
 
@@ -561,16 +530,23 @@ original.info
 ```
 
 
-### Annotation {#annotation}
+### Region Boundaries {#annotation}
 
 A .ribo file contains the region boundary information. 
 This information can be useful to compare CDS lengths of different transcripts or perform region specific analysis using coverage data.
 
 Some transcripts might have very short regions,
-compared to left or right span, in their original annotation. 
+compared to left or right span, in their original annotation.
+In this case, when attempting to set the junction boundaries, the UTR5 and/or UTR3 junctions may take the entirety of any combination of the transcript’s original regions (5’ UTR, CDS, and 3’UTR).
 Then, UTR5 or UTR3 junctions will take over their nucleotides. 
 Thus, in our modified region definitions, 
 the coordinates of these regions are marked as `NA` and their lengths will be 0. 
+
+Region coordinates can be obtained using `get_region_coordinates`.
+```{r get_region_coordinates}
+region_coord <- get_region_coordinates(ribo.object = alias.ribo , alias = TRUE)
+head(region_coord, 2)
+```
 
 Length of regions can be useful to normalize data, say by CDS length, or to compare different transcripts.
 The function `get_region_lengths` gives region lengths for each transcript. 
@@ -578,12 +554,6 @@ The function `get_region_lengths` gives region lengths for each transcript.
 ```{r get_region_lengths}
 region_lengths <- get_region_lengths(ribo.object = alias.ribo, alias = TRUE)
 head(region_lengths, 2)
-```
-
-Region coordinates can be obtained using `get_region_coordinates`.
-```{r get_region_coordinates}
-region_coord <- get_region_coordinates(ribo.object = alias.ribo , alias = TRUE)
-head(region_coord, 2)
 ```
 
 ## Optional Data {#optionaldata}
@@ -643,7 +613,7 @@ get_metadata(ribo.object = original.ribo,
  
 ### Coverage {#coverage}
 
-To obtain data for fundamental ribosome profiling analysis such as metagene and region counts, we map the reads to the transcriptome and take the first nucleotide on the 5’ end of each mapped read. The distribution of all reads coming from an experiment is called coverage data. In other words, coverage data gives us the total number of reads mapping to each nucleotide position in the transcriptome.
+For all quantifications, we first map the sequencing reads to the transcriptome and use the  5’ most nucleotide of each mapped read. Coverage data is the total number of reads whose 5’ends map to each nucleotide position in the transcriptome.
 
 Within a .ribo file, the coverage data, if exists, is typically the largest data set in terms of storage, and it accounts for a substantial portion of a .ribo file’s size, when present. The `get_coverage` function returns the coverage information for one specific transcript at a time.
 
@@ -657,7 +627,7 @@ has.coverage <- experiment.info[experiment.info$coverage == TRUE, experiment]
 has.coverage
 ```
 
-Because `get_coverage` takes the transcript name, for annotations with long transcriptome names, it is **recommended** to use aliases and generate a ribo object with a valid `rename` parameter.`
+Because `get_coverage` takes the transcript name, for annotations with long transcriptome names, it is **recommended** to use aliases and generate a ribo object with a valid `rename` parameter.
 
 The `get_coverage` function retrieves  the coverage across any subset of the experiments. If `length` parameter is `TRUE`, then the coverage counts are summed up across the read lengths.
 
@@ -674,7 +644,7 @@ cov <- get_coverage(ribo.object = original.ribo,
 cov[380:385]
 ```
 
-To preserve the information at read length, set `length = FALSE`.
+To preserve the information at ribosome foot print length, set `length = FALSE`.
 ```{r}
 #only using one experiment for this 
 exp.names <- has.coverage[1]
