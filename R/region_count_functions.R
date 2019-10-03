@@ -309,7 +309,6 @@ get_length_distribution <- function(ribo.object,
 #' @param experiments a list of experiment names
 #' @param fraction logical value that, if TRUE, presents the count as a fraction of the total reads in the given ranges
 #' @param title a title for the generated plot
-#' @importFrom data.table is.data.table
 #' @importFrom tidyr gather
 #' @importFrom dplyr select
 #' @importFrom ggplot2 ggplot geom_line theme_bw theme labs aes_string
@@ -361,7 +360,7 @@ check_ld_input <- function(x,
                                      range.lower = range.lower,
                                      range.upper = range.upper,
                                      experiments = experiments)
-    } else if (is.data.table(x)){
+    } else if (is.data.frame(x)){
         col.names <- c("experiment", "length", "count", "total.reads")
         types <- c("integer", "double")
         mismatch <- all(names(x) == col.names, 
@@ -438,7 +437,6 @@ check_ld_input <- function(x,
 #' @param range.upper an upper bounds for a read length range
 #' @param experiments a list of experiment names
 #' @param title a title for the generated plot
-#' @importFrom data.table is.data.table
 #' @importFrom dplyr left_join mutate %>% group_by summarize arrange desc
 #' @importFrom tidyr gather
 #' @importFrom rlang .data
@@ -506,7 +504,7 @@ check_plot_rc_input <- function(x,
                                length      = TRUE,
                                transcript  = TRUE,
                                experiments = experiments)
-    } else if (is.data.table(x)) {
+    } else if (is.data.frame(x)) {
         col.names <- c("experiment", "region", "count")
         mismatch  <- !all(names(x) == col.names, 
                      typeof(x[[1]]) == "character",
