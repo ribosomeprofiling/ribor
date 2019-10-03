@@ -381,15 +381,15 @@ check_plot_metagene <- function(x,
                                length = TRUE,
                                experiments = experiments)
 
-    } else if (is.data.table(x)) {
+    } else if (is.data.frame(x)) {
         col.names <- c("experiment", "position", "count", "total.reads")
         types <- c("integer", "double")
-        mismatch <- !all(names(x) == col.names)   ||
-                    typeof(x[[1]]) != "character" ||
-                    typeof(x[[2]]) %in% types     ||
-                    typeof(x[[3]]) %in% types     ||
-                    typeof(x[[4]]) %in% types     ||
-                    ncol(x) != 4
+        mismatch <- !all(names(x) == col.names,
+                         typeof(x[[1]]) == "character",
+                         typeof(x[[2]]) %in% types,
+                         typeof(x[[3]]) %in% types,
+                         typeof(x[[4]]) %in% types,
+                         ncol(x) == 4)
         if (mismatch) {
             stop("Please make sure that the data table is of the correct format.",
                  call.=FALSE)

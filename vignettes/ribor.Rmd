@@ -12,12 +12,14 @@ output:
     toc_depth: 4
   md_document:
     variant: markdown_github
-  'rmarkdown:': html_vignette
+  rmarkdown:: html_vignette
   word_document:
     toc: yes
     toc_depth: '4'
 vignette: |
-  %\VignetteIndexEntry{A Walkthrough of RiboR}  %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{A Walkthrough of RiboR}    
+  %\VignetteEngine{knitr::rmarkdown}  
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}

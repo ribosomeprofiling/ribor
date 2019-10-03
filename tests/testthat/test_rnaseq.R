@@ -17,7 +17,7 @@ actual <- get_rnaseq(ribo.object,
                      tidy = FALSE,
                      experiments = experiments)
 
-expected <-rnaseq[, -c("UTR5", "UTR5J", "UTR3")]
+expected <-rnaseq[-c(3, 4, 7)]
 
 test_that("get_rnaseq = non-tidy CDS and UTR3J",
           expect_true(all(actual == expected)))
@@ -27,7 +27,7 @@ actual <- get_rnaseq(ribo.object,
                      tidy = FALSE,
                      experiments = experiments)
 
-expected <-rnaseq[, -c("UTR3J", "UTR5J")]
+expected <-rnaseq[, -c(4, 6)]
 
 test_that("get_rnaseq = non-tidy CDS and UTR3J",
           expect_true(all(actual == expected)))

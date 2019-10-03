@@ -81,9 +81,10 @@ get_rnaseq <- function(ribo.object,
     
     rnaseq <- rep(rnaseq.experiments, each = ref.length)
     transcripts <- rep(ref.names, total.experiments)
-    result <- data.table(experiment = rnaseq,
+    result <- data.frame(experiment = rnaseq,
                          transcript = transcripts,
-                         result)
+                         result,
+                         stringsAsFactors = FALSE)
     
     if (tidy) result <- setDT(gather(result, "region", "count", regions))
     return(result)
