@@ -13,11 +13,10 @@
 #' region_lengths <- get_region_lengths(sample, alias = TRUE)
 #' 
 #' @export
-#' @importFrom data.table data.table
 #' @importFrom rhdf5 h5read
 #' @param ribo.object A 'ribo' object 
 #' @param alias Option to return the transcript names as aliases  
-#' @return A data table of the region lengths 
+#' @return A data.frame of the region lengths 
 get_region_lengths <- function(ribo.object, alias = FALSE) {
     check_ribo(ribo.object)
     check_alias(ribo.object, alias)
@@ -35,9 +34,9 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
     diff <- matrix(unlist(diff), byrow = FALSE, nrow = nrow(result))
     colnames(diff) <- c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3")
     
-    #generate the data table 
+    #generate the data.frame 
     references <- change_reference_names(ribo.object, alias)
-    return(data.table(transcript=references, diff))
+    return(data.frame(transcript=references, diff))
 }
 
 #' Retrieves the region stop and start coordinates 
@@ -48,16 +47,15 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' 
 #' To note, because of the R-specific 1-based indexing, the positions start at
 #' 1 instead of 0 in other programming languages. The positions provided in 
-#' the returned data table will correspond to the positions in the output of 
+#' the returned data.frame will correspond to the positions in the output of 
 #' {\code{\link{get_coverage}}}.
 #' 
 #' Additionally, within the transcripts, there are edge cases. 
-#' NA values found in the returned data table means that the region has no 
+#' NA values found in the returned data.frame means that the region has no 
 #' start and stop position and a length of zero after computing the boundaries
 #' of the UTR5 and UTR3 junction.
 #' 
 #' @export 
-#' @importFrom data.table data.table 
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
@@ -67,19 +65,19 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' coord <- get_region_coordinates(sample, alias = TRUE)
 #' 
 #' @inheritParams get_region_lengths
-#' @return A data table of start and stop coordinates for every region
+#' @return A data.frame of start and stop coordinates for every region
 get_region_coordinates <- function(ribo.object, alias=FALSE) {
     check_ribo(ribo.object)
     check_alias(ribo.object, alias)
     references <- change_reference_names(ribo.object, alias)
-    #generate the data table from the boundary positions
-    return(data.table(transcript=references, compute_boundaries(ribo.object)))
+    #generate the data.frame from the boundary positions
+    return(data.frame(transcript=references, compute_boundaries(ribo.object)))
 }
 
 compute_boundaries <- function(ribo.object) {
     #helper method that computes the boundaries for each region
-    annotation <- t(h5read(ribo.object@handle&'reference', 
-                           name = "annotation"))
+    annotation <- t(h5read(ribo.object@path,
+                           name = "/reference/annotation"))
     left.span <- get_attributes(ribo.object)[['left_span']]
     right.span <- get_attributes(ribo.object)[['right_span']]
     UTR5_end <- annotation[, 1]

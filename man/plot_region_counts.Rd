@@ -8,7 +8,7 @@ plot_region_counts(x, experiments, range.lower, range.upper,
   title = "Region Counts")
 }
 \arguments{
-\item{x}{A 'ribo' object or a data table generated from \code{\link{get_region_counts}}}
+\item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
 
 \item{experiments}{a list of experiment names}
 
@@ -22,23 +22,23 @@ plot_region_counts(x, experiments, range.lower, range.upper,
 A 'ggplot' of the region counts
 }
 \description{
-The function \code{\link{plot_region_counts}} can take either a data.table
+The function \code{\link{plot_region_counts}} can take either a DataFrame
 or a "ribo" object to generate the a stacked bar plot of proportions that
 correspond to the "UTR5", "CDS", and "UTR3" regions.
 }
 \details{
 When given a 'ribo' object, \code{\link{plot_region_counts}} calls
 \code{\link{get_region_counts}} to retrieve the necessary information
-for plotting. This option is in the case that a data.table of the
+for plotting. This option is in the case that a DataFrame of the
 region count information is not required.
 
-The user can instead provide a data.table with the same structure as the
+The user can instead provide a DataFrame with the same structure as the
 output of the \code{\link{get_region_counts}} function where the 'transcript'
 and 'length' parameters are the default values of TRUE. This also means that
 the remaining parameters of the \code{\link{plot_region_counts}} function are not necessary.
 The run time becomes substantially faster when \code{\link{plot_region_counts}} is given
-the direct data.table to plot. Note that there is no manipulation by this function on the
-data.table, making this input option more error prone.
+the direct DataFrame to plot. Note that there is no manipulation by this function on the
+DataFrame, making this input option more error prone.
 }
 \examples{
 #ribo object use case
@@ -55,7 +55,7 @@ plot_region_counts(sample,
                    range.upper = 5,
                    experiments)
 
-#data.table use case
+#DataFrame use case
 #obtains the region counts at each individual read length, summed across every transcript
 region.counts <- get_region_counts(sample,
                                    region = regions,
@@ -65,11 +65,11 @@ region.counts <- get_region_counts(sample,
                                    length = TRUE,
                                    transcript = TRUE)
 
-#the params 'length' and 'transcript' must be set to true to use a data.table
+#the params 'length' and 'transcript' must be set to true to use a DataFrame
 plot_region_counts(region.counts)
 
 }
 \seealso{
-\code{\link{get_region_counts}} to generate a data.table that can be provided as input,
+\code{\link{get_region_counts}} to generate a DataFrame that can be provided as input,
 \code{\link{ribo}} to create a ribo.object that can be provided as input
 }

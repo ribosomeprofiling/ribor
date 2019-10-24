@@ -13,7 +13,7 @@ functions.
 \section{Vignette}{
 
 To get started with the ribor package, please see the vignette page at
-\url{https://ribosomeprofiling.github.io/ribor/walkthrough.html}.
+\url{https://ribosomeprofiling.github.io/ribor/ribor.html}.
 }
 
 \section{Related Tools}{

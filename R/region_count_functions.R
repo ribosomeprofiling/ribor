@@ -3,17 +3,17 @@
 #' \code{\link{get_region_counts}} will return the particular region counts
 #' of any subset of regions for a given set of experiments.
 #'
-#' This function will return a data.table of the counts at each specified region
+#' This function will return a DataFrame of the counts at each specified region
 #' for each specified experiment. The region options are "UTR5", "UTR5J", "CDS",
 #' "UTR3J", and "UTR3". The user can specify any subset of regions in the form of a vector,
 #' a list, or a single string if only one region is desired.
 #'
-#' The dimensions of the returned data table depend on the parameters
+#' The dimensions of the returned DataFrame depend on the parameters
 #' range.lower, range.upper, length, and transcript.
 #'
 #' The param 'length' condenses the read lengths together.
 #' When length is TRUE and transcript is FALSE, the
-#' data table presents information for each transcript across
+#' DataFrame presents information for each transcript across
 #' all of the read lengths. That is, each transcript has a value
 #' that is the sum of all of the counts across every read length.
 #' As a result, information about the transcript at each specific
@@ -27,23 +27,23 @@
 #' counts of each individual transcript is lost.
 #'
 #' When 'transcript' is set to FALSE, the 'alias' parameter specifies whether
-#' or not the returned data.table should present each transcript as an alias
+#' or not the returned DataFrame should present each transcript as an alias
 #' instead of the original name. If 'alias' is set to TRUE, then the column
 #' of the transcript names will contain the aliases rather than the original
 #' reference names of the .ribo file.
 #'
 #' If both 'length' and 'transcript' are TRUE, then the resulting
-#' data table prints out one row for each experiment. This provides the metagene
+#' DataFrame prints out one row for each experiment. This provides the metagene
 #' information across all transcripts and all reads in a given experiment.
 #'
 #' If both length' and 'transcript' are FALSE, calculations are done to the data,
 #' all information is preserved for both the read length and the transcript.
-#' The data table would just present the entire stored raw data
+#' The DataFrame would just present the entire stored raw data
 #' from the read length 'range.lower' to the read length 'range.upper' which in most
-#' cases would result in a slow run time with a massive data.table returned.
+#' cases would result in a slow run time with a massive DataFrame returned.
 #'
 #' When 'transcript' is set to FALSE, the 'alias' parameter specifies whether
-#' or not the returned data.table should present each transcript as an alias
+#' or not the returned DataFrame should present each transcript as an alias
 #' instead of the original name. If 'alias' is set to TRUE, then the column
 #' of the transcript names will contain the aliases rather than the original
 #' reference names of the .ribo file.
@@ -72,14 +72,15 @@
 #' @param range.upper Upper bound of the read length
 #' @param length Option to condense the read lengths together, preserve the transcripts
 #' @param transcript Option to condense the transcripts together, preserve the read lengths
-#' @param tidy Option to return the data table in a tidy format
+#' @param tidy Option to return the DataFrame in a tidy format
 #' @param region Specific region of interest
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param experiments List of experiment names
 #' @param normalize Option to normalize the counts as counts per million reads
-#' @return A data table of the region counts
+#' @return A DataFrame of the region counts
 #' @importFrom rhdf5 h5read
-#' @importFrom data.table data.table
+#' @importFrom methods as 
+#' @importFrom S4Vectors DataFrame Rle
 #' @importFrom tidyr gather
 #' @importFrom dplyr left_join
 #' @export
@@ -98,7 +99,7 @@ get_region_counts <- function(ribo.object,
     conditions <- c(transcript = transcript, length = length,
                     normalize  = normalize,   alias = alias)
 
-    handle              <- ribo.object@handle
+    path              <- ribo.object@path
     matched.experiments <- intersect(experiments, get_experiments(ribo.object))
     total.experiments   <- length(matched.experiments)
     ref.names           <- get_reference_names(ribo.object)
@@ -112,28 +113,35 @@ get_region_counts <- function(ribo.object,
     row.stop  <- row.start + ref.length* (range.upper - range.lower + 1) - 1
     rows      <- c(row.start:row.stop)
     matched.experiments <- intersect(experiments, get_experiments(ribo.object))
-    paths <- vapply(matched.experiments, get_rc_path, FUN.VALUE = "character")
-    data  <- lapply(paths, generate_matrix, ribo.object = ribo.object,
-                                            transcript  = transcript,
-                                            length      = length,
-                                            normalize   = normalize,
-                                            file        = handle,
-                                            index       = list(columns, rows),
-                                            ncol        = ncol)
+    
+    # compute the file paths
+    file_paths <- vapply(matched.experiments, get_rc_path, FUN.VALUE = "character")
+    data  <- lapply(file_paths, generate_matrix, ribo.object = ribo.object,
+                                                 transcript  = transcript,
+                                                 length      = length,
+                                                 normalize   = normalize,
+                                                 file        = path,
+                                                 index       = list(columns, rows),
+                                                 ncol        = ncol)
     data           <- do.call(rbind, data)
     colnames(data) <- region
-    result         <- make_datatable(ribo.object, matched.experiments,
-                                     range.info, conditions, data)
+    
+    # make_dataframe is a generic helper that returns a DataFrame so need to cast
+    result         <- as.data.frame(make_dataframe(ribo.object, matched.experiments,
+                                                   range.info, conditions, data))
+    
     if (normalize) {
+        # normalize the counts to reads/total reads * 1000000
         info <- get_info(ribo.object)$experiment.info[, c("experiment", "total.reads")]
         result <- left_join(result, info, by = "experiment")
         result[, region] <- result[, region] * 1000000/result$total.reads
         result[, "total.reads"] <- NULL
     }
-    if (tidy) result <- setDT(gather(result, "region", "count", region))
-    return(result)
+    
+    if (tidy) result <- gather(result, "region", "count", region)
+    result <- as(result, "DataFrame")
+    return(prepare_DataFrame(ribo.object, result))
 }
-
 
 
 get_rc_path <- function(experiment) {
@@ -191,7 +199,7 @@ check_regions <- function(ribo.object,
 #' counts at each read length from 'range.lower' to 'range.upper'.
 #'
 #' This function is a wrapper function of {\code{\link{get_region_counts}}}, and the
-#' returned data table is valid input for {\code{\link{plot_length_distribution}}}.
+#' returned DataFrame is valid input for {\code{\link{plot_length_distribution}}}.
 #'
 #' @examples
 #' #generate the ribo object
@@ -208,44 +216,36 @@ check_regions <- function(ribo.object,
 #'                                        range.upper = 5)
 #'
 #' @inheritParams get_region_counts
-#' @param total Include a column with the total reads, required for plotting
-#' @importFrom dplyr left_join
+#' @importFrom methods as
+#' @importFrom S4Vectors DataFrame Rle
 #' @export
 #' @seealso
 #' {\code{\link{plot_length_distribution}}} to plot the output of this function
 #' @return
-#' A data table of the counts at each read length
+#' A DataFrame of the counts at each read length
 get_length_distribution <- function(ribo.object,
                                     region,
                                     range.lower = rangeLower(ribo.object),
                                     range.upper = rangeUpper(ribo.object),
-                                    experiments = get_experiments(ribo.object),
-                                    total = TRUE) {
+                                    experiments = get_experiments(ribo.object)) {
     if (length(region) != 1) {
       stop("Please provide only one region.")
     }
 
-    rc <- get_region_counts(ribo.object,
-                            range.lower = range.lower,
-                            range.upper = range.upper,
-                            region = region,
-                            length = FALSE,
-                            transcript = TRUE,
-                            normalize = FALSE,
-                            experiments = experiments)[, -"region"]
-
-    if (total) {
-        exp.info <- get_info(ribo.object)$experiment.info
-        reads <- exp.info[, c("experiment", "total.reads")]
-        rc %>% left_join(reads, by="experiment") %>% setDT() -> rc
-  }
-  return(rc)
+  return(as(get_region_counts(ribo.object,
+                              range.lower = range.lower,
+                              range.upper = range.upper,
+                              region = region,
+                              length = FALSE,
+                              transcript = TRUE,
+                              normalize = FALSE,
+                              experiments = experiments)[, -3], "DataFrame"))
 }
 
 
 #' Plots the length distribution
 #'
-#' The function \code{\link{plot_length_distribution}} can take either a data.table
+#' The function \code{\link{plot_length_distribution}} can take either a DataFrame
 #' or a "ribo" object to generate a line graph of the length distributions from
 #' range.lower to range.upper.
 #'
@@ -258,14 +258,14 @@ get_length_distribution <- function(ribo.object,
 #' \code{\link{get_region_counts}} to retrieve the necessary information
 #' for plotting.
 #'
-#' The user can instead provide a data.table with the same structure as the
+#' The user can instead provide a DataFrame with the same structure as the
 #' output of the \code{\link{get_region_counts}} function where the 'transcript'
 #' parameter is set to FALSE and 'length' parameters is the default value of
 #' TRUE. This also means that the many of the remaining parameters of the
 #' \code{\link{plot_length_distribution}} function are not necessary. The run
 #' time becomes substantially faster when \code{\link{plot_region_counts}} is
-#' given the direct data.table to plot. Note that there is no manipulation by
-#' this function on the data.table. This responsibility is given to the user
+#' given the direct DataFrame to plot. Note that there is no manipulation by
+#' this function on the DataFrame. This responsibility is given to the user
 #' and allows for more control.
 #'
 #' @examples
@@ -286,7 +286,7 @@ get_length_distribution <- function(ribo.object,
 #'                          fraction = TRUE)
 #'
 #'
-#' #data.table use case
+#' #DataFrame use case
 #' #obtains the region counts at each individual read length, summed across every transcript
 #' region.counts <- get_length_distribution(ribo.object = sample,
 #'                                          region      = "CDS",
@@ -295,14 +295,14 @@ get_length_distribution <- function(ribo.object,
 #'                                          experiments = experiments)
 #'
 #' #the param 'length' must be set to FALSE and param 'transcript' must be set
-#' #to TRUE to use a data.table
+#' #to TRUE to use a DataFrame
 #' plot_length_distribution(region.counts)
 #'
 #'
-#' @seealso \code{\link{get_region_counts}} to generate a data.table that can
+#' @seealso \code{\link{get_region_counts}} to generate a DataFrame that can
 #' be provided as input,
 #' \code{\link{ribo}} to create a ribo.object that can be provided as input
-#' @param x A 'ribo' object or a data table generated from \code{\link{get_region_counts}}
+#' @param x A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
 #' @param region the region of interest
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
@@ -322,17 +322,23 @@ plot_length_distribution <- function(x,
                                      range.lower,
                                      range.upper,
                                      fraction = FALSE,
-                                     title = "Length Distribution") {
+                                    title = "Length Distribution") {
     x <- check_ld_input(x, region, range.lower, range.upper, experiments)
     y.axis <- "Count"
     y.value <- "count"
-
+  
     if (fraction) {
-        x %>% mutate(fraction = .data$count/.data$total.reads) -> x
+        info <- x@metadata[[1]]
+        x %>% 
+          strip_rlefactor() %>% 
+          as.data.frame() %>% 
+          left_join(info, by = "experiment") %>% 
+          mutate(fraction = .data$count/.data$total.reads) -> x
         y.axis <- "Fraction"
         y.value <- "fraction"
+    } else {
+        x <- as.data.frame(x)
     }
-
     ggplot(x, aes_string(x="length", y=y.value, color="experiment")) +
         geom_line() +
         theme_bw() +
@@ -355,27 +361,27 @@ check_ld_input <- function(x,
         if (missing(range.lower)) range.lower <- rangeLower(x)
         if (missing(range.upper)) range.upper <- rangeUpper(x)
         
-        x <- get_length_distribution(ribo.object = x,
-                                     region      = region,
-                                     range.lower = range.lower,
-                                     range.upper = range.upper,
-                                     experiments = experiments)
-    } else if (is.data.frame(x)){
-        col.names <- c("experiment", "length", "count", "total.reads")
+        x <- strip_rlefactor(get_length_distribution(ribo.object = x,
+                                                     region      = region,
+                                                     range.lower = range.lower,
+                                                     range.upper = range.upper,
+                                                     experiments = experiments))
+    } else if (class(x) == "DataFrame"){
+        x <- strip_rlefactor(x)
+        col.names <- c("experiment", "length", "count")
         types <- c("integer", "double")
-        mismatch <- all(names(x) == col.names, 
-                        typeof(x[[1]]) == "character",
-                        typeof(x[[2]]) %in% types, 
-                        typeof(x[[3]]) == "character",
-                        typeof(x[[4]]) %in% types,
-                        ncol(x) == 4)
+        mismatch <- !all(names(x) == col.names, 
+                         typeof(x[[1]]) == "character",
+                         typeof(x[[2]]) %in% types, 
+                         typeof(x[[3]]) %in% types,
+                         ncol(x) == 3)
         if (mismatch) {
-              stop("Please make sure that the data table is of the correct format.",
-                   call.=FALSE)
+              stop("Please make sure that the DataFrame is of the correct format.",
+                    call.=FALSE)
         }
     } else {
         stop("Please make sure that param 'x' is either", 
-             "a data.table or a ribo object.",
+             "a DataFrame or a ribo object.",
              call.=FALSE)
     }
     return(x)
@@ -384,22 +390,22 @@ check_ld_input <- function(x,
 
 #' Plots the region counts of UTR5, CDS, and UTR3
 #'
-#' The function \code{\link{plot_region_counts}} can take either a data.table
+#' The function \code{\link{plot_region_counts}} can take either a DataFrame
 #' or a "ribo" object to generate the a stacked bar plot of proportions that
 #' correspond to the "UTR5", "CDS", and "UTR3" regions.
 #'
 #' When given a 'ribo' object, \code{\link{plot_region_counts}} calls
 #' \code{\link{get_region_counts}} to retrieve the necessary information
-#' for plotting. This option is in the case that a data.table of the
+#' for plotting. This option is in the case that a DataFrame of the
 #' region count information is not required.
 #'
-#' The user can instead provide a data.table with the same structure as the
+#' The user can instead provide a DataFrame with the same structure as the
 #' output of the \code{\link{get_region_counts}} function where the 'transcript'
 #' and 'length' parameters are the default values of TRUE. This also means that
 #' the remaining parameters of the \code{\link{plot_region_counts}} function are not necessary.
 #' The run time becomes substantially faster when \code{\link{plot_region_counts}} is given
-#' the direct data.table to plot. Note that there is no manipulation by this function on the
-#' data.table, making this input option more error prone.
+#' the direct DataFrame to plot. Note that there is no manipulation by this function on the
+#' DataFrame, making this input option more error prone.
 #'
 #' @examples
 #' #ribo object use case
@@ -416,7 +422,7 @@ check_ld_input <- function(x,
 #'                    range.upper = 5,
 #'                    experiments)
 #'
-#' #data.table use case
+#' #DataFrame use case
 #' #obtains the region counts at each individual read length, summed across every transcript
 #' region.counts <- get_region_counts(sample,
 #'                                    region = regions,
@@ -426,13 +432,13 @@ check_ld_input <- function(x,
 #'                                    length = TRUE,
 #'                                    transcript = TRUE)
 #'
-#' #the params 'length' and 'transcript' must be set to true to use a data.table
+#' #the params 'length' and 'transcript' must be set to true to use a DataFrame
 #' plot_region_counts(region.counts)
 #'
-#' @seealso \code{\link{get_region_counts}} to generate a data.table that can be provided as input,
+#' @seealso \code{\link{get_region_counts}} to generate a DataFrame that can be provided as input,
 #' \code{\link{ribo}} to create a ribo.object that can be provided as input
 #'
-#' @param x A 'ribo' object or a data table generated from \code{\link{get_region_counts}}
+#' @param x A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
 #' @param experiments a list of experiment names
@@ -450,7 +456,9 @@ plot_region_counts <- function(x,
                                range.upper,
                                title = "Region Counts") {
     rc <- check_plot_rc_input(x, range.lower, range.upper, experiments)
-
+    
+    rc <- as.data.frame(rc)
+    
     #prepare data for visualization
     rc %>%
         group_by(.data$experiment) %>%
@@ -497,29 +505,30 @@ check_plot_rc_input <- function(x,
         if (missing(range.lower)) range.lower <- rangeLower(x)
         if (missing(range.upper)) range.upper <- rangeUpper(x)
         check_lengths(x, range.lower, range.upper)
-        x <- get_region_counts(ribo.object = x,
-                               region      = regions,
-                               range.lower = range.lower,
-                               range.upper = range.upper,
-                               length      = TRUE,
-                               transcript  = TRUE,
-                               experiments = experiments)
-    } else if (is.data.frame(x)) {
+        x <- strip_rlefactor(get_region_counts(ribo.object = x,
+                                                region      = regions,
+                                                range.lower = range.lower,
+                                                range.upper = range.upper,
+                                                length      = TRUE,
+                                                transcript  = TRUE,
+                                                experiments = experiments))
+    } else if (class(x) == "DataFrame") {
+        x <- strip_rlefactor(x)
         col.names <- c("experiment", "region", "count")
         mismatch  <- !all(names(x) == col.names, 
                      typeof(x[[1]]) == "character",
                      typeof(x[[2]]) == "character",
-                     typeof(x[[3]]) == "double",
+                     typeof(x[[3]]) %in% c("double", "integer"),
                      ncol(x) == 3)
         if (mismatch) {
-            stop("Please make sure that the data table is of",  
+            stop("Please make sure that the DataFrame is of",  
                  "the correct format.", call. = FALSE)
         } else if (!identical(unique(x$region), regions)) {
-            stop("Please make sure that the data table only includes the ", 
+            stop("Please make sure that the DataFrame only includes the ", 
                  "'UTR5','CDS', and 'UTR3' regions.", call. = FALSE)
         }
     } else {
-        stop("Please provide a ribo object or a data.table of the",
+        stop("Please provide a ribo object or a DataFrame of the",
              "correct format.", call. = FALSE)
     }
     return(x)

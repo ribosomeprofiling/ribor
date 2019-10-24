@@ -14,7 +14,6 @@ biocViews:
     Software,
     Infrastructure
 Imports:
-    data.table,
     dplyr,
     ggplot2,
     hash,
@@ -22,6 +21,7 @@ Imports:
     rhdf5,
     rlang,
     stats,
+    S4Vectors,
     tidyr,
     yaml
 Suggests: 

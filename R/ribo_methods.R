@@ -3,7 +3,6 @@
 NULL
 
 #' @describeIn ribo Displaying the file contents
-#' @importFrom data.table as.data.table
 #' @examples 
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
 #' sample <- create_ribo(file.path)
@@ -23,8 +22,11 @@ setMethod(f = "show",
                                   "has.metadata"     = object@has.metadata,
                                   "metagene radius"  = object@metagene.radius,
                                   "has.alias"        = !is.empty(object@transcript.alias))
-              file.info <- data.table("info" = names(file.values),
-                                      " " = file.values)
+              file.info <- data.frame(info = names(file.values),
+                                      " " = unlist(unname(file.values)), check.names = FALSE,
+                                                         stringsAsFactors = FALSE,
+                                                         fix.empty.names = FALSE)
+              
               #center by reformatting the output of the data tables
               file.info   <- format_file_info(file.info)
               experiment.info <- format_experiment_info(object@experiment.info)
@@ -35,8 +37,8 @@ setMethod(f = "show",
 
 format_experiment_info <- function(experiment.info) {
     #helper method to format the experiment info
-    experiment.info <- lapply(experiment.info, as.character)
-    experiment.info <- as.data.table(experiment.info)
+    experiment.info <- lapply(as.list(experiment.info), as.character)
+    experiment.info <- as.data.frame(experiment.info, stringsAsFactors = FALSE)
 
     #format in the case that the experiment names are really long
     exp.val.name <- unlist(names(experiment.info)[-1])
@@ -50,7 +52,7 @@ format_experiment_info <- function(experiment.info) {
                                          width = name.size,
                                          justify = "right")
 
-    experiment.info <-  as.data.table(format(experiment.info,
+    experiment.info <-  as.data.frame(format(experiment.info,
                                              width   = name.size,
                                              justify = "right"))
 
@@ -82,12 +84,12 @@ print_output <- function (file.info,
                           experiment.info) {
     #print the output
     cat("General File Information:\n")
-    print(data.table(file.info),
+    print(data.frame(file.info, check.names = FALSE),
           row.names = FALSE,
           quote = FALSE)
     cat("\n")
     cat("Dataset Information:\n")
-    print(data.table(experiment.info),
+    print(data.frame(experiment.info, check.names = FALSE),
           row.names = FALSE,
           quote = FALSE)
 }

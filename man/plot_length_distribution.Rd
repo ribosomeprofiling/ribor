@@ -8,7 +8,7 @@ plot_length_distribution(x, region, experiments, range.lower, range.upper,
   fraction = FALSE, title = "Length Distribution")
 }
 \arguments{
-\item{x}{A 'ribo' object or a data table generated from \code{\link{get_region_counts}}}
+\item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
 
 \item{region}{the region of interest}
 
@@ -26,7 +26,7 @@ plot_length_distribution(x, region, experiments, range.lower, range.upper,
 A 'ggplot' of the length distribution
 }
 \description{
-The function \code{\link{plot_length_distribution}} can take either a data.table
+The function \code{\link{plot_length_distribution}} can take either a DataFrame
 or a "ribo" object to generate a line graph of the length distributions from
 range.lower to range.upper.
 }
@@ -40,14 +40,14 @@ When given a "ribo" object, \code{\link{plot_length_distribution}} calls
 \code{\link{get_region_counts}} to retrieve the necessary information
 for plotting.
 
-The user can instead provide a data.table with the same structure as the
+The user can instead provide a DataFrame with the same structure as the
 output of the \code{\link{get_region_counts}} function where the 'transcript'
 parameter is set to FALSE and 'length' parameters is the default value of
 TRUE. This also means that the many of the remaining parameters of the
 \code{\link{plot_length_distribution}} function are not necessary. The run
 time becomes substantially faster when \code{\link{plot_region_counts}} is
-given the direct data.table to plot. Note that there is no manipulation by
-this function on the data.table. This responsibility is given to the user
+given the direct DataFrame to plot. Note that there is no manipulation by
+this function on the DataFrame. This responsibility is given to the user
 and allows for more control.
 }
 \examples{
@@ -68,7 +68,7 @@ plot_length_distribution(x = sample,
                          fraction = TRUE)
 
 
-#data.table use case
+#DataFrame use case
 #obtains the region counts at each individual read length, summed across every transcript
 region.counts <- get_length_distribution(ribo.object = sample,
                                          region      = "CDS",
@@ -77,13 +77,13 @@ region.counts <- get_length_distribution(ribo.object = sample,
                                          experiments = experiments)
 
 #the param 'length' must be set to FALSE and param 'transcript' must be set
-#to TRUE to use a data.table
+#to TRUE to use a DataFrame
 plot_length_distribution(region.counts)
 
 
 }
 \seealso{
-\code{\link{get_region_counts}} to generate a data.table that can
+\code{\link{get_region_counts}} to generate a DataFrame that can
 be provided as input,
 \code{\link{ribo}} to create a ribo.object that can be provided as input
 }

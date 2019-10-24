@@ -20,11 +20,11 @@ get_rnaseq(ribo.object, tidy = TRUE, regions = c("UTR5", "UTR5J",
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 }
 \value{
-Returns a data table that contains the transcript name, experiment, and
+Returns a data frame that contains the transcript name, experiment, and
 RNA-seq abundance
 }
 \description{
-\code{\link{get_rnaseq}} returns a data.table containing information on the transcript name, experiment, and
+\code{\link{get_rnaseq}} returns a DataFrame containing information on the transcript name, experiment, and
 sequence abundance
 }
 \details{
@@ -33,11 +33,11 @@ experiments within a ribo file. RNA-Seq data is an optional dataset to
 include in a .ribo file. The experiments in experiment.list are checked
 for experiment existence in the ribo file and then checked for RNA-seq data.
 
-The returned data.table can either be in the tidy format for easier data
+The returned DataFrame can either be in the tidy format for easier data
 cleaning or in a condensed non-tidy format. The data will present RNA-seq counts
 for each transcript in each valid experiment in experiment.list.
 
-The 'alias' parameter specifies whether or not the returned data.table
+The 'alias' parameter specifies whether or not the returned DataFrame
 should present each transcript as an alias instead of the original name.
 If 'alias' is set to TRUE, then the column of the transcript names will
 contain the aliases rather than the original reference names of the .ribo

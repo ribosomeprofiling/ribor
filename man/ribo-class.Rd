@@ -26,7 +26,7 @@ An S4 class to be used with the ribor package
 \section{Slots}{
 
 \describe{
-\item{\code{handle}}{A handle to the ribo file of interest}
+\item{\code{path}}{A path to the ribo file of interest}
 
 \item{\code{experiments}}{A character vector of experiment names in the file}
 
@@ -46,7 +46,7 @@ An S4 class to be used with the ribor package
 
 \item{\code{has.metadata}}{Value denoting whether the root ribo file has metadata}
 
-\item{\code{experiment.info}}{Data table of information on the experiments}
+\item{\code{experiment.info}}{data.frame of information on the experiments}
 
 \item{\code{transcript.info}}{Hash of the lengths and offsets of each transcript}
 

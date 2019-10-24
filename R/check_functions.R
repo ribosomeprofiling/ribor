@@ -2,7 +2,7 @@ check_ribo <- function(ribo.object, stop = TRUE) {
     # Helper method that checks the internal contents and class of a parameter
     # check_ribo takes in an object and checks for proper contents and class
     # Args:
-    # ribo.object An S3 object of class "ribo"
+    # ribo.object An S4 object of class "ribo"
     #
     # Return:
     # None
@@ -97,7 +97,7 @@ check_experiments <- function(ribo.object, experiments) {
             warning("'", experiment, "'", " was not found.", call. = FALSE)
         }
         warning("Param 'experiments' contained experiments that were not ", 
-                "found. The returned data table ignores these experiments.",
+                "found. The returned data frame ignores these experiments.",
                 call. = FALSE)
     }
 }

@@ -16,18 +16,18 @@
 get_reference_names <- function(ribo.object) {
     # Retrieves the reference transcript names
     check_ribo(ribo.object)
-    return(h5read(ribo.object@handle &
-                      'reference', name = "reference_names"))
+    return(h5read(ribo.object@path,
+                  name = "reference/reference_names"))
 }
 
 get_reference_lengths <- function(ribo.object) {
     # Retrieves the reference transcript lengths
     check_ribo(ribo.object)
-    row.names <- h5read(ribo.object@handle & 'reference',
-                        name = "reference_names")
-    lengths   <- h5read(ribo.object@handle & 'reference',
-                        name = "reference_lengths")
-    return(data.table(transcript = row.names, length = lengths))
+    row.names <- h5read(ribo.object@path,
+                        name = "reference/reference_names")
+    lengths   <- h5read(ribo.object@path,
+                        name = "reference/reference_lengths")
+    return(data.frame(transcript = row.names, length = lengths))
 }
 
 
@@ -48,7 +48,7 @@ get_reference_lengths <- function(ribo.object) {
 #' transcripts in the ribo file. This character vector would provide aliases that match the order
 #' of the original reference names returned by the {\code{\link{get_reference_names}}} function.
 #'
-#' @param ribo a handle to the ribo file or a 'ribo' object
+#' @param ribo a path to the ribo file or a 'ribo' object
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases
 #' @importFrom rhdf5 h5read
@@ -63,16 +63,16 @@ get_reference_lengths <- function(ribo.object) {
 #' @export
 #' @return A character vector denoting the renamed transcript aliases
 rename_transcripts <- function(ribo, rename) {
-    #ensure that the ribo handle is retrieved
-    ribo.handle <- ribo
+    #ensure that the ribo path is retrieved
+    ribo.path <- ribo
     if (is.ribo(ribo)) {
-        ribo.handle <- ribo@handle
+        ribo.path <- ribo@path
     }
 
     #handle the function case and the vector case
     simplify <- NULL
-    original <-
-        h5read(ribo.handle & 'reference', name = "reference_names")
+    original <- h5read(ribo.path, 
+                       name = "reference/reference_names")
 
     if (is.function(rename)) {
         simplify <- vapply(X = original,
@@ -111,9 +111,9 @@ rename_default <- function(x) {
     return(unlist(strsplit(x, split = "|", fixed = TRUE))[5])
 }
 
-get_content_info <- function(ribo.handle) {
-    experiments        <-
-        h5ls(ribo.handle & 'experiments', recursive = FALSE)$name
+get_content_info <- function(ribo.path) {
+    file_info     <- h5ls(ribo.path, recursive = TRUE, all = FALSE)
+    experiments   <- file_info[file_info$group == "/experiments", ]$name
     length <- length(experiments)
 
     #creates the separate lists for reads, coverage, rna.seq, and metadata
@@ -124,7 +124,7 @@ get_content_info <- function(ribo.handle) {
     metadata.list <- vector(mode = "logical", length = length)
 
     #ls function provides information about the contents of each experiment
-    ls <- h5ls(ribo.handle)
+    ls <- h5ls(ribo.path)
 
     #loop over all of the experiments
     for (i in seq(length)) {
@@ -133,7 +133,7 @@ get_content_info <- function(ribo.handle) {
         #the attributes
         name           <-
             paste("/experiments/", experiment, sep = "")
-        attribute      <- h5readAttributes(ribo.handle, name)
+        attribute      <- h5readAttributes(ribo.path, name)
         reads.list[i]     <- attribute[["total_reads"]]
 
         #creates separate logical lists to denote the presence of
@@ -147,12 +147,13 @@ get_content_info <- function(ribo.handle) {
         rna.seq.list[i]   <- ("rnaseq" %in% group.names)
     }
 
-    experiments.info       <- data.table(
+    experiments.info       <- data.frame(
         experiment  = experiments,
         total.reads = reads.list,
         coverage    = coverage.list,
         rna.seq     = rna.seq.list,
-        metadata    = metadata.list
+        metadata    = metadata.list,
+        stringsAsFactors = FALSE
     )
     return(experiments.info)
 }
@@ -160,8 +161,8 @@ get_content_info <- function(ribo.handle) {
 
 get_attributes <- function(ribo.object) {
     # Retrieves the attributes of the ribo.object
-    handle  <- ribo.object@handle
-    attribute <- h5readAttributes(handle, "/")
+    path  <- ribo.object@path
+    attribute <- h5readAttributes(path, "/")
     return(attribute[-which(names(attribute) == "time")])
 }
 
@@ -176,14 +177,14 @@ get_read_lengths <- function(ribo.object) {
 
 
 
-make_datatable <- function(ribo.object,
+make_dataframe <- function(ribo.object,
                            matched.list,
                            range.info,
                            conditions,
                            matrix) {
     alias      <- conditions[["alias"]]
     ref.names <- get_reference_names(ribo.object)
-    # helper function that creates a polished data table out of a filled in matrix
+    # helper function that creates a polished dataframe out of a filled in matrix
     if (alias) {
         original <- ref.names
         ref.names <- vector(mode = "character", length = length(original))
@@ -191,20 +192,22 @@ make_datatable <- function(ribo.object,
             ref.names[i] <- ribo.object@transcript.original[[original[[i]]]]
         }
     }
-    return(help_make_datatable(ref.names,
+    return(help_make_dataframe(ref.names,
                                conditions,
                                matched.list,
                                range.info,
                                matrix))
 }
 
-help_make_datatable <- function(ref.names,
+help_make_dataframe <- function(ref.names,
                                 conditions,
                                 matched.list,
                                 range.info,
                                 matrix) {
 
-    # helper that generates data table of the correct size
+    # helper that generates data frame of the correct size
+    # the helper method is used for both the get_region_counts
+    # and the get_metagene functions,
     range.lower <- range.info['range.lower']
     range.upper <- range.info['range.upper']
 
@@ -214,35 +217,42 @@ help_make_datatable <- function(ref.names,
     ref.length  <- length(ref.names)
     num.reads   <- range.upper - range.lower + 1
     total.list  <- length(matched.list)
-
+    
+    # get the matrix data and pass create a data frame of the 
+    # correct format
     if (transcript & length) {
         experiment.list   <- matched.list
-        return (data.table(experiment = matched.list,
-                           matrix))
+        return (data.frame(experiment = matched.list,
+                           matrix,
+                           stringsAsFactors = FALSE,
+                           check.names = FALSE))
     } else if (transcript) {
         #sum transcripts only
         experiment.column <- rep(matched.list, each = num.reads)
         read.column <- rep(c(range.lower:range.upper), total.list)
-        return (data.table(experiment = experiment.column,
+        return (data.frame(experiment = experiment.column,
                            length     = read.column,
-                           matrix))
+                           matrix, stringsAsFactors = FALSE,
+                           check.names = FALSE))
     } else if (length) {
         #length only
         experiment.column <- rep(matched.list, each = ref.length)
         transcript.column <- rep(ref.names, total.list)
-        return (data.table(experiment = experiment.column,
+        return (data.frame(experiment = experiment.column,
                            transcript = transcript.column,
-                           matrix))
+                           matrix, stringsAsFactors = FALSE,
+                           check.names = FALSE))
     }
     #!transcript and !length
     experiment.column <- rep(matched.list, each = num.reads * ref.length)
     transcripts       <- rep(ref.names, total.list * num.reads)
     ref.read          <- rep(c(range.lower:range.upper), each = ref.length)
-    read.length       <- rep(ref.read, total.list)
-    return (data.table(experiment  = experiment.column,
+    read.column <- rep(ref.read, total.list)
+    return (data.frame(experiment  = experiment.column,
                        transcript  = transcripts,
-                       read.length = read.length,
-                       matrix))
+                       length      = read.column,
+                       matrix, stringsAsFactors = FALSE,
+                       check.names = FALSE))
 }
 
 
@@ -303,4 +313,28 @@ sum_lengths <- function(index, ref.length, mat) {
     return(sum(mat[index:(index+ref.length-1), ]))
   }
   return (colSums(mat[index:(index+ref.length-1), ]))
+}
+
+
+prepare_DataFrame <- function(ribo.object, DF) {
+  #factor and Rle the columns of the metagene and region_count functions
+  if (!is.null(DF$region)) DF$region <- Rle(factor(DF$region))
+  if (!is.null(DF$transcript)) DF$transcript <- factor(DF$transcript)
+  if (!is.null(DF$position)) DF$position <- Rle(DF$position)
+  if (!is.null(DF$length)) DF$length <- Rle(DF$length)
+  DF$experiment = Rle(factor(DF$experiment))
+  
+  # add the metadata
+  DF@metadata[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", 
+                                                                "total.reads")]
+  return(DF)
+}
+
+strip_rlefactor <- function(DF) {
+  if (!is.null(DF$region)) DF$region <- as.character(DF$region)
+  if (!is.null(DF$transcript)) DF$transcript <- as.character(DF$transcript)
+  if (!is.null(DF$position)) DF$position <- as.integer(DF$position)
+  if (!is.null(DF$length)) DF$length <- as.integer(DF$length)
+  DF$experiment <- as.character(DF$experiment)
+  return(DF)
 }

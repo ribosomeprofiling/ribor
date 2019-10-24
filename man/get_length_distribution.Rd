@@ -7,7 +7,7 @@
 get_length_distribution(ribo.object, region,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
-  experiments = get_experiments(ribo.object), total = TRUE)
+  experiments = get_experiments(ribo.object))
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}
@@ -19,11 +19,9 @@ get_length_distribution(ribo.object, region,
 \item{range.upper}{Upper bound of the read length}
 
 \item{experiments}{List of experiment names}
-
-\item{total}{Include a column with the total reads, required for plotting}
 }
 \value{
-A data table of the counts at each read length
+A DataFrame of the counts at each read length
 }
 \description{
 The function {\code{\link{get_length_distribution}}} retrieves the raw or normalized
@@ -31,7 +29,7 @@ counts at each read length from 'range.lower' to 'range.upper'.
 }
 \details{
 This function is a wrapper function of {\code{\link{get_region_counts}}}, and the
-returned data table is valid input for {\code{\link{plot_length_distribution}}}.
+returned DataFrame is valid input for {\code{\link{plot_length_distribution}}}.
 }
 \examples{
 #generate the ribo object

@@ -21,7 +21,7 @@ get_region_counts(ribo.object, range.lower = rangeLower(ribo.object),
 
 \item{transcript}{Option to condense the transcripts together, preserve the read lengths}
 
-\item{tidy}{Option to return the data table in a tidy format}
+\item{tidy}{Option to return the DataFrame in a tidy format}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 
@@ -32,24 +32,24 @@ get_region_counts(ribo.object, range.lower = rangeLower(ribo.object),
 \item{experiments}{List of experiment names}
 }
 \value{
-A data table of the region counts
+A DataFrame of the region counts
 }
 \description{
 \code{\link{get_region_counts}} will return the particular region counts
 of any subset of regions for a given set of experiments.
 }
 \details{
-This function will return a data.table of the counts at each specified region
+This function will return a DataFrame of the counts at each specified region
 for each specified experiment. The region options are "UTR5", "UTR5J", "CDS",
 "UTR3J", and "UTR3". The user can specify any subset of regions in the form of a vector,
 a list, or a single string if only one region is desired.
 
-The dimensions of the returned data table depend on the parameters
+The dimensions of the returned DataFrame depend on the parameters
 range.lower, range.upper, length, and transcript.
 
 The param 'length' condenses the read lengths together.
 When length is TRUE and transcript is FALSE, the
-data table presents information for each transcript across
+DataFrame presents information for each transcript across
 all of the read lengths. That is, each transcript has a value
 that is the sum of all of the counts across every read length.
 As a result, information about the transcript at each specific
@@ -63,23 +63,23 @@ sum of counts from every transcript. As a result, information about the
 counts of each individual transcript is lost.
 
 When 'transcript' is set to FALSE, the 'alias' parameter specifies whether
-or not the returned data.table should present each transcript as an alias
+or not the returned DataFrame should present each transcript as an alias
 instead of the original name. If 'alias' is set to TRUE, then the column
 of the transcript names will contain the aliases rather than the original
 reference names of the .ribo file.
 
 If both 'length' and 'transcript' are TRUE, then the resulting
-data table prints out one row for each experiment. This provides the metagene
+DataFrame prints out one row for each experiment. This provides the metagene
 information across all transcripts and all reads in a given experiment.
 
 If both length' and 'transcript' are FALSE, calculations are done to the data,
 all information is preserved for both the read length and the transcript.
-The data table would just present the entire stored raw data
+The DataFrame would just present the entire stored raw data
 from the read length 'range.lower' to the read length 'range.upper' which in most
-cases would result in a slow run time with a massive data.table returned.
+cases would result in a slow run time with a massive DataFrame returned.
 
 When 'transcript' is set to FALSE, the 'alias' parameter specifies whether
-or not the returned data.table should present each transcript as an alias
+or not the returned DataFrame should present each transcript as an alias
 instead of the original name. If 'alias' is set to TRUE, then the column
 of the transcript names will contain the aliases rather than the original
 reference names of the .ribo file.
