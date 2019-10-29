@@ -602,7 +602,7 @@ To find the experiments that have metadata and subsequently retrieve it from one
 ```{r get_metadata has.metadata}
 #obtain a list of experiments with metadata 
 experiment.info <- get_info(ribo.object = original.ribo)[['experiment.info']]
-has.metadata <- experiment.info[experiment.info$metadata == TRUE, experiment]
+has.metadata <- experiment.info[experiment.info$metadata == TRUE, "experiment"]
 has.metadata
 
 #store the name of the first experiment with metadata and gets its metadata
@@ -625,7 +625,7 @@ Since coverage data is an optional field of .ribo files, it is helpful to keep t
 ``` {r get_list_of_exps_with_coverage}
 #get a list of experiments that have coverage data
 experiment.info <- get_info(ribo.object = original.ribo)[['experiment.info']]
-has.coverage <- experiment.info[experiment.info$coverage == TRUE, experiment]
+has.coverage <- experiment.info[experiment.info$coverage == TRUE, "experiment"]
 has.coverage
 ```
 
@@ -643,7 +643,7 @@ cov <- get_coverage(ribo.object = original.ribo,
                     alias       = TRUE,
                     tidy        = TRUE,
                     experiments = has.coverage)
-cov[380:385]
+cov
 ```
 
 To preserve the information at ribosome foot print length, set `length = FALSE`.
@@ -680,7 +680,7 @@ To get started, it might be helpful to store a character vector of the experimen
 ``` {r}
 #get a list of experiments that have RNA-Seq data
 experiment.info <- get_info(ribo.object = original.ribo)[['experiment.info']]
-has.rnaseq <- experiment.info[experiment.info$rna.seq == TRUE, experiment]
+has.rnaseq <- experiment.info[experiment.info$rna.seq == TRUE, "experiment"]
 has.rnaseq
 ```
 
