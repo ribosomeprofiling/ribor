@@ -82,7 +82,7 @@ format_file_info <- function(file.info) {
 
 print_output <- function (file.info,
                           experiment.info) {
-    #print the output
+    # Final helper method that prints the output of the formatted attributes 
     cat("General File Information:\n")
     print(data.frame(file.info, check.names = FALSE),
           row.names = FALSE,

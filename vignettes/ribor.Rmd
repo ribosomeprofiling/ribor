@@ -93,7 +93,7 @@ BiocManager::install("ribor")
 RiboR can also be installed directly using the source code.
 For this, the following are required.
 
-* **R:** RiboR requires **version 3.6 or later**. Previous R versions are known to cause installation or run time problems.
+* **R:** RiboR requires **version 3.6 or later**. Previous R versions are known to cause installation and run time problems.
 
 * **Devtools:** Installing the package requires `devtools`, a CRAN package that provides a wide suite of development tools in the R environment. 
 
@@ -181,11 +181,11 @@ rc <- get_length_distribution(ribo.object      = original.ribo,
 rc
 ```
 
-It is also possible to generate the above plot from the data frame returned by `get_region_counts`.
+It is also possible to generate the above plot from the DataFrame returned by `get_region_counts`.
 This can be useful if the user wants to further process the data prior to plotting.
 
 ```{r plot_length_distribution_from_dataframe, eval = FALSE}
-# further data frame manipulation and filtering can ensue here 
+# further DataFrame manipulation and filtering can ensue here 
 # before calling the plot function
 
 plot_length_distribution(rc, fraction = TRUE)
@@ -228,10 +228,10 @@ plot_metagene(original.ribo,
 There are two functions that allow the user to obtain metagene coverage data. 
 
 * `get_metagene`
-     * This function returns a data frame of metagene coverage.
+     * This function returns a DataFrame of metagene coverage.
      
 * `get_tidy_metagene`
-     * This function returns a tidy data frame of metagene coverage. It is a wrapper of the `get_metagene` function, and in order to keep manageable data frame dimensions, it will always sum across the transcripts.
+     * This function returns a tidy DataFrame of metagene coverage. It is a wrapper of the `get_metagene` function, and in order to keep manageable DataFrame dimensions, it will always sum across the transcripts.
 
 When using `length = TRUE` and `transcript = TRUE`, 
 the user will obtain the most concise data corresponding to the sum of reads 
@@ -250,7 +250,7 @@ meta.start <- get_metagene(ribo.object = original.ribo,
 print(meta.start[ , 1:10])
 ```
 
-To obtain the tidy version of the above data frame,
+To obtain the tidy version of the above DataFrame,
 
 ```{r}
 tidy.meta.start <- get_tidy_metagene(ribo.object = original.ribo,
@@ -293,7 +293,7 @@ print(meta.start[1:2, 1:10])
 ```
 
 
-As we discussed above for read length analysis, we also provide the option to generate metagene plots using the data frames returned by `get_metagene`.
+As we discussed above for read length analysis, we also provide the option to generate metagene plots using the DataFrames returned by `get_metagene`.
 ``` {r plot_metagene_from_dt, fig.width = 7}
 plot_metagene(tidy.meta.start, normalize = TRUE)
 ```
@@ -326,8 +326,7 @@ the corresponding region. After doing this for all reads, the accumulated values
 As mentioned earlier, a messenger RNA transcript is partitioned into three regions: 5'UTR, CDS and 3'UTR.
 For technical reasons, we rename 5'UTR as UTR5 and 3'UTR as UTR3.
 
-It is well-known that ribosome pauses, or moves slower, around start and stop sites. As a result, we observe peaks around start and stop sites in metagene plots. This behavior of ribosome makes it harder to perform certain
-analyses such as coverage, translation efficiency, periodicity and uniformity analysis with accuracy. 
+It is well-known that ribosomes pause, or move slower, around start and stop sites. As a result, we observe peaks around start and stop sites in metagene plots. This behavior of ribosome makes it harder to perform certain analyses such as coverage, translation efficiency, periodicity and uniformity analysis with accuracy. 
 To tackle this problem, we introduce two additional regions called __UTR5 junction__ and __UTR3 junction__,
 and modify the definition of the regions UTR5, CDS and UTR3 as shown in Figure 2. 
 This way, we keep regions around start and stop sites separate when doing such analyses.
@@ -355,7 +354,7 @@ Using these junction regions, we re-define the conventional regions as follows.
 
 Similar to the `get_metagene` function, the `get_region_counts` function has the `transcript` and `length` parameters. As previously mentioned, `transcript` specifies whether or not to sum across the transcripts, and `length` specifies whether or not to sum across the read lengths. 
 
-The following code will plot the number of sequencing reads whose 5’ ends map to the UTR5, CDS, and UTR3 as a stacked bar plot. To facilitate comparison between experiments, the percentage of the regions counts are plotted and the percentage of  reads mapping to CDS are printed on the plot.
+The following code will plot the number of sequencing reads whose 5’ ends map to the UTR5, CDS, and UTR3 as a stacked bar plot. To facilitate comparison between experiments, the percentage of the regions counts are plotted and the percentage of reads mapping to CDS are printed on the plot.
 
 ``` {r plot_region_counts ribo, fig.width = 7}
 plot_region_counts(x           = original.ribo,
@@ -403,7 +402,7 @@ rc <- get_region_counts(original.ribo,
 rc
 ```
 
-By default, the data frames are in tidy form. If non-tidy data set is desired, then set `tidy = FALSE`.
+By default, the DataFrame output is in a tidy form. If non-tidy data set is desired, then set `tidy = FALSE`.
 
 ``` {r get_region_counts non-tidy}
 rc <- get_region_counts(original.ribo,
@@ -424,7 +423,7 @@ rc <- get_region_counts(original.ribo,
 rc
 ```
 
-Similar to the case of metagene and length distribution, bar plot above can be generated directly from data frames.
+Similar to the case of metagene and length distribution, the bar plot above can be generated directly from a DataFrame.
 
 ``` {r plot_region_counts dt, fig.width = 7}
 rc.info <- get_region_counts(ribo.object = original.ribo,
@@ -693,7 +692,7 @@ rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      alias       = TRUE,
                      experiments = has.rnaseq)
 
-#print out the first ten columns and first ten rows 
+#print out the first 2 rows of the DataFrame
 head(rnaseq, 2)
 ```
 

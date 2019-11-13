@@ -19,7 +19,7 @@ plot_region_counts(x, experiments, range.lower, range.upper,
 \item{title}{a title for the generated plot}
 }
 \value{
-A 'ggplot' of the region counts
+A 'ggplot' of the region counts for each of the experiments
 }
 \description{
 The function \code{\link{plot_region_counts}} can take either a DataFrame
@@ -37,8 +37,8 @@ output of the \code{\link{get_region_counts}} function where the 'transcript'
 and 'length' parameters are the default values of TRUE. This also means that
 the remaining parameters of the \code{\link{plot_region_counts}} function are not necessary.
 The run time becomes substantially faster when \code{\link{plot_region_counts}} is given
-the direct DataFrame to plot. Note that there is no manipulation by this function on the
-DataFrame, making this input option more error prone.
+the direct DataFrame to plot. However, the DataFrame needs to follow the format and 
+types in the output of the reading functions
 }
 \examples{
 #ribo object use case

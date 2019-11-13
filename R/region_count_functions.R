@@ -404,8 +404,8 @@ check_ld_input <- function(x,
 #' and 'length' parameters are the default values of TRUE. This also means that
 #' the remaining parameters of the \code{\link{plot_region_counts}} function are not necessary.
 #' The run time becomes substantially faster when \code{\link{plot_region_counts}} is given
-#' the direct DataFrame to plot. Note that there is no manipulation by this function on the
-#' DataFrame, making this input option more error prone.
+#' the direct DataFrame to plot. However, the DataFrame needs to follow the format and 
+#' types in the output of the reading functions 
 #'
 #' @examples
 #' #ribo object use case
@@ -449,7 +449,7 @@ check_ld_input <- function(x,
 #' @importFrom ggplot2 ggplot geom_col theme_bw theme ggtitle coord_flip theme
 #' @importFrom ggplot2 labs scale_fill_discrete element_blank geom_text position_stack
 #' @export
-#' @return A 'ggplot' of the region counts
+#' @return A 'ggplot' of the region counts for each of the experiments 
 plot_region_counts <- function(x,
                                experiments,
                                range.lower,

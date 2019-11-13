@@ -271,6 +271,8 @@ generate_matrix <- function(ribo.object,
     ref.length <- length(get_reference_names(ribo.object))
     single <- (ref.length == nrow(output))
 
+    # handle the different cases of the user's passed in parameters for
+    # transcript and length 
     if (transcript & length) {
         output <- matrix(unlist(colSums(output)), ncol=ncol, byrow=TRUE)
     } else if (transcript) {
@@ -294,7 +296,7 @@ generate_matrix <- function(ribo.object,
                                        by = ref.length)
             output <- lapply(condense_lengths, sum_transcripts, mat=output)
             output <- matrix(unlist(output), ncol=ncol, byrow=TRUE)
-      }
+        }
   }
   return(output)
 }
@@ -317,7 +319,8 @@ sum_lengths <- function(index, ref.length, mat) {
 
 
 prepare_DataFrame <- function(ribo.object, DF) {
-  #factor and Rle the columns of the metagene and region_count functions
+  # Helper method that creates factors and Rle the columns of the 
+  # metagene and region_count functions
   if (!is.null(DF$region)) DF$region <- Rle(factor(DF$region))
   if (!is.null(DF$transcript)) DF$transcript <- factor(DF$transcript)
   if (!is.null(DF$position)) DF$position <- Rle(DF$position)
@@ -331,6 +334,7 @@ prepare_DataFrame <- function(ribo.object, DF) {
 }
 
 strip_rlefactor <- function(DF) {
+  # Helper method that strips the factors and prepares the DataFrame for plotting
   if (!is.null(DF$region)) DF$region <- as.character(DF$region)
   if (!is.null(DF$transcript)) DF$transcript <- as.character(DF$transcript)
   if (!is.null(DF$position)) DF$position <- as.integer(DF$position)
