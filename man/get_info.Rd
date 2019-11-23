@@ -7,12 +7,12 @@
 get_info(ribo.object)
 }
 \arguments{
-\item{ribo.object}{ribo.object is an S3 object of class "ribo"}
+\item{ribo.object}{ribo.object is an S4 object of class "ribo"}
 }
 \value{
 Returns a list containing a nested list of file attributes, a logical
 value denoting whether the root file has additional metadata, and a
-data.table of information on each experiment
+data.frame of information on each experiment
 }
 \description{
 The function \code{\link{get_info}} provides information on the attributes, metadata,

@@ -1,6 +1,6 @@
 #' Retrieves the coverage data for a given transcript
 #'
-#' The function \code{\link{get_coverage}} generates a data.table of coverage
+#' The function \code{\link{get_coverage}} generates a DataFrame of coverage
 #' data over the length of a given transcript.
 #'
 #' The function \code{\link{get_coverage}} first checks the experiments in the
@@ -48,6 +48,8 @@
 #' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
 #' @importFrom tidyr gather
+#' @importFrom S4Vectors Rle DataFrame
+#' @importFrom methods as
 #' @importFrom hash has.key
 #' @export
 get_coverage <- function(ribo.object,
@@ -58,11 +60,13 @@ get_coverage <- function(ribo.object,
                          tidy = FALSE,
                          alias = FALSE,
                          experiments = get_experiments(ribo.object)) {
+    if (missing(name)) stop("Please provide a transcript name.")
     matched.experiments <- initialize_coverage(ribo.object,
                                                alias,
                                                range.lower,
                                                range.upper,
                                                experiments)
+    
     total.experiments   <- length(matched.experiments)
 
     info <- retrieve_transcript_info(ribo.object,
@@ -78,13 +82,15 @@ get_coverage <- function(ribo.object,
                             alias,
                             info)
 
-    return <- create_datatable(length,
+    result <- create_dataframe(length,
                                range.lower,
                                range.upper,
                                matched.experiments,
                                result)
 
-    return(check_tidy_coverage(return, tidy, length))
+    if (tidy) result <- tidy_coverage(result, length) 
+    result@metadata[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", "total.reads")]
+    return(result)
 }
 
 
@@ -116,7 +122,7 @@ fill_coverage <- function(ribo.object,
             correct.length <- 1 + (current.length - min.length) * length.offset
             coverage.start <- correct.length + current.offset
             coverage.stop  <- coverage.start + transcript.length - 1
-            coverage <- t(h5read(ribo.object@handle,
+            coverage <- t(h5read(ribo.object@path,
                                  path,
                                  index = list(coverage.start:coverage.stop)))
             coverage <- as.integer(coverage)
@@ -196,49 +202,52 @@ initialize_matrix_coverage <- function(total.experiments,
         result <- matrix(nrow = read.range * total.experiments,
                          ncol = transcript.length)
     }
-    colnames(result) <- seq_len(transcript.length)
+    colnames(result) <- as.character(seq_len(transcript.length))
     return(result)
 }
 
-check_tidy_coverage <- function(return, tidy, length) {
+tidy_coverage <- function(result, length) {
     #checks the tidy case for coverage
-    if (tidy) {
-        #determine which columns to remove
-        tidy.columns <- "experiment"
-        if (!length) {
-            tidy.columns <- c("experiment", "read.length")
-        }
-        return <- setDT(gather(
-            return,
-            key = "position",
-            value = "count",-tidy.columns
-        ))
-    }
-    return(return)
+    #determine which columns to remove
+    tidy.columns <- "experiment"
+    if (!length) tidy.columns <- c("experiment", "length")
+
+    result <- gather(data.frame(result, check.names = FALSE),
+                     key = "position",
+                     value = "count", 
+                     -tidy.columns)
+
+    result <- as(result, "DataFrame")
+    
+    if (!length) result$length <- Rle(factor(result$length))
+    result$position   <- Rle(factor(result$position, 
+                             levels = as.character(sort(unique(as.integer(result$position))))))
+    result$experiment <- Rle(factor(result$experiment))
+    return(result)
 }
 
 
-create_datatable <- function (length,
+create_dataframe <- function (length,
                               range.lower,
                               range.upper,
                               matched.experiments,
                               matrix) {
-# Given a matrix of coverage data, create_datatable generates the correct
-# data.table based on a set of parameters
+# Given a matrix of coverage data, create_dataframe generates the correct
+# DataFrame based on a set of parameters
 #
 # Returns:
 # Data table that wraps the matrix with the correct and appropriate labels
 
     matched.size <- length(matched.experiments)
     if (length) {
-        return (data.table(experiment = matched.experiments,
-                           matrix))
+        return (DataFrame(experiment = Rle(factor(matched.experiments)),
+                          matrix, check.names = FALSE))
     }
     range <- range.upper - range.lower + 1
-    return (data.table(
-        experiment  = rep(matched.experiments, each = range),
-        read.length = rep(c(range.lower:range.upper), matched.size),
-        matrix
+    return (DataFrame(
+        experiment  = Rle(factor(rep(matched.experiments, each = range))),
+        length = Rle(factor(rep(c(range.lower:range.upper), matched.size))),
+        matrix, check.names = FALSE
     ))
 }
 
@@ -255,9 +264,9 @@ check_coverage <- function(ribo.object, experiments) {
     # Returns:
     # A list of experiments in the ribo.object that have coverage data
 
-    handle <- ribo.object@handle
+    path <- ribo.object@path
     #obtain the coverage data
-    table <- get_content_info(handle)
+    table <- get_content_info(path)
     has.coverage <- table[table$coverage == TRUE,]
     has.coverage <- has.coverage$experiment
 

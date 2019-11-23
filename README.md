@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/ribosomeprofiling/RiboR.svg?branch=master)](https://travis-ci.com/ribosomeprofiling/RiboR)
+[![DOI](https://zenodo.org/badge/200300903.svg)](https://zenodo.org/badge/latestdoi/200300903)
+
 
 # RiboR
 R interface for .ribo files
@@ -28,8 +30,7 @@ For Ubuntu based distributions, you can use the following command.
 
 `install_github("ribosomeprofiling/ribor")`
 
-
-
 ## Documentation
 
 [Here](https://ribosomeprofiling.github.io/ribor/ribor.html) is a walk-through of RiboR.
+

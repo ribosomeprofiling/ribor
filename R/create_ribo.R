@@ -65,12 +65,12 @@ set_aliases <- function(ribo.object, rename) {
         warning("Ribo object already has a naming convention. Aliases will be overriden.",
                 call. = FALSE)
     }
-    handle <- ribo.object@handle
-    original   <- h5read(handle&'reference',
-                         name = "reference_names")
+    path <- ribo.object@path
+    original   <- h5read(path,
+                         name = "reference/reference_names")
     
     num.transcripts <- length(original)
-    alias <- rename_transcripts(handle, rename)
+    alias <- rename_transcripts(path, rename)
     ribo.object@transcript.alias    <- hash(keys = alias, values = original)
     ribo.object@transcript.original <- hash(keys = original, values = alias)
     
@@ -80,7 +80,7 @@ set_aliases <- function(ribo.object, rename) {
 
 #' Creates an S4 object of class "ribo"
 #'
-#' \code{\link{create_ribo}} creates a "ribo" object. It creates a handle, extracts the root folder attributes,
+#' \code{\link{create_ribo}} creates a "ribo" object. It creates a path, extracts the root folder attributes,
 #' and provides information about the reference transcript names and lengths
 #'
 #' An important option is the param 'rename' which allows the user to nickname long
@@ -93,24 +93,24 @@ set_aliases <- function(ribo.object, rename) {
 #' be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file and
 #' an R environment by creating an object that holds pertinent information.
 #'
-#' The information stored in this object include the .ribo file handle, the list of experiments,
+#' The information stored in this object include the .ribo file path, the list of experiments,
 #' the format version, the reference model, the maximum read length, the minimum read length, the left span,
 #' the right span, and other information about the transcript information.
 #'
 #' Some of the subsequent function calls avoid direct usage of the information stored in the
 #' .ribo object to prevent any accidental error. However, certain variables in the returned object, such
-#' as the handle, are required to make use of the additional functionality in this package.
+#' as the path, are required to make use of the additional functionality in this package.
 #'
 #' @param name The path to the .ribo file
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases
-#' @return Returns a list containing a handle to the HDF5 file,
-#'         various attributes in the root folder, and
-#'         information about the transcripts such as
-#'         names and lengths
+#' @return Returns an S4 object of class "ribo" containing a path to the HDF5 file,
+#'         various attributes in the root folder, and information about the transcripts 
+#'         such as names and lengths
 #' @importFrom rhdf5 H5Fopen h5readAttributes h5ls h5read
 #' @importFrom hash hash is.empty
 #' @importFrom methods new
+#' @importFrom tools file_path_as_absolute
 #' @examples
 #' #generate a ribo object with transcript nicknames/aliases
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
@@ -120,32 +120,32 @@ set_aliases <- function(ribo.object, rename) {
 #' \code{\link{set_aliases}} function.
 #' @export
 create_ribo <- function(name, rename = NULL) {
-    ribo.handle   <- H5Fopen(name)
-    attributes <- h5readAttributes(ribo.handle, name = "/")
-    transcript.names   <- h5read(ribo.handle & 'reference',
-                                 name = "reference_names")
+    ribo.path   <- file_path_as_absolute(name)
+    attributes <- h5readAttributes(ribo.path, name = "/")
+    transcript.names   <- h5read(ribo.path,
+                                 name = "reference/reference_names")
     
-    transcript.lengths <- h5read(ribo.handle & 'reference',
-                                 name = "reference_lengths")
-    
+    transcript.lengths <- h5read(ribo.path, 
+                                 name = "reference/reference_lengths")
+    file_info          <- h5ls(ribo.path, recursive = TRUE, all = FALSE)
     transcript.info    <- initialize_transcript_info(transcript.names,
                                                      transcript.lengths)
     
     has.metadata   <- ("metadata" %in% names(attributes))
     
     ribo.object <- new("ribo", 
-                       handle          = ribo.handle,
-                       experiments     = h5ls(ribo.handle&'experiments', 
-                                              recursive = FALSE)$name,
+                       path          = ribo.path,
+                       experiments     = file_info[file_info$group == "/experiments",]$name,
                        format.version  = as.integer(attributes$format_version),
                        reference       = attributes$reference,
                        length.min      = attributes$length_min,
                        length.max      = attributes$length_max,
                        left.span       = attributes$left_span,
                        right.span      = attributes$right_span,
+                       metagene.radius = attributes$metagene_radius,
                        length.offset   = transcript.info[['length.offset']],
                        has.metadata    = has.metadata,
-                       experiment.info = get_content_info(ribo.handle),
+                       experiment.info = get_content_info(ribo.path),
                        transcript.info = transcript.info[['transcript.info']])
     
     if (!is.null(rename)) { 

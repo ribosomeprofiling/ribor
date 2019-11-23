@@ -12,7 +12,7 @@ get_region_lengths(ribo.object, alias = FALSE)
 \item{alias}{Option to return the transcript names as aliases}
 }
 \value{
-A data table of the region lengths
+A data.frame of the region lengths
 }
 \description{
 The function {\code{\link{get_region_coordinates}}} retrieves the 

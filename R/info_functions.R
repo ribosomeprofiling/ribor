@@ -8,7 +8,7 @@
 #' returned list contains the information about the presence of coverage and RNA-seq data which are
 #' optional datasets to include in a .ribo file.
 #'
-#' @param ribo.object ribo.object is an S3 object of class "ribo"
+#' @param ribo.object ribo.object is an S4 object of class "ribo"
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
@@ -19,16 +19,15 @@
 #'
 #' @return Returns a list containing a nested list of file attributes, a logical
 #' value denoting whether the root file has additional metadata, and a
-#' data.table of information on each experiment
+#' data.frame of information on each experiment
 #'
 #' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
 #'
 #' @importFrom rhdf5 h5ls h5readAttributes
-#' @importFrom data.table data.table
 #' @export
 get_info <- function(ribo.object) {
     check_ribo(ribo.object)
-    handle   <- ribo.object@handle
+    path   <- ribo.object@path
     
     #retrieve an experiment list
     exp.list <- get_experiments(ribo.object)
@@ -39,7 +38,7 @@ get_info <- function(ribo.object) {
         result <- result[-which(names(result) == "metadata")]
     }
     
-    experiment.info <- get_content_info(handle)
+    experiment.info <- get_content_info(path)
     result <- list(
         "has.metadata"    = has.metadata,
         "attributes"      = result,
@@ -80,12 +79,12 @@ get_info <- function(ribo.object) {
 get_metadata <- function(ribo.object,
                          name = NULL,
                          print = TRUE) {
-    handle <- ribo.object@handle
+    path <- ribo.object@path
     exp.list <- get_experiments(ribo.object)
-    path = "/"
+    file_path = "/"
     
     if (!is.null(name)) {
-        path = paste("experiments/", name, sep = "")
+        file_path = paste("experiments/", name, sep = "")
         if (!(name %in% exp.list)) {
             stop("'",
                  name,
@@ -95,7 +94,7 @@ get_metadata <- function(ribo.object,
         }
     }
     
-    attribute <- h5readAttributes(handle, path)
+    attribute <- h5readAttributes(path, file_path)
     if ("metadata" %in% names(attribute)) {
         result <- yaml.load(string = attribute[["metadata"]])
         if (print) {
@@ -127,7 +126,7 @@ print_metadata <- function(metadata, index) {
 #' The function \code{\link{get_experiments}} provides a list of experiment names in the .ribo file.
 #'
 #' \code{\link{get_experiments}} returns a list of strings denoting the experiments. It obtains this
-#' by reading directly from the .ribo file through the handle of the 'ribo.object' parameter. To generate
+#' by reading directly from the .ribo file through the path of the 'ribo.object' parameter. To generate
 #' the param 'ribo.object', call the \code{\link{ribo}} function and provide the path to the .ribo file of interest.
 #'
 #' The user can then choose to create a subset from this list for any specific experiments of interest
@@ -143,13 +142,13 @@ print_metadata <- function(metadata, index) {
 #' get_experiments(sample)
 #'
 #' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
-#' @param ribo.object S3 object of class "ribo"
+#' @param ribo.object S4 object of class "ribo"
 #' @return A list of the experiment names
 #' @importFrom rhdf5 h5ls
 #' @export
 get_experiments <- function(ribo.object) {
     check_ribo(ribo.object)
-    result <- h5ls(ribo.object@handle)
+    result <- h5ls(ribo.object@path)
     result <- result[result$group == "/experiments",]
     return(result$name)
 }

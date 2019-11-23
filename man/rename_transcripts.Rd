@@ -7,7 +7,7 @@
 rename_transcripts(ribo, rename)
 }
 \arguments{
-\item{ribo}{a handle to the ribo file or a 'ribo' object}
+\item{ribo}{a path to the ribo file or a 'ribo' object}
 
 \item{rename}{A function that renames the original transcript or an already generated
 character vector of aliases}

@@ -7,7 +7,7 @@
 get_tidy_metagene(ribo.object, site,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object), length = TRUE,
-  experiments = get_experiments(ribo.object), total = TRUE)
+  alias = FALSE, experiments = get_experiments(ribo.object))
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}
@@ -20,12 +20,12 @@ get_tidy_metagene(ribo.object, site,
 
 \item{length}{Option to condense the read lengths together}
 
-\item{experiments}{List of experiment names}
+\item{alias}{Option to report the transcripts as aliases/nicknames}
 
-\item{total}{Include a column with the total reads, required for plotting}
+\item{experiments}{List of experiment names}
 }
 \value{
-A tidy data table of the metagene information
+A tidy data frame of the metagene information
 }
 \description{
 The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier
@@ -33,17 +33,17 @@ data cleaning and manipulation. In providing this functionality, the user must l
 transcripts together and is only provided the option to length the read lengths together.
 }
 \details{
-The dimensions of the returned data table depend on the parameters
+The dimensions of the returned data frame depend on the parameters
 range.lower, range.upper, and length.
 
 The param 'length' condenses the read lengths together.
-When length is TRUE, then the resulting data table prints out one row
+When length is TRUE, then the resulting data frame prints out one row
 for each experiment. This provides a tidy format of the metagene information
 across all transcripts and all read lengths in a given experiment. Each row
-in the data table represents the total metagene coverage count of a given experiment
+in the data frame represents the total metagene coverage count of a given experiment
 at a given position.
 
-When the param  'length' is FALSE, then the resulting data table prints out the
+When the param  'length' is FALSE, then the resulting data frame prints out the
 metagene coverage count at each position of the metagene radius for each read length.
 This provides a tidy format of the metagene information across the transcripts, preserving
 the metagene coverage count at each read length.

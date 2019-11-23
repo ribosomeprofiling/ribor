@@ -6,7 +6,7 @@ ribo.object<- create_ribo(file.path)
 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 green <- create_ribo(file.path, rename = rename_default)
-total.reads <- get_info(green)[["experiment.info"]][, total.reads][1]
+total.reads <- get_info(green)[["experiment.info"]][,2][1]
 
 green_rc_alias <- get_region_counts(green,
                                     region = "CDS",
@@ -27,11 +27,13 @@ green_rc_original <- get_region_counts(green,
                                        alias = FALSE,
                                        experiments = get_experiments(green)[1])
 
-test_that("get_region_counts- alias values preserved",
-          expect_true(all(green_rc_alias[, -2] ==
-                            green_rc_original[, -2])))
 
-original.names <- unlist(green_rc_original[, 2])
+
+test_that("get_region_counts- alias values preserved",
+          expect_true(all(as.vector(as.character(green_rc_alias[, 4])) ==
+                          as.vector(green_rc_original[, 4]))))
+
+original.names <- unlist(as.character(green_rc_original[, 2]))
 actual   <- unlist(green_rc_alias[, 2])
 expected <- sapply(original.names, rename_default)
 
@@ -47,7 +49,7 @@ green_rc_alias <- get_region_counts(green,
                                     normalize = TRUE,
                                     experiments = get_experiments(green)[1])
 
-actual <- green_rc_alias[5, count]
+actual <- green_rc_alias[5, 4]
 expected <- norm.test1
 
 test_that("get_region_counts- normalize function",
@@ -85,11 +87,11 @@ green_rc_norm <- get_region_counts(green,
                                    range.lower = 28,
                                    range.upper = 28,
                                    transcript = FALSE,
-                                   alias = FALSE,
+                                   alias = TRUE,
                                    normalize = TRUE,
                                    experiments = get_experiments(green)[1])
 
-actual <- sum(green_rc_norm[, count])
+actual <- sum(green_rc_norm[, 4])
 
 test_that("get_region_counts- normalize function",
           expect_true(abs(actual - expected) < threshold))
@@ -104,7 +106,7 @@ green_rc_norm <- get_region_counts(green,
                                    normalize = TRUE,
                                    experiments = get_experiments(green)[1])
 
-actual <- sum(green_rc_norm[, count])
+actual <- sum(green_rc_norm[, 5])
 test_that("get_region_counts- normalize function",
           expect_true(abs(actual - expected) < threshold))
 
@@ -177,4 +179,3 @@ actual <- sum(rc_4$count)
 expected <- 102
 test_that("get_region_count- preserving lengths",
           expect_equal(actual, expected))
-

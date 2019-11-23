@@ -25,7 +25,7 @@ validate_ribo <- function(object) {
 #' An S4 class to be used with the ribor package
 #' 
 #' @param object A 'ribo' object
-#' @slot handle A handle to the ribo file of interest
+#' @slot path A path to the ribo file of interest
 #' @slot experiments A character vector of experiment names in the file 
 #' @slot format.version The format version of the ribo file 
 #' @slot reference The reference transcriptome used in the ribo file 
@@ -35,7 +35,7 @@ validate_ribo <- function(object) {
 #' @slot right.span Right span of the junction regions
 #' @slot length.offset Length offset of all transcripts 
 #' @slot has.metadata Value denoting whether the root ribo file has metadata 
-#' @slot experiment.info Data table of information on the experiments 
+#' @slot experiment.info data.frame of information on the experiments 
 #' @slot transcript.info Hash of the lengths and offsets of each transcript
 #' @slot transcript.alias Hash that goes from alias to original transcript name
 #' @slot transcript.original Hash that goes from original to alias transcript 
@@ -44,7 +44,7 @@ validate_ribo <- function(object) {
 ribo <- setClass(
     "ribo",
     
-    representation(handle = "H5IdComponent",
+    representation(path = "character",
                    experiments = "character",
                    format.version = "integer",
                    reference = "character",
@@ -52,9 +52,10 @@ ribo <- setClass(
                    length.max = "integer",
                    left.span = "integer",
                    right.span = "integer",
+                   metagene.radius = "integer",
                    length.offset = "numeric",
                    has.metadata = "logical",
-                   experiment.info = "data.table",
+                   experiment.info = "data.frame",
                    transcript.info = "hash",
                    transcript.alias = "hash",
                    transcript.original = "hash"),

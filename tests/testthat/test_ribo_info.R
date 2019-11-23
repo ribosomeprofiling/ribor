@@ -15,7 +15,7 @@ reads.list     <- list(118, 118, 12, 12, 12)
 coverage.list  <- list(TRUE, TRUE, TRUE, TRUE, FALSE)
 rna.seq.list   <- list(TRUE, TRUE, TRUE, FALSE, FALSE)
 metadata.list  <- list(TRUE, FALSE, TRUE, TRUE, TRUE)
-expected.table <- data.table(names    = names.list,
+expected.table <- data.frame(names    = names.list,
                              reads    = reads.list,
                              coverage = coverage.list,
                              rna.seq  = rna.seq.list,
@@ -49,7 +49,7 @@ transcript.list <- c("GAPDH", "VEGFA", "MYC",
                      "GAPDH", "VEGFA", "MYC",
                      "GAPDH", "VEGFA", "MYC")
 
-expected.rnaseq <- data.table(transcript = transcript.list,
+expected.rnaseq <- data.frame(transcript = transcript.list,
                               experiment = experiment.list,
                               abundance  = abundance.list)
 

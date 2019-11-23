@@ -12,7 +12,7 @@ get_region_coordinates(ribo.object, alias = FALSE)
 \item{alias}{Option to return the transcript names as aliases}
 }
 \value{
-A data table of start and stop coordinates for every region
+A data.frame of start and stop coordinates for every region
 }
 \description{
 The function {\code{\link{get_region_coordinates}}} retrieves the 
@@ -22,11 +22,11 @@ and UTR3 regions of every transcript.
 \details{
 To note, because of the R-specific 1-based indexing, the positions start at
 1 instead of 0 in other programming languages. The positions provided in 
-the returned data table will correspond to the positions in the output of 
+the returned data.frame will correspond to the positions in the output of 
 {\code{\link{get_coverage}}}.
 
 Additionally, within the transcripts, there are edge cases. 
-NA values found in the returned data table means that the region has no 
+NA values found in the returned data.frame means that the region has no 
 start and stop position and a length of zero after computing the boundaries
 of the UTR5 and UTR3 junction.
 }

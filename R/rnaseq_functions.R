@@ -1,6 +1,6 @@
 #' Information on the RNA-Seq data of the experiments, if any
 #'
-#' \code{\link{get_rnaseq}} returns a data.table containing information on the transcript name, experiment, and
+#' \code{\link{get_rnaseq}} returns a DataFrame containing information on the transcript name, experiment, and
 #' sequence abundance
 #'
 #' As a default value, experiment.list is presumed to include all of the
@@ -8,11 +8,11 @@
 #' include in a .ribo file. The experiments in experiment.list are checked
 #' for experiment existence in the ribo file and then checked for RNA-seq data.
 #'
-#' The returned data.table can either be in the tidy format for easier data
+#' The returned DataFrame can either be in the tidy format for easier data
 #' cleaning or in a condensed non-tidy format. The data will present RNA-seq counts
 #' for each transcript in each valid experiment in experiment.list.
 #'
-#' The 'alias' parameter specifies whether or not the returned data.table
+#' The 'alias' parameter specifies whether or not the returned DataFrame
 #' should present each transcript as an alias instead of the original name.
 #' If 'alias' is set to TRUE, then the column of the transcript names will
 #' contain the aliases rather than the original reference names of the .ribo
@@ -37,13 +37,12 @@
 #' @param regions Specific region(s) of interest
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @return
-#' Returns a data table that contains the transcript name, experiment, and
+#' Returns a data frame that contains the transcript name, experiment, and
 #' RNA-seq abundance
 #'
 #' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
-#'
 #' @importFrom rhdf5 h5ls h5read
-#' @importFrom data.table data.table
+#' @importFrom S4Vectors DataFrame Rle
 #' @importFrom tidyr gather
 #' @export
 get_rnaseq <- function(ribo.object,
@@ -61,7 +60,7 @@ get_rnaseq <- function(ribo.object,
     ref.length <- length(ref.names)
     total.experiments <- length(rnaseq.experiments)
     num.regions <- length(regions)
-    handle <- ribo.object@handle
+    path <- ribo.object@path
     
     result <- matrix(nrow = ref.length * total.experiments, ncol = num.regions)
     colnames(result) <- regions
@@ -73,20 +72,22 @@ get_rnaseq <- function(ribo.object,
     #generate the untidy version
     for (index in seq(total.experiments)) {
         experiment <- rnaseq.experiments[index]
-        path <- paste("/experiments/", experiment, "/rnaseq/rnaseq", sep = "")
+        exp_path <- paste("/experiments/", experiment, "/rnaseq/rnaseq", sep = "")
         row.start <- (index - 1) * ref.length + 1
         row.stop <- row.start + ref.length - 1
-        result[row.start:row.stop,] <- t(h5read(handle, path, index = list(cols, rows)))
+        result[row.start:row.stop,] <- t(h5read(path, exp_path, index = list(cols, rows)))
     }
     
     rnaseq <- rep(rnaseq.experiments, each = ref.length)
     transcripts <- rep(ref.names, total.experiments)
-    result <- data.table(experiment = rnaseq,
-                         transcript = transcripts,
-                         result)
     
-    if (tidy) result <- setDT(gather(result, "region", "count", regions))
-    return(result)
+    result <- data.frame(experiment = rnaseq,
+                         transcript = factor(transcripts),
+                         result,
+                         stringsAsFactors = FALSE)
+    
+    if (tidy) result <- gather(result, "region", "count", regions)
+    return(prepare_DataFrame(ribo.object, as(result, "DataFrame")))
 }
 
 change_reference_names <- function(ribo.object,
@@ -108,8 +109,8 @@ check_rnaseq <- function(ribo.object, experiments) {
     check_experiments(ribo.object, experiments)
     
     #obtain the rnaseq data
-    handle <- ribo.object@handle
-    table <- get_content_info(handle)
+    path <- ribo.object@path
+    table <- get_content_info(path)
     has.rnaseq <- table[table$rna.seq == TRUE,]$experiment
     
     #find the experiments in the experiment.list that do not have coverage and print warnings

@@ -7,7 +7,7 @@
 get_experiments(ribo.object)
 }
 \arguments{
-\item{ribo.object}{S3 object of class "ribo"}
+\item{ribo.object}{S4 object of class "ribo"}
 }
 \value{
 A list of the experiment names
@@ -17,7 +17,7 @@ The function \code{\link{get_experiments}} provides a list of experiment names i
 }
 \details{
 \code{\link{get_experiments}} returns a list of strings denoting the experiments. It obtains this
-by reading directly from the .ribo file through the handle of the 'ribo.object' parameter. To generate
+by reading directly from the .ribo file through the path of the 'ribo.object' parameter. To generate
 the param 'ribo.object', call the \code{\link{ribo}} function and provide the path to the .ribo file of interest.
 
 The user can then choose to create a subset from this list for any specific experiments of interest

@@ -8,7 +8,7 @@ plot_metagene(x, site, experiments, range.lower, range.upper,
   normalize = FALSE, title = "Metagene Site Coverage", tick = 10)
 }
 \arguments{
-\item{x}{A 'ribo' object or a data table generated from \code{\link{get_metagene}}}
+\item{x}{A 'ribo' object or a data frame generated from \code{\link{get_metagene}}}
 
 \item{site}{"start" or "stop" site}
 
@@ -32,12 +32,12 @@ The function \code{\link{plot_metagene}} plots the metagene site coverage,
 separating by experiment.
 }
 \details{
-If a data.table is provided as param 'x', then the only additional parameter
+If a DataFrame is provided as param 'x', then the only additional parameter
 is the optional title' parameter for the generated plot. If a ribo.object is
 provided as param 'x', the rest of the parameters listed are necessary.
 
 When given a ribo class object, the \code{\link{plot_metagene}} function
-generates a data.table by calling the \code{\link{get_tidy_metagene}}
+generates a DataFrame by calling the \code{\link{get_tidy_metagene}}
 function, so the run times in this case will be mostly comprised of a call
 to the \code{\link{get_metagene}} function.
 
@@ -66,8 +66,8 @@ plot_metagene(x = sample,
 #object is passed in, then the param 'experiments' will be set to all of
 #the experiments by default.
 
-#If a data.table is passed in, then the plot_metagene function
-#does not need any other information. All of the elements of the data.table
+#If a DataFrame is passed in, then the plot_metagene function
+#does not need any other information. All of the elements of the DataFrame
 #will be used, assuming that it contains the same column names and number of
 #columns as the output from get_tidy_metagene()
 

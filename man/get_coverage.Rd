@@ -29,7 +29,7 @@ get_coverage(ribo.object, name, range.lower = rangeLower(ribo.object),
 A data table containing the coverage data
 }
 \description{
-The function \code{\link{get_coverage}} generates a data.table of coverage
+The function \code{\link{get_coverage}} generates a DataFrame of coverage
 data over the length of a given transcript.
 }
 \details{

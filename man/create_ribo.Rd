@@ -13,13 +13,12 @@ create_ribo(name, rename = NULL)
 character vector of aliases}
 }
 \value{
-Returns a list containing a handle to the HDF5 file,
-        various attributes in the root folder, and
-        information about the transcripts such as
-        names and lengths
+Returns an S4 object of class "ribo" containing a path to the HDF5 file,
+        various attributes in the root folder, and information about the transcripts 
+        such as names and lengths
 }
 \description{
-\code{\link{create_ribo}} creates a "ribo" object. It creates a handle, extracts the root folder attributes,
+\code{\link{create_ribo}} creates a "ribo" object. It creates a path, extracts the root folder attributes,
 and provides information about the reference transcript names and lengths
 }
 \details{
@@ -33,13 +32,13 @@ functions in this package can accept the returned object of this function. This 
 be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file and
 an R environment by creating an object that holds pertinent information.
 
-The information stored in this object include the .ribo file handle, the list of experiments,
+The information stored in this object include the .ribo file path, the list of experiments,
 the format version, the reference model, the maximum read length, the minimum read length, the left span,
 the right span, and other information about the transcript information.
 
 Some of the subsequent function calls avoid direct usage of the information stored in the
 .ribo object to prevent any accidental error. However, certain variables in the returned object, such
-as the handle, are required to make use of the additional functionality in this package.
+as the path, are required to make use of the additional functionality in this package.
 }
 \examples{
 #generate a ribo object with transcript nicknames/aliases
