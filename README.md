@@ -14,7 +14,7 @@ RiboR requires R version **3.6** or higher.
 Install dependencies for devtools.
 For Ubuntu based distributions, you can use the following command.
 
-`sudo apt-get install libxml2-dev libcurl4-openssl-dev libssl-dev -y`
+`sudo apt-get install libxml2-dev libcurl4-openssl-dev libssl-dev build-essential m4 autoconf -y`
 
 ### Install Latest Version From GitHub
 
