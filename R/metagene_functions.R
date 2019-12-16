@@ -386,7 +386,7 @@ check_plot_metagene <- function(x,
                                                range.upper,
                                                length = TRUE,
                                                experiments = experiments))
-    } else if (class(x) == "DataFrame") {
+    } else if (class(x) == "DataFrame" || class(x) == "DFrame") {
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "position", "count")
         types <- c("integer", "double")

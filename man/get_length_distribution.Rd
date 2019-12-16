@@ -4,10 +4,13 @@
 \alias{get_length_distribution}
 \title{Retrieves the length distribution of a given region}
 \usage{
-get_length_distribution(ribo.object, region,
+get_length_distribution(
+  ribo.object,
+  region,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
-  experiments = get_experiments(ribo.object))
+  experiments = get_experiments(ribo.object)
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}

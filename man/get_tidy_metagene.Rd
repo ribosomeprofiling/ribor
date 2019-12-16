@@ -4,10 +4,15 @@
 \alias{get_tidy_metagene}
 \title{Retrieves the metagene data in a tidy format}
 \usage{
-get_tidy_metagene(ribo.object, site,
+get_tidy_metagene(
+  ribo.object,
+  site,
   range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object), length = TRUE,
-  alias = FALSE, experiments = get_experiments(ribo.object))
+  range.upper = rangeUpper(ribo.object),
+  length = TRUE,
+  alias = FALSE,
+  experiments = get_experiments(ribo.object)
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}
@@ -49,7 +54,7 @@ This provides a tidy format of the metagene information across the transcripts, 
 the metagene coverage count at each read length.
 }
 \examples{
-#generate the ribo object by loading in a ribo function and calling the \\code{\\link{ribo}} function
+#generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
 sample <- create_ribo(file.path)
 

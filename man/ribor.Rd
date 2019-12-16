@@ -3,7 +3,6 @@
 \docType{package}
 \name{ribor}
 \alias{ribor}
-\alias{ribor-package}
 \title{ribor: A package for reading .ribo files}
 \description{
 The 'ribor' package offers a suite of reading functions for the datasets

@@ -4,11 +4,18 @@
 \alias{get_region_counts}
 \title{Retrieves the region counts from a .ribo file}
 \usage{
-get_region_counts(ribo.object, range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object), length = TRUE,
-  transcript = TRUE, tidy = TRUE, alias = FALSE, normalize = FALSE,
+get_region_counts(
+  ribo.object,
+  range.lower = rangeLower(ribo.object),
+  range.upper = rangeUpper(ribo.object),
+  length = TRUE,
+  transcript = TRUE,
+  tidy = TRUE,
+  alias = FALSE,
+  normalize = FALSE,
   region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-  experiments = get_experiments(ribo.object))
+  experiments = get_experiments(ribo.object)
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}

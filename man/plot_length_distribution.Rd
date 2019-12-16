@@ -4,8 +4,15 @@
 \alias{plot_length_distribution}
 \title{Plots the length distribution}
 \usage{
-plot_length_distribution(x, region, experiments, range.lower, range.upper,
-  fraction = FALSE, title = "Length Distribution")
+plot_length_distribution(
+  x,
+  region,
+  experiments,
+  range.lower,
+  range.upper,
+  fraction = FALSE,
+  title = "Length Distribution"
+)
 }
 \arguments{
 \item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
