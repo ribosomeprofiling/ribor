@@ -4,10 +4,16 @@
 \alias{get_metagene}
 \title{Retrieves the metagene data from a .ribo file}
 \usage{
-get_metagene(ribo.object, site, range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object), transcript = TRUE,
-  length = TRUE, alias = FALSE,
-  experiments = get_experiments(ribo.object))
+get_metagene(
+  ribo.object,
+  site,
+  range.lower = rangeLower(ribo.object),
+  range.upper = rangeUpper(ribo.object),
+  transcript = TRUE,
+  length = TRUE,
+  alias = FALSE,
+  experiments = get_experiments(ribo.object)
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}

@@ -366,7 +366,7 @@ check_ld_input <- function(x,
                                                      range.lower = range.lower,
                                                      range.upper = range.upper,
                                                      experiments = experiments))
-    } else if (class(x) == "DataFrame"){
+    } else if (class(x) == "DataFrame" || class(x) == "DFrame"){
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "length", "count")
         types <- c("integer", "double")
@@ -512,7 +512,7 @@ check_plot_rc_input <- function(x,
                                                 length      = TRUE,
                                                 transcript  = TRUE,
                                                 experiments = experiments))
-    } else if (class(x) == "DataFrame") {
+    } else if (class(x) == "DataFrame" || class(x) == "DFrame") {
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "region", "count")
         mismatch  <- !all(names(x) == col.names, 

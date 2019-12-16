@@ -4,9 +4,16 @@
 \alias{get_coverage}
 \title{Retrieves the coverage data for a given transcript}
 \usage{
-get_coverage(ribo.object, name, range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object), length = TRUE, tidy = FALSE,
-  alias = FALSE, experiments = get_experiments(ribo.object))
+get_coverage(
+  ribo.object,
+  name,
+  range.lower = rangeLower(ribo.object),
+  range.upper = rangeUpper(ribo.object),
+  length = TRUE,
+  tidy = FALSE,
+  alias = FALSE,
+  experiments = get_experiments(ribo.object)
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}

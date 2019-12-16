@@ -4,8 +4,16 @@
 \alias{plot_metagene}
 \title{Plots the metagene coverage data}
 \usage{
-plot_metagene(x, site, experiments, range.lower, range.upper,
-  normalize = FALSE, title = "Metagene Site Coverage", tick = 10)
+plot_metagene(
+  x,
+  site,
+  experiments,
+  range.lower,
+  range.upper,
+  normalize = FALSE,
+  title = "Metagene Site Coverage",
+  tick = 10
+)
 }
 \arguments{
 \item{x}{A 'ribo' object or a data frame generated from \code{\link{get_metagene}}}

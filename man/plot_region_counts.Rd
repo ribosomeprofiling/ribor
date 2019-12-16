@@ -4,8 +4,13 @@
 \alias{plot_region_counts}
 \title{Plots the region counts of UTR5, CDS, and UTR3}
 \usage{
-plot_region_counts(x, experiments, range.lower, range.upper,
-  title = "Region Counts")
+plot_region_counts(
+  x,
+  experiments,
+  range.lower,
+  range.upper,
+  title = "Region Counts"
+)
 }
 \arguments{
 \item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}

@@ -4,9 +4,13 @@
 \alias{get_rnaseq}
 \title{Information on the RNA-Seq data of the experiments, if any}
 \usage{
-get_rnaseq(ribo.object, tidy = TRUE, regions = c("UTR5", "UTR5J",
-  "CDS", "UTR3J", "UTR3"), experiments = get_experiments(ribo.object),
-  alias = FALSE)
+get_rnaseq(
+  ribo.object,
+  tidy = TRUE,
+  regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  experiments = get_experiments(ribo.object),
+  alias = FALSE
+)
 }
 \arguments{
 \item{ribo.object}{A 'ribo' object}

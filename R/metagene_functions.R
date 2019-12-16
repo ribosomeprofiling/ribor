@@ -197,6 +197,7 @@ get_metagene_path <- function(experiment, site) {
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
+#' @importFrom tidyr gather
 #' @export
 get_tidy_metagene <- function(ribo.object,
                               site,
@@ -386,7 +387,7 @@ check_plot_metagene <- function(x,
                                                range.upper,
                                                length = TRUE,
                                                experiments = experiments))
-    } else if (class(x) == "DataFrame") {
+    } else if (class(x) == "DataFrame" || class(x) == "DFrame") {
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "position", "count")
         types <- c("integer", "double")
