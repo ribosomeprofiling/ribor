@@ -197,6 +197,7 @@ get_metagene_path <- function(experiment, site) {
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
+#' @importFrom tidyr gather
 #' @export
 get_tidy_metagene <- function(ribo.object,
                               site,

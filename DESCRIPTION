@@ -23,6 +23,7 @@ Imports:
     stats,
     S4Vectors,
     tidyr,
+    tools,
     yaml
 Suggests: 
     testthat,
