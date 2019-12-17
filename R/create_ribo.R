@@ -134,7 +134,7 @@ create_ribo <- function(name, rename = NULL) {
     has.metadata   <- ("metadata" %in% names(attributes))
     
     ribo.object <- new("ribo", 
-                       path          = ribo.path,
+                       path            = ribo.path,
                        experiments     = file_info[file_info$group == "/experiments",]$name,
                        format.version  = as.integer(attributes$format_version),
                        reference       = attributes$reference,

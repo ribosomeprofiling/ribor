@@ -9,7 +9,7 @@ R interface for .ribo files
 
 RiboR requires R version **3.6** or higher.
 
- 
+
 
 ### Note For Linux Users
 
@@ -34,11 +34,17 @@ For Ubuntu based distributions, you can use the following command.
 
 ### Note for Bioconductor Installation
 
-For now, RiboR is **NOT** a bioconductor package. Please use the alternative instalattion instructions given above.
+For now, RiboR is **NOT** a bioconductor package. Please use the alternative installation instructions given above.
 
-RiboR has been submitted to Bioconductor for evaluation. We hope that RiboR will be available via Bioconductor on the next release cycle. 
+RiboR has been submitted to Bioconductor for evaluation. We hope that RiboR will be available via Bioconductor on the next release cycle.
+Once it is available, the download instructions will be as follows.
+
+### Install Latest Version from Bioconductor (Not Yet Available)
+`if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")`
+
+`BiocManager::install("ribor")`
 
 ## Documentation
 
 [Here](https://ribosomeprofiling.github.io/ribor/ribor.html) is a walk-through of RiboR.
-
