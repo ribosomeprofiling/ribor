@@ -44,6 +44,7 @@
 #' @param experiments List of experiments to obtain coverage information on
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param alias Option to report the transcripts as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return A data table containing the coverage data
 #' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
@@ -59,7 +60,9 @@ get_coverage <- function(ribo.object,
                          length = TRUE,
                          tidy = FALSE,
                          alias = FALSE,
+                         compact = TRUE,
                          experiments = get_experiments(ribo.object)) {
+    # check the parameters and prepare parameters for reading from ribo file
     if (missing(name)) stop("Please provide a transcript name.")
     matched.experiments <- initialize_coverage(ribo.object,
                                                alias,
@@ -68,11 +71,11 @@ get_coverage <- function(ribo.object,
                                                experiments)
     
     total.experiments   <- length(matched.experiments)
-
     info <- retrieve_transcript_info(ribo.object,
                                      name,
                                      alias)
 
+    # read from the ribo file and generate a data.frame
     result <- fill_coverage(ribo.object,
                             total.experiments,
                             matched.experiments,
@@ -81,15 +84,20 @@ get_coverage <- function(ribo.object,
                             length,
                             alias,
                             info)
-
-    result <- create_dataframe(length,
-                               range.lower,
-                               range.upper,
-                               matched.experiments,
-                               result)
-
-    if (tidy) result <- tidy_coverage(result, length) 
-    result@metadata[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", "total.reads")]
+    
+    # gather the data to make it tidy 
+    if (tidy) {
+      tidy.columns <- "experiment"
+      if (!length) tidy.columns <- c("experiment", "length")
+      
+      result <- gather(result,
+                       key = "position",
+                       value = "count", 
+                       -tidy.columns)
+    }
+    
+    # convert to DataFrame with Rle encoding if necessary 
+    if (compact) return(prepare_DataFrame(ribo.object, result))
     return(result)
 }
 
@@ -138,7 +146,17 @@ fill_coverage <- function(ribo.object,
             }
         }
     }
-    return(result)
+    matched.size <- length(matched.experiments)
+    if (length) {
+      return (data.frame(experiment = matched.experiments,
+                         result, check.names = FALSE))
+    }
+    range <- range.upper - range.lower + 1
+    return (data.frame(experiment  = rep(matched.experiments, each = range),
+                       length      = rep(c(range.lower:range.upper), matched.size),
+                       result, 
+                       check.names = FALSE))
+    
 }
 
 get_dataset_path <- function(experiment,
@@ -206,31 +224,12 @@ initialize_matrix_coverage <- function(total.experiments,
     return(result)
 }
 
-tidy_coverage <- function(result, length) {
-    #checks the tidy case for coverage
-    #determine which columns to remove
-    tidy.columns <- "experiment"
-    if (!length) tidy.columns <- c("experiment", "length")
-
-    result <- gather(data.frame(result, check.names = FALSE),
-                     key = "position",
-                     value = "count", 
-                     -tidy.columns)
-
-    result <- as(result, "DataFrame")
-    
-    if (!length) result$length <- Rle(factor(result$length))
-    result$position   <- Rle(factor(result$position, 
-                             levels = as.character(sort(unique(as.integer(result$position))))))
-    result$experiment <- Rle(factor(result$experiment))
-    return(result)
-}
-
 
 create_dataframe <- function (length,
                               range.lower,
                               range.upper,
                               matched.experiments,
+                              compact,
                               matrix) {
 # Given a matrix of coverage data, create_dataframe generates the correct
 # DataFrame based on a set of parameters

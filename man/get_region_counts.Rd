@@ -14,6 +14,7 @@ get_region_counts(
   alias = FALSE,
   normalize = FALSE,
   region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  compact = TRUE,
   experiments = get_experiments(ribo.object)
 )
 }
@@ -35,6 +36,8 @@ get_region_counts(
 \item{normalize}{Option to normalize the counts as counts per million reads}
 
 \item{region}{Specific region of interest}
+
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{experiments}{List of experiment names}
 }

@@ -36,6 +36,7 @@
 #' @param experiments List of experiment names
 #' @param regions Specific region(s) of interest
 #' @param alias Option to report the transcripts as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return
 #' Returns a data frame that contains the transcript name, experiment, and
 #' RNA-seq abundance
@@ -49,6 +50,7 @@ get_rnaseq <- function(ribo.object,
                        tidy = TRUE,
                        regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
                        experiments = get_experiments(ribo.object),
+                       compact = TRUE,
                        alias = FALSE) {
     rnaseq.experiments <- check_rnaseq(ribo.object, experiments)
     check_alias(ribo.object, alias)
@@ -87,6 +89,8 @@ get_rnaseq <- function(ribo.object,
                          stringsAsFactors = FALSE)
     
     if (tidy) result <- gather(result, "region", "count", regions)
+    if (!compact) return (result)
+    
     return(prepare_DataFrame(ribo.object, as(result, "DataFrame")))
 }
 

@@ -9,6 +9,7 @@ get_rnaseq(
   tidy = TRUE,
   regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
   experiments = get_experiments(ribo.object),
+  compact = TRUE,
   alias = FALSE
 )
 }
@@ -20,6 +21,8 @@ get_rnaseq(
 \item{regions}{Specific region(s) of interest}
 
 \item{experiments}{List of experiment names}
+
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 }

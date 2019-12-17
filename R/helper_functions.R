@@ -321,6 +321,7 @@ sum_lengths <- function(index, ref.length, mat) {
 prepare_DataFrame <- function(ribo.object, DF) {
   # Helper method that creates factors and Rle the columns of the 
   # metagene and region_count functions
+  DF <- as(DF, "DataFrame")
   if (!is.null(DF$region)) DF$region <- Rle(factor(DF$region))
   if (!is.null(DF$transcript)) DF$transcript <- factor(DF$transcript)
   if (!is.null(DF$position)) DF$position <- Rle(DF$position)
