@@ -437,6 +437,38 @@ rc.info <- get_region_counts(ribo.object = original.ribo,
 plot_region_counts(rc.info)
 ```
 
+### A Note on the Memory Footprint
+
+In the above function calls, the `compact` parameter is set to TRUE by default. This applies Rle (run-length encoding) and factor to several of the columns (notably the columns with repeated values such as experiment, length, and region), and the purpose of this is to reduce the memory footprint of the return values and better accomodate any range of devices using the package.
+
+``` {r memory_footprint_example}
+# default return value with compact = TRUE
+compact_rc <- get_region_counts(ribo.object = original.ribo, 
+                                range.lower = 28,
+                                range.upper = 32,
+                                length      = TRUE,
+                                transcript  = FALSE,
+                                compact     = TRUE,
+                                alias       = TRUE)
+head(compact_rc)
+class(compact_rc)
+object.size(compact_rc)
+
+# return value with compact = FALSE
+# Note that in this example, it takes up twice as much memory
+noncompact_rc <- get_region_counts(ribo.object = original.ribo, 
+                                   range.lower = 28,
+                                   range.upper = 32,
+                                   length      = TRUE,
+                                   transcript  = FALSE,
+                                   compact     = FALSE,
+                                   alias       = TRUE)
+head(noncompact_rc)
+class(noncompact_rc)
+object.size(noncompact_rc)
+```
+
+However, for user convenience, we provide a `compact` parameter which return a data.frame instead of a DataFrame, and it will strip the Rle and factor that is applied to the variables, resulting in a notably larger memory footprint. However, this makes it easier to manipulate and filter the data frame for any downstream analyses, and the data.frame is more readily compatible with other popular packages (i.e. dplyr, tidyr, and ggplot2).
 
 ## Advanced Features {#advancedfeatures}
 
