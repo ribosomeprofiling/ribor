@@ -13,6 +13,8 @@ get_coverage(
   tidy = FALSE,
   alias = FALSE,
   compact = TRUE,
+
+
   experiments = get_experiments(ribo.object)
 )
 }

@@ -391,6 +391,7 @@ check_ld_input <- function(x,
                                                      range.upper = range.upper,
                                                      experiments = experiments))
     } else if (is(x, "DataFrame") || is(x, "DFrame")) {
+
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "length", "count")
         types <- c("integer", "double")

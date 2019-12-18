@@ -9,10 +9,10 @@ get_metagene(
   site,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
-  transcript = TRUE,
-  length = TRUE,
-  alias = FALSE,
-  compact = TRUE,
+  transcript  = TRUE,
+  length      = TRUE,
+  alias       = FALSE,
+  compact     = TRUE,
   experiments = get_experiments(ribo.object)
 )
 }

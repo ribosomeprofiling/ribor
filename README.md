@@ -10,7 +10,6 @@ R interface for .ribo files
 RiboR requires R version **3.6** or higher.
 
 
-
 ### Note For Linux Users
 
 Install dependencies for devtools.
