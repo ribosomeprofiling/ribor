@@ -437,9 +437,10 @@ rc.info <- get_region_counts(ribo.object = original.ribo,
 plot_region_counts(rc.info)
 ```
 
+
 ### A Note on the Memory Footprint
 
-In the above function calls, the `compact` parameter is set to TRUE by default. This applies Rle (run-length encoding) and factor to several of the columns (notably the columns with repeated values such as experiment, length, and region), and the purpose of this is to reduce the memory footprint of the return values and better accomodate any range of devices using the package.
+In the above function calls, the `compact` parameter is set to TRUE by default, and this parameter is available for all of the offered reading functions. When set to TRUE, it applies Rle (run-length encoding) and factor to several of the columns (notably the columns with repeated values such as experiment, length, and region), and the purpose of this is to reduce the memory footprint of the return values and better accomodate any range of devices using the package.
 
 ``` {r memory_footprint_example}
 # default return value with compact = TRUE
@@ -468,7 +469,8 @@ class(noncompact_rc)
 object.size(noncompact_rc)
 ```
 
-However, for user convenience, we provide a `compact` parameter which return a data.frame instead of a DataFrame, and it will strip the Rle and factor that is applied to the variables, resulting in a notably larger memory footprint. However, this makes it easier to manipulate and filter the data frame for any downstream analyses, and the data.frame is more readily compatible with other popular packages (i.e. dplyr, tidyr, and ggplot2).
+If `compact` is FALSE, the called function will return a data.frame instead of a DataFrame, and it will strip the Rle and factor that is applied to several of columns, resulting in a notably larger memory footprint. However, this makes it easier to manipulate and filter the data frame for any downstream analyses, and the data.frame is more readily compatible with other popular packages (i.e. dplyr, tidyr, and ggplot2).
+
 
 ## Advanced Features {#advancedfeatures}
 
@@ -589,11 +591,12 @@ region_lengths <- get_region_lengths(ribo.object = alias.ribo, alias = TRUE)
 head(region_lengths, 2)
 ```
 
+
 ## Optional Data {#optionaldata}
 
-Length distribution, metagene coverage and region counts are essential to ribosome profiling data analysis and
-these data exist in every .ribo file. However, for certain types of analysis, additional data might be required.
-For example, periodicity and uniformity analyses require the knowledge of number of reads at each nucleotide position, aka coverage data. Another analysis, called translation efficiency, can be done when transcript abundance information is present. For these types of analyses, .ribo files offer two types of optional data: coverage data and RNA-Seq  data.
+Length distribution, metagene coverage and region counts are essential to ribosome profiling data analysis and these data exist in every .ribo file. However, for certain types of analysis, additional data might be required.
+
+For example, periodicity and uniformity analyses require the knowledge of number of reads at each nucleotide position, aka coverage data. Another analysis, called translational efficiency, can be done when transcript abundance information is present. An example of this is seen below in the section, `Sample Analysis`. For these types of analyses, .ribo files offer two types of optional data: coverage data and RNA-Seq data.
 
 It might be helpful to have data explaining how ribosome profiling data is collected, prepared and processed. For this, .ribo files has an additional field, called metadata, to store such data for each experiment and for the .ribo file itself.
 
@@ -740,4 +743,59 @@ rnaseq <- get_rnaseq(ribo.object = original.ribo,
 head(rnaseq, 2)
 ```
 
+## Sample Analysis  
 
+Here, we outline a relatively simple analysis. The goal of this is to show some of the capabilities of the package and provide a brief example on what can be done in further analyses with a few base R functions. 
+
+A potential use case of the RNA-Seq data (example seen in the `RNA-Seq`section in `Optional Data`) is to measure translational efficiency or plot it alongside the ribosome profiling region counts. By having the region-specific read counts of both RNA-Seq and ribosome profiling data, we can first filter out any lowly expressed transcripts, and visualize the relationship between the RNA-Seq and ribosome profiling region counts.
+
+``` {r rc_rnaseq_sample}
+# obtain the rnaseq and ribosomal occupancy of the CDS region
+rnaseq_CDS <- get_rnaseq(ribo.object = original.ribo,
+                         tidy        = TRUE,
+                         alias       = TRUE,
+                         region      = "CDS",
+                         compact     = FALSE,
+                         experiment  = "GSM1606108")
+
+
+rc_CDS <- get_region_counts(ribo.object    = original.ribo,
+                                tidy       = TRUE,
+                                alias      = TRUE,
+                                transcript = FALSE,
+                                region     = "CDS",
+                                compact    = FALSE,
+                                experiment = "GSM1606108")
+
+# filter out the lowly expressed transcripts  
+plot(density(log2(rnaseq_CDS$count)), xlab = "Log 2 of RNA-Seq Count", main = "RNA-Seq Density")
+plot(density(log2(rc_CDS$count)), xlab = "Log 2 of CDS Region Count", main = "Region Counts Density")
+```
+
+From the above plots, we can roughly estimate the threshold to filter out the lowly expressed transcripts, and for simplicity, we roughly estimate a value of 2 (which is 1 on the log2 scale) for both the RNA-Seq and region counts. After this, we make a scatterplot of the region counts over the RNA-Seq counts.
+
+``` {r filter_and_plot}
+# filter out transcripts with count value less than 2 for either region counts or rnaseq
+filtered_transcripts <- which(rnaseq_CDS$count > 2 & rc_CDS$count > 2)
+rnaseq_CDS <- rnaseq_CDS[filtered_transcripts, ]
+rc_CDS     <- rc_CDS[filtered_transcripts, ]
+plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "Log 2 CDS RNA-Seq Count", ylab = "Log 2 of CDS Region Counts", main = "Scatter Plot of Ribosome Occupancy and RNA Abundance")
+```
+
+Now, using the filtered data, we can look at the transcripts with a high translational efficiency. To do so, we divide the region counts by the RNA-Seq counts, and plot the density distribution of these ratios. From there, we visually choose the threshold again as a simple way to find the transcripts with a relatively high translational efficiency.
+
+``` {r translational_efficiency}
+# get the translational efficiency of CDS 
+te_CDS    <- rc_CDS$count/rnaseq_CDS$count
+plot(density(log2(te_CDS)), xlab = "Log 2 of Translational Efficiency", main = "Translational Efficiency Density")
+```
+
+From the above density distribution, we see the small elbow around -2 on the log2 scale, and we choose to use that as a rough estimate of the threshold value. From this threshold value, we find 229 transcripts that exhibit relatively high translational efficiency. 
+
+```{r filter_te}
+# filter for translational efficiency of the observed elbow at -2 (on the log2 scale, untransformed value of .25) 
+high_te <- rc_CDS$transcript[which(te_CDS > .25)]
+
+# found 229 transcripts, first 20 shown here 
+head(high_te, n = 20)
+```
