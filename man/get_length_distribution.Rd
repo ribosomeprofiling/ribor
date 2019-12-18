@@ -9,6 +9,7 @@ get_length_distribution(
   region,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
+  compact     = TRUE,
   experiments = get_experiments(ribo.object)
 )
 }
@@ -21,6 +22,8 @@ get_length_distribution(
 
 \item{range.upper}{Upper bound of the read length}
 
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
+  
 \item{experiments}{List of experiment names}
 }
 \value{

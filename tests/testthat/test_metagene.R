@@ -156,6 +156,55 @@ test_that("get_metagene- preserve everything",
           expect_equal(actual, 
                        expected))
 
+
+tidy_df <- get_tidy_metagene(ribo.object,
+                             "start",
+                             compact = FALSE)
+
+test_that("get_metagene- noncompact everything",
+          expect_equal(tidy_df[1,3], 
+                       7))
+
+meta_df <- get_metagene(ribo.object,
+                        "start",
+                        2,
+                        3,
+                        compact = FALSE,
+                        length = TRUE)
+test_that("get_metagene- base",
+           expect_equal(sum(meta_df[1, -1]), 21))
+
+meta_df <- get_metagene(ribo.object,
+                        "start",
+                        2,
+                        3,
+                        compact = FALSE,
+                        length = FALSE)
+
+test_that("get_metagene- base",
+          expect_equal(sum(meta_df[4, -c(1,2)]), 13))
+
+meta_df <- get_metagene(ribo.object,
+                        "start",
+                        2,
+                        3,
+                        compact = FALSE,
+                        transcript = FALSE)
+
+test_that("get_metagene- base",
+          expect_equal(sum(meta_df[1, -c(1, 2)]), 12))
+
+meta_df <- get_metagene(ribo.object,
+                        "stop",
+                        2,
+                        3,
+                        compact = FALSE,
+                        transcript = FALSE,
+                        length = FALSE)
+
+test_that("get_metagene- base",
+          expect_equal(nrow(meta_df), 30))
+
 CBS_meta <- get_metagene(CBS, "start", 15, 35)
 actual <- as.integer(CBS_meta[, 3])
 expected <- 1L
@@ -168,3 +217,4 @@ CBS_tidy <- get_tidy_metagene(CBS, "stop", 15, 35)
 actual <- CBS_tidy[as.integer(CBS_tidy$position) == -47, 3]
 expected <- 1L
 test_that("get_tidy_metagene- check random value", expect_equal(actual, expected))
+

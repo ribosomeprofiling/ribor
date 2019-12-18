@@ -9,9 +9,10 @@ get_metagene(
   site,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
-  transcript = TRUE,
-  length = TRUE,
-  alias = FALSE,
+  transcript  = TRUE,
+  length      = TRUE,
+  alias       = FALSE,
+  compact     = TRUE,
   experiments = get_experiments(ribo.object)
 )
 }
@@ -29,6 +30,8 @@ get_metagene(
 \item{length}{Option to condense the read lengths together, preserving information at each transcript}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
+
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{experiments}{List of experiment names}
 }

@@ -1,0 +1,10 @@
+We generated the ribo file using RiboFlow (https://github.com/ribosomeprofiling/riboflow) via the following command:
+
+nextflow RiboFlow.groovy -params-file project.yaml -profile docker_local
+
+The file project.yaml, used above is available online at https://github.com/ribosomeprofiling/riboflow/blob/master/project.yaml .
+
+For this run, we used the sequencing files and the metadata in the GitHub repository:
+https://github.com/ribosomeprofiling/rf_sample_data
+
+For details, see https://github.com/ribosomeprofiling/riboflow/blob/master/README.md

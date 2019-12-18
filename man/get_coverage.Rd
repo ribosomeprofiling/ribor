@@ -12,6 +12,9 @@ get_coverage(
   length = TRUE,
   tidy = FALSE,
   alias = FALSE,
+  compact = TRUE,
+
+
   experiments = get_experiments(ribo.object)
 )
 }
@@ -29,6 +32,8 @@ get_coverage(
 \item{tidy}{Logical value denoting whether or not the user wants a tidy format}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
+
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{experiments}{List of experiments to obtain coverage information on}
 }

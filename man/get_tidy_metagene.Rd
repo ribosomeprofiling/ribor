@@ -9,8 +9,9 @@ get_tidy_metagene(
   site,
   range.lower = rangeLower(ribo.object),
   range.upper = rangeUpper(ribo.object),
-  length = TRUE,
-  alias = FALSE,
+  length      = TRUE,
+  alias       = FALSE,
+  compact     = TRUE,
   experiments = get_experiments(ribo.object)
 )
 }
@@ -27,6 +28,9 @@ get_tidy_metagene(
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 
+
+\item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
+
 \item{experiments}{List of experiment names}
 }
 \value{
@@ -34,8 +38,10 @@ A tidy data frame of the metagene information
 }
 \description{
 The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier
-data cleaning and manipulation. In providing this functionality, the user must length the
-transcripts together and is only provided the option to length the read lengths together.
+data cleaning and manipulation. In providing this functionality while reducing the returned data frame
+size, the user must aggregate across the transcripts and is only provided the option to aggregate the 
+read lengths together.
+
 }
 \details{
 The dimensions of the returned data frame depend on the parameters
@@ -52,6 +58,8 @@ When the param  'length' is FALSE, then the resulting data frame prints out the
 metagene coverage count at each position of the metagene radius for each read length.
 This provides a tidy format of the metagene information across the transcripts, preserving
 the metagene coverage count at each read length.
+
+The
 }
 \examples{
 #generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function

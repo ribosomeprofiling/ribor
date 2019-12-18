@@ -45,6 +45,7 @@
 #' @param length Option to condense the read lengths together, preserving information at each transcript
 #' @param experiments List of experiment names
 #' @param alias Option to report the transcripts as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return A DataFrame of the metagene information
 #' @examples
 #'
@@ -89,6 +90,7 @@ get_metagene <- function(ribo.object,
                          transcript = TRUE,
                          length = TRUE,
                          alias = FALSE,
+                         compact = TRUE,
                          experiments = get_experiments(ribo.object)) {
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     conditions <- c(transcript = transcript, length = length, alias = alias)
@@ -122,13 +124,17 @@ get_metagene <- function(ribo.object,
     data <- as.data.frame(do.call(rbind, data))
     colnames(data) <- c(as.character(-metagene.radius:metagene.radius))
     
-    result <- as(make_dataframe(ribo.object,
-                                matched.experiments,
-                                range.info,
-                                conditions,
-                                data), "DataFrame")
+    result <- make_dataframe(ribo.object,
+                             matched.experiments,
+                             range.info,
+                             conditions,
+                             data)
+    if(compact) {
+      result <- as(result, "DataFrame")
+      result <- prepare_DataFrame(ribo.object, result)
+    }
     
-    return(prepare_DataFrame(ribo.object, result))
+    return(result)
 }
 
 
@@ -142,8 +148,9 @@ get_metagene_path <- function(experiment, site) {
 #' Retrieves the metagene data in a tidy format
 #'
 #' The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier
-#' data cleaning and manipulation. In providing this functionality, the user must length the
-#' transcripts together and is only provided the option to length the read lengths together.
+#' data cleaning and manipulation. In providing this functionality while reducing the returned data frame
+#' size, the user must aggregate across the transcripts and is only provided the option to aggregate the 
+#' read lengths together.
 #'
 #' The dimensions of the returned data frame depend on the parameters
 #' range.lower, range.upper, and length.
@@ -159,7 +166,9 @@ get_metagene_path <- function(experiment, site) {
 #' metagene coverage count at each position of the metagene radius for each read length.
 #' This provides a tidy format of the metagene information across the transcripts, preserving
 #' the metagene coverage count at each read length.
-#'
+#' 
+#' The 
+#' 
 #' @param ribo.object A 'ribo' object
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length
@@ -167,6 +176,7 @@ get_metagene_path <- function(experiment, site) {
 #' @param length Option to condense the read lengths together
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param experiments List of experiment names
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return
 #' A tidy data frame of the metagene information
 #' @examples
@@ -205,6 +215,7 @@ get_tidy_metagene <- function(ribo.object,
                               range.upper = rangeUpper(ribo.object),
                               length = TRUE,
                               alias = FALSE,
+                              compact = TRUE,
                               experiments = get_experiments(ribo.object)) {
   site <- tolower(site)
   result <- get_metagene(ribo.object,
@@ -224,8 +235,16 @@ get_tidy_metagene <- function(ribo.object,
                       value = "count",
                       c(as.character(-metagene.radius:metagene.radius)))
   tidy.data$position <- as.integer(tidy.data$position)
-  tidy.data <- as(tidy.data, "DataFrame")
-  return(prepare_DataFrame(ribo.object, tidy.data))
+  
+  if(compact) {
+    tidy.data <- as(tidy.data, "DataFrame")
+    tidy.data <- prepare_DataFrame(ribo.object, tidy.data)
+  } else {
+    tidy.data %>%
+      left_join(get_info(ribo.object)$experiment.info[, c("experiment", "total.reads")],
+                by = "experiment")  -> tidy.data
+  }
+  return(tidy.data)
 }
 
 
@@ -339,15 +358,19 @@ plot_metagene <- function(x,
     y.label <- "Count"
     
     if (normalize) {
-        per.million <- 1000000
-        info <- x@metadata[[1]]
-        x %>% 
-          strip_rlefactor() %>% 
-          as.data.frame() %>% 
-          left_join(info, by = "experiment") %>% 
-          mutate(normalize = per.million * .data$count/.data$total.reads) -> x
-        y.value <- "normalize"
-        y.label <- "Counts per 1M Reads"
+      per.million <- 1000000
+      if (is(x, "DataFrame")) {
+          info <- x@metadata[[1]]
+          x %>% 
+            strip_rlefactor() %>% 
+            as.data.frame() %>% 
+            left_join(info, by = "experiment") %>% 
+            mutate(normalize = per.million * .data$count/.data$total.reads) -> x
+      } else {
+          x <- mutate(x, normalize=(.data$count/.data$total.reads)*per.million)
+      }
+      y.value <- "normalize"
+      y.label <- "Counts per 1M Reads"
     } else {
       x <- as.data.frame(x)
     }
@@ -387,23 +410,37 @@ check_plot_metagene <- function(x,
                                                range.upper,
                                                length = TRUE,
                                                experiments = experiments))
-    } else if (class(x) == "DataFrame" || class(x) == "DFrame") {
+    } else if (is(x, "DataFrame") || is(x, "DFrame")) {
+
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "position", "count")
         types <- c("integer", "double")
         mismatch <- !all(names(x) == col.names,
-                         typeof(x[[1]]) == "character",
-                         typeof(x[[2]]) %in% types,
-                         typeof(x[[3]]) %in% types,
+                         typeof(x[, "experiment"]) == "character",
+                         typeof(x[, "position"]) %in% types,
+                         typeof(x[, "count"]) %in% types,
                          ncol(x) == 3)
         if (mismatch) {
             stop("Please make sure that the data frame is of the correct format.",
                  call.=FALSE)
         }
-    } else {
+    } else if (is.data.frame(x)){
+      col.names <- c("experiment", "position", "count", "total.reads")
+      types <- c("integer", "double")
+      mismatch <-  !all(names(x) == col.names,                    
+                        typeof(x[, "experiment"]) == "character",
+                        typeof(x[, "position"]) %in% types,
+                        typeof(x[, "count"]) %in% types,    
+                        typeof(x[, "total.reads"]) %in% types, 
+                        ncol(x) == 4)
+      if (mismatch) {
+        stop("Please make sure that the data table is of the correct format.",
+             call.=FALSE)
+      }
+    } else{ 
         #not a data frame
         stop("Please make sure that param 'x' is either ", 
-             "a DataFrame or a ribo object.")
+             "a DataFrame, data.frame, or ribo object.")
     }
     return(x)
 }

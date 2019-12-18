@@ -77,6 +77,7 @@
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param experiments List of experiment names
 #' @param normalize Option to normalize the counts as counts per million reads
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return A DataFrame of the region counts
 #' @importFrom rhdf5 h5read
 #' @importFrom methods as 
@@ -93,6 +94,7 @@ get_region_counts <- function(ribo.object,
                               alias = FALSE,
                               normalize = FALSE,
                               region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+                              compact = TRUE, 
                               experiments = get_experiments(ribo.object)) {
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     region     <- check_rc_input(ribo.object, region, range.info, experiments, alias)
@@ -139,8 +141,12 @@ get_region_counts <- function(ribo.object,
     }
     
     if (tidy) result <- gather(result, "region", "count", region)
-    result <- as(result, "DataFrame")
-    return(prepare_DataFrame(ribo.object, result))
+    
+    if (compact) {
+      result <- as(result, "DataFrame")
+      return(prepare_DataFrame(ribo.object, result))
+    } 
+    return (result)
 }
 
 
@@ -227,19 +233,29 @@ get_length_distribution <- function(ribo.object,
                                     region,
                                     range.lower = rangeLower(ribo.object),
                                     range.upper = rangeUpper(ribo.object),
+                                    compact = TRUE,
                                     experiments = get_experiments(ribo.object)) {
-    if (length(region) != 1) {
-      stop("Please provide only one region.")
-    }
-
-  return(as(get_region_counts(ribo.object,
+  if (length(region) != 1) {
+    stop("Please provide only one region.")
+  }
+  
+  result <- get_region_counts(ribo.object,
                               range.lower = range.lower,
                               range.upper = range.upper,
                               region = region,
                               length = FALSE,
                               transcript = TRUE,
                               normalize = FALSE,
-                              experiments = experiments)[, -3], "DataFrame"))
+                              compact = compact,
+                              experiments = experiments)[, -3]
+  
+  # by not using DataFrame, we will need to add total.reads back
+  if (!compact) {
+    result %>% 
+      left_join(get_info(ribo.object)$experiment.info[, c("experiment", "total.reads")],
+                by = "experiment") -> result
+  }
+  return (result)
 }
 
 
@@ -322,21 +338,29 @@ plot_length_distribution <- function(x,
                                      range.lower,
                                      range.upper,
                                      fraction = FALSE,
-                                    title = "Length Distribution") {
+                                     title = "Length Distribution") {
     x <- check_ld_input(x, region, range.lower, range.upper, experiments)
     y.axis <- "Count"
     y.value <- "count"
-  
+    
     if (fraction) {
-        info <- x@metadata[[1]]
+        if (is(x, "DataFrame")) {
+          info <- x@metadata[[1]]
+          x %>% 
+            strip_rlefactor() %>% 
+            as.data.frame() %>% 
+            left_join(info, by = "experiment") -> x
+        } else {
+          x %>% 
+            left_join(get_info(x)$experiment.info[, c("experiment", "total.reads")],
+                      by = "experiment") 
+        }
+        
         x %>% 
-          strip_rlefactor() %>% 
-          as.data.frame() %>% 
-          left_join(info, by = "experiment") %>% 
           mutate(fraction = .data$count/.data$total.reads) -> x
         y.axis <- "Fraction"
         y.value <- "fraction"
-    } else {
+    } else if (is(x, "DataFrame")) {
         x <- as.data.frame(x)
     }
     ggplot(x, aes_string(x="length", y=y.value, color="experiment")) +
@@ -366,18 +390,35 @@ check_ld_input <- function(x,
                                                      range.lower = range.lower,
                                                      range.upper = range.upper,
                                                      experiments = experiments))
-    } else if (class(x) == "DataFrame" || class(x) == "DFrame"){
+    } else if (is(x, "DataFrame") || is(x, "DFrame")) {
+
         x <- strip_rlefactor(x)
         col.names <- c("experiment", "length", "count")
         types <- c("integer", "double")
         mismatch <- !all(names(x) == col.names, 
-                         typeof(x[[1]]) == "character",
-                         typeof(x[[2]]) %in% types, 
-                         typeof(x[[3]]) %in% types,
-                         ncol(x) == 3)
+                         typeof(x[, "experiment"]) == "character",
+                         typeof(x[, "length"]) %in% types, 
+                         typeof(x[, "count"]) %in% types,
+                         ncol(x) == 3,
+                         length(x@metadata) > 0)
         if (mismatch) {
-              stop("Please make sure that the DataFrame is of the correct format.",
+              stop("Please make sure that the DataFrame is of the correct format.
+                    It requires a non-empty metadata field.",
                     call.=FALSE)
+        }
+    } else if (is.data.frame(x)) {
+        col.names <- c("experiment", "length", "count", "total.reads")
+        types <- c("integer", "double")
+        mismatch <-  !all(names(x) == col.names,                    
+                          typeof(x[, "experiment"]) == "character",
+                          typeof(x[, "length"]) %in% types,
+                          typeof(x[, "count"]) %in% types,    
+                          typeof(x[, "total.reads"]) %in% types, 
+                          ncol(x) == 4)
+        if (mismatch) {
+          stop("Please make sure that the data frame is of the correct format.",
+               " It requires a 'total.reads' column.",
+               call.=FALSE)
         }
     } else {
         stop("Please make sure that param 'x' is either", 
@@ -456,7 +497,6 @@ plot_region_counts <- function(x,
                                range.upper,
                                title = "Region Counts") {
     rc <- check_plot_rc_input(x, range.lower, range.upper, experiments)
-    
     rc <- as.data.frame(rc)
     
     #prepare data for visualization
@@ -512,16 +552,17 @@ check_plot_rc_input <- function(x,
                                                 length      = TRUE,
                                                 transcript  = TRUE,
                                                 experiments = experiments))
-    } else if (class(x) == "DataFrame" || class(x) == "DFrame") {
-        x <- strip_rlefactor(x)
+    } else if (is(x, "DataFrame") || is.data.frame(x)) {
+        if (is(x, "DataFrame")) x <- strip_rlefactor(x)
+
         col.names <- c("experiment", "region", "count")
         mismatch  <- !all(names(x) == col.names, 
-                     typeof(x[[1]]) == "character",
-                     typeof(x[[2]]) == "character",
-                     typeof(x[[3]]) %in% c("double", "integer"),
-                     ncol(x) == 3)
+                          typeof(x[, "experiment"]) == "character",
+                          typeof(x[, "region"]) == "character",
+                          typeof(x[, "count"]) %in% c("double", "integer"),
+                          ncol(x) == 3)
         if (mismatch) {
-            stop("Please make sure that the DataFrame is of",  
+            stop("Please make sure that the DataFrame is of ",  
                  "the correct format.", call. = FALSE)
         } else if (!identical(unique(x$region), regions)) {
             stop("Please make sure that the DataFrame only includes the ", 
