@@ -50,13 +50,15 @@ Third, we describe how to import a .ribo file to R environment and demonstrate e
    * [Metagene Analysis](#metageneanalysis)
    * [Region Counts](#regioncounts)
    
-In the last two sections, we describe some [advanced features](#advancedfeatures)
+In the following two sections, we describe some [advanced features](#advancedfeatures)
 including renaming transcripts using [aliases](#alias), accessing .ribo [file attributes](#fileattributes), and getting [region boundaries](#annotation) that define transcript regions.  
 In the [last section](#optionaldata), we explain the three optional types of data, which may exist in a .ribo file.
 
 * [Metadata](#metadata): A .ribo file may contain metadata for each experiment and for the .ribo file itself.
 * [Coverage](#coverage): A .ribo file can keep the nucleotide level transcriptome coverage.
 * [RNA-Seq](#rnaseq): A ribosome profiling experiment can be paired with an RNA-Seq experiment to study ribosome occupancy together with transcript abundance. 
+
+In the final section, we outline a simple analysis to study translational efficiency.
 
 ### .ribo File Format {#ribofileformat}
 
@@ -745,9 +747,9 @@ head(rnaseq, 2)
 
 ## Sample Analysis  
 
-Here, we outline a relatively simple analysis. The goal of this is to show some of the capabilities of the package and provide a brief example on what can be done in further analyses with a few base R functions. 
+Here, we outline a  simple analysis highlighting some capabilities of our package.
 
-A potential use case of the RNA-Seq data (example seen in the `RNA-Seq`section in `Optional Data`) is to measure translational efficiency or plot it alongside the ribosome profiling region counts. By having the region-specific read counts of both RNA-Seq and ribosome profiling data, we can first filter out any lowly expressed transcripts, and visualize the relationship between the RNA-Seq and ribosome profiling region counts.
+A common use case for the RNA-Seq data (example seen in the `RNA-Seq`section in `Optional Data`) is to measure translational efficiency. We first filter out poorly expressed transcripts, and visualize the relationship between the RNA-Seq and ribosome profiling region counts.
 
 ``` {r rc_rnaseq_sample}
 # obtain the rnaseq and ribosomal occupancy of the CDS region
@@ -772,25 +774,25 @@ plot(density(log2(rnaseq_CDS$count)), xlab = "Log 2 of RNA-Seq Count", main = "R
 plot(density(log2(rc_CDS$count)), xlab = "Log 2 of CDS Region Count", main = "Region Counts Density")
 ```
 
-From the above plots, we can roughly estimate the threshold to filter out the lowly expressed transcripts, and for simplicity, we roughly estimate a value of 2 (which is 1 on the log2 scale) for both the RNA-Seq and region counts. After this, we make a scatterplot of the region counts over the RNA-Seq counts.
+From the above plot, we decided to use a read count threshold of 2 for both the RNA-Seq and ribosome profiling region counts. We then plot the relationship between ribosome profiling and RNA-Seq counts.
 
 ``` {r filter_and_plot}
-# filter out transcripts with count value less than 2 for either region counts or rnaseq
+# filter out transcripts with count value less than 2 for either ribosome profiling region counts or rnaseq
 filtered_transcripts <- which(rnaseq_CDS$count > 2 & rc_CDS$count > 2)
-rnaseq_CDS <- rnaseq_CDS[filtered_transcripts, ]
-rc_CDS     <- rc_CDS[filtered_transcripts, ]
-plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "Log 2 CDS RNA-Seq Count", ylab = "Log 2 of CDS Region Counts", main = "Scatter Plot of Ribosome Occupancy and RNA Abundance")
+rnaseq_CDS           <- rnaseq_CDS[filtered_transcripts, ]
+rc_CDS               <- rc_CDS[filtered_transcripts, ]
+plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "RNA-Seq", ylab = "Ribosome Profiling", main = "log2 CDS Read Counts")
 ```
 
-Now, using the filtered data, we can look at the transcripts with a high translational efficiency. To do so, we divide the region counts by the RNA-Seq counts, and plot the density distribution of these ratios. From there, we visually choose the threshold again as a simple way to find the transcripts with a relatively high translational efficiency.
+Next, we caluclate the ratio of ribosome profiling to RNA-Seq counts. This ratio has been used as a rough proxy for translational efficiency in the literature. We then visually inspect the distribution of this ratio.
 
 ``` {r translational_efficiency}
 # get the translational efficiency of CDS 
 te_CDS    <- rc_CDS$count/rnaseq_CDS$count
-plot(density(log2(te_CDS)), xlab = "Log 2 of Translational Efficiency", main = "Translational Efficiency Density")
+plot(density(log2(te_CDS)), xlab = "Log 2 of Translation Efficiency", main = "")
 ```
 
-From the above density distribution, we see the small elbow around -2 on the log2 scale, and we choose to use that as a rough estimate of the threshold value. From this threshold value, we find 229 transcripts that exhibit relatively high translational efficiency. 
+Using the above density distribution, we next select genes with a log2 ratio of greater than -2. From this threshold value, we identify 229 transcripts that exhibit relatively high translational efficiency.
 
 ```{r filter_te}
 # filter for translational efficiency of the observed elbow at -2 (on the log2 scale, untransformed value of .25) 
