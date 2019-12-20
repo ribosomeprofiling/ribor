@@ -771,7 +771,6 @@ rc_CDS <- get_region_counts(ribo.object    = original.ribo,
 
 # filter out the lowly expressed transcripts  
 plot(density(log2(rnaseq_CDS$count)), xlab = "Log 2 of RNA-Seq Count", main = "RNA-Seq Density")
-plot(density(log2(rc_CDS$count)), xlab = "Log 2 of CDS Region Count", main = "Region Counts Density")
 ```
 
 From the above plot, we decided to use a read count threshold of 2 for both the RNA-Seq and ribosome profiling region counts. We then plot the relationship between ribosome profiling and RNA-Seq counts.
@@ -781,7 +780,7 @@ From the above plot, we decided to use a read count threshold of 2 for both the 
 filtered_transcripts <- which(rnaseq_CDS$count > 2 & rc_CDS$count > 2)
 rnaseq_CDS           <- rnaseq_CDS[filtered_transcripts, ]
 rc_CDS               <- rc_CDS[filtered_transcripts, ]
-plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "RNA-Seq", ylab = "Ribosome Profiling", main = "log2 CDS Read Counts")
+plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "RNA-Seq", ylab = "Ribosome Profiling", main = "log2 CDS Read Counts", pch = 19, cex = 0.5)
 ```
 
 Next, we caluclate the ratio of ribosome profiling to RNA-Seq counts. This ratio has been used as a rough proxy for translational efficiency in the literature. We then visually inspect the distribution of this ratio.
