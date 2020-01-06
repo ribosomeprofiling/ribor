@@ -783,7 +783,7 @@ rc_CDS               <- rc_CDS[filtered_transcripts, ]
 plot(log2(rnaseq_CDS$count), log2(rc_CDS$count), xlab = "RNA-Seq", ylab = "Ribosome Profiling", main = "log2 CDS Read Counts", pch = 19, cex = 0.5)
 ```
 
-Next, we caluclate the ratio of ribosome profiling to RNA-Seq counts. This ratio has been used as a rough proxy for translational efficiency in the literature. We then visually inspect the distribution of this ratio.
+Next, we calculate the ratio of ribosome profiling to RNA-Seq counts. This ratio has been used as a rough proxy for translational efficiency in the literature. We then visually inspect the distribution of this ratio.
 
 ``` {r translational_efficiency}
 # get the translational efficiency of CDS 
