@@ -18,7 +18,7 @@
 #' @param alias Option to return the transcript names as aliases  
 #' @return A data.frame of the region lengths 
 get_region_lengths <- function(ribo.object, alias = FALSE) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     check_alias(ribo.object, alias)
     #generate the start and stop indices, get the matrix of positions
     start <- seq(1, 10, by = 2)
@@ -67,7 +67,7 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' @inheritParams get_region_lengths
 #' @return A data.frame of start and stop coordinates for every region
 get_region_coordinates <- function(ribo.object, alias=FALSE) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     check_alias(ribo.object, alias)
     references <- change_reference_names(ribo.object, alias)
     #generate the data.frame from the boundary positions

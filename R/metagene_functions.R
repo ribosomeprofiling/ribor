@@ -264,7 +264,7 @@ check_metagene_input <- function(ribo.object,
   range.upper <- range.info[["range.upper"]]
 
   check_alias(ribo.object, alias)
-  check_ribo(ribo.object)
+  validObject(ribo.object)
   check_lengths(ribo.object, range.lower, range.upper)
   check_experiments(ribo.object, experiments)
 }
@@ -393,10 +393,9 @@ check_plot_metagene <- function(x,
                                 range.lower,
                                 range.upper,
                                 experiments) {
-    is.ribo <- check_ribo(x, stop = FALSE)
-
+    
     #x is a ribo object
-    if (is.ribo) {
+    if (is(x, "ribo") && validObject(x)) {
         if (missing(site)) {
           stop("Please indicate the 'site' parameter with either 'start' or 'stop'",
                call. = FALSE)

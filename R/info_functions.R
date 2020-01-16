@@ -26,7 +26,7 @@
 #' @importFrom rhdf5 h5ls h5readAttributes
 #' @export
 get_info <- function(ribo.object) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     path   <- ribo.object@path
     
     #retrieve an experiment list
@@ -147,7 +147,7 @@ print_metadata <- function(metadata, index) {
 #' @importFrom rhdf5 h5ls
 #' @export
 get_experiments <- function(ribo.object) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     result <- h5ls(ribo.object@path)
     result <- result[result$group == "/experiments",]
     return(result$name)

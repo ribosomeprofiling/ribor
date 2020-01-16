@@ -376,8 +376,7 @@ check_ld_input <- function(x,
                            range.upper,
                            experiments) {
       #check the plot_length_distribution output
-    is.ribo <- check_ribo(x, stop=FALSE)
-    if (is.ribo) {
+    if (is(x, "ribo") && validObject(x)) {
         if (missing(region) || length(region) != 1){
             stop("Please indicate a single region.") 
         } 
@@ -536,9 +535,8 @@ check_plot_rc_input <- function(x,
                                 experiments) {
     #helper method that checks the plot_region_counts input and returns data
     #for plotting
-    is.ribo <- check_ribo(x, stop = FALSE)
     regions <- c("UTR5", "CDS", "UTR3")
-    if (is.ribo) {
+    if (is(x, "ribo") && validObject(x)) {
         if (missing(experiments) || is.null(experiments)) {
             experiments <- get_experiments(x)
         } 

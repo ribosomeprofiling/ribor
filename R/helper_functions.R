@@ -15,14 +15,14 @@
 #' names <- get_reference_names(sample)
 get_reference_names <- function(ribo.object) {
     # Retrieves the reference transcript names
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     return(h5read(ribo.object@path,
                   name = "reference/reference_names"))
 }
 
 get_reference_lengths <- function(ribo.object) {
     # Retrieves the reference transcript lengths
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     row.names <- h5read(ribo.object@path,
                         name = "reference/reference_names")
     lengths   <- h5read(ribo.object@path,

@@ -1,40 +1,6 @@
-check_ribo <- function(ribo.object, stop = TRUE) {
-    # Helper method that checks the internal contents and class of a parameter
-    # check_ribo takes in an object and checks for proper contents and class
-    # Args:
-    # ribo.object An S4 object of class "ribo"
-    #
-    # Return:
-    # None
-
-    is.ribo <- is.ribo(ribo.object)
-    if (stop && !is.ribo) {
-        stop("Param ribo.object should be of class ribo.", call. = FALSE)
-    }
-    return(is.ribo)
-}
-
-#' Checks for a valid 'ribo' object
-#'
-#' The function \code{\link{is.ribo}} checks whether or not a given ribo object
-#' is valid.
-#'
-#' @param ribo.object Object in question
-#' @importFrom methods is
-#' @examples
-#' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
-#' 
-#' is.ribo(sample)
-#' @return A boolean indicating whether or not a given object is a valid 'ribo' object
-#' @export
-is.ribo <- function(ribo.object) {
-    return (all(is(ribo.object) == "ribo"))
-}
-
 check_alias <- function(ribo.object,
                         alias) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     has.alias <- !is.empty(ribo.object@transcript.alias) &&
                  !is.empty(ribo.object@transcript.original)
     if (alias && !has.alias) {
