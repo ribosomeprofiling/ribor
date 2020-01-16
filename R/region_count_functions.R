@@ -345,7 +345,7 @@ plot_length_distribution <- function(x,
     
     if (fraction) {
         if (is(x, "DataFrame")) {
-          info <- x@metadata[[1]]
+          info <- metadata(x)[[1]]
           x %>% 
             strip_rlefactor() %>% 
             as.data.frame() %>% 
@@ -399,7 +399,7 @@ check_ld_input <- function(x,
                          typeof(x[, "length"]) %in% types, 
                          typeof(x[, "count"]) %in% types,
                          ncol(x) == 3,
-                         length(x@metadata) > 0)
+                         length(metadata(x)) > 0)
         if (mismatch) {
               stop("Please make sure that the DataFrame is of the correct format.
                     It requires a non-empty metadata field.",

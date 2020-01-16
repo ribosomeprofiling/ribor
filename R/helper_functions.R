@@ -329,7 +329,7 @@ prepare_DataFrame <- function(ribo.object, DF) {
   DF$experiment = Rle(factor(DF$experiment))
   
   # add the metadata
-  DF@metadata[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", 
+  metadata(DF)[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", 
                                                                 "total.reads")]
   return(DF)
 }

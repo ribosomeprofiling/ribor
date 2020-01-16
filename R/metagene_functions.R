@@ -360,7 +360,7 @@ plot_metagene <- function(x,
     if (normalize) {
       per.million <- 1000000
       if (is(x, "DataFrame")) {
-          info <- x@metadata[[1]]
+          info <- metadata(x)[[1]]
           x %>% 
             strip_rlefactor() %>% 
             as.data.frame() %>% 
