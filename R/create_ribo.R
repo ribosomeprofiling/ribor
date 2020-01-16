@@ -73,8 +73,6 @@ set_aliases <- function(ribo.object, rename) {
     alias <- rename_transcripts(path, rename)
     ribo.object@transcript.alias    <- hash(keys = alias, values = original)
     ribo.object@transcript.original <- hash(keys = original, values = alias)
-    
-    validObject(ribo.object)
     return(ribo.object)
 }
 

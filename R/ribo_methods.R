@@ -94,14 +94,59 @@ print_output <- function (file.info,
           quote = FALSE)
 }
 
-setGeneric("rangeLower", function(ribo.object) standardGeneric("rangeLower"))
-setMethod("rangeLower", "ribo", function(ribo.object) get_read_lengths(ribo.object)[1])
+setGeneric("path", function(object) standardGeneric("path"))
+setMethod("path", "ribo", function(object) object@path)
 
-setGeneric("rangeUpper", function(ribo.object) standardGeneric("rangeUpper"))
-setMethod("rangeUpper", "ribo", function(ribo.object) get_read_lengths(ribo.object)[2])
+setGeneric("experiments", function(object) standardGeneric("experiments"))
+setMethod("experiments", "ribo", function(object) object@experiments)
 
-setGeneric("aliasHash", function(ribo.object) standardGeneric("aliasHash"))
-setMethod("aliasHash", "ribo", function(ribo.object) ribo.object@transcript.alias)
+setGeneric("format_version", function(object) standardGeneric("format_version"))
+setMethod("format_version", "ribo", function(object) object@format.version)
 
-setGeneric("originalHash", function(ribo.object) standardGeneric("originalHash"))
-setMethod("originalHash", "ribo", function(ribo.object) ribo.object@transcript.original)
+setGeneric("reference", function(object) standardGeneric("reference"))
+setMethod("reference", "ribo", function(object) object@reference)
+
+setGeneric("length_min", function(object) standardGeneric("length_min"))
+setMethod("length_min", "ribo", function(object) object@length.min)
+
+setGeneric("length_max", function(object) standardGeneric("length_max"))
+setMethod("length_max", "ribo", function(object) object@length.max)
+
+setGeneric("left_span", function(object) standardGeneric("left_span"))
+setMethod("left_span", "ribo", function(object) object@left.span)
+
+setGeneric("right_span", function(object) standardGeneric("right_span"))
+setMethod("right_span", "ribo", function(object) object@right.span)
+
+setGeneric("metagene_radius", function(object) standardGeneric("metagene_radius"))
+setMethod("metagene_radius", "ribo", function(object) object@metagene.radius)
+
+setGeneric("length_offset", function(object) standardGeneric("length_offset"))
+setMethod("length_offset", "ribo", function(object) object@length.offset)
+
+setGeneric("has_metadata", function(object) standardGeneric("has_metadata"))
+setMethod("has_metadata", "ribo", function(object) object@has.metadata)
+
+setGeneric("experiment_info", function(object) standardGeneric("experiment_info"))
+setMethod("experiment_info", "ribo", function(object) object@experiment.info)
+
+setGeneric("transcript_info", function(object) standardGeneric("transcript_info"))
+setMethod("transcript_info", "ribo", function(object) object@transcript.info)
+
+setGeneric("alias_hash", function(object) standardGeneric("alias_hash"))
+setMethod("alias_hash", "ribo", function(object) object@transcript.alias)
+
+setGeneric("transcript_original", function(object) standardGeneric("transcript_original"))
+setMethod("transcript_original", "ribo", function(object) object@transcript.original)
+
+setGeneric("rangeLower", function(object) standardGeneric("rangeLower"))
+setMethod("rangeLower", "ribo", function(object) get_read_lengths(object)[1])
+
+setGeneric("rangeUpper", function(object) standardGeneric("rangeUpper"))
+setMethod("rangeUpper", "ribo", function(object) get_read_lengths(object)[2])
+
+setGeneric("original_hash", function(object) standardGeneric("original_hash"))
+setMethod("original_hash", "ribo", function(object) object@transcript.original)
+
+# validity method 
+setValidity("ribo", validate_ribo)
