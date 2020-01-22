@@ -147,6 +147,3 @@ setMethod("rangeUpper", "ribo", function(object) get_read_lengths(object)[2])
 
 setGeneric("original_hash", function(object) standardGeneric("original_hash"))
 setMethod("original_hash", "ribo", function(object) object@transcript.original)
-
-# validity method 
-setValidity("ribo", validate_ribo)

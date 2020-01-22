@@ -2,7 +2,7 @@
 #'
 #' Gets a list of reference names by reading directly from the .ribo file
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'ribo' object-=09
 #' @return a list of the reference names
 #' @importFrom rhdf5 h5read
 #' @export

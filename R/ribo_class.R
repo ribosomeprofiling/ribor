@@ -1,4 +1,44 @@
-validate_ribo <- function(object) {
+#' Class "ribo"
+#' 
+#' An S4 class to be used with the ribor package
+#' 
+#' @param object A 'ribo' object
+#' @slot path A path to the ribo file of interest
+#' @slot experiments A character vector of experiment names in the file 
+#' @slot format.version The format version of the ribo file 
+#' @slot reference The reference transcriptome used in the ribo file 
+#' @slot length.min The minimum read length of the data in the file 
+#' @slot length.max The maximum read length of the data in the file 
+#' @slot left.span Left span of the junction regions
+#' @slot right.span Right span of the junction regions
+#' @slot length.offset Length offset of all transcripts 
+#' @slot has.metadata Value denoting whether the root ribo file has metadata 
+#' @slot experiment.info data.frame of information on the experiments 
+#' @slot transcript.info Hash of the lengths and offsets of each transcript
+#' @slot transcript.alias Hash that goes from alias to original transcript name
+#' @slot transcript.original Hash that goes from original to alias transcript 
+#' @return A 'ribo' object
+#' @seealso \code{\link{create_ribo}} to create a ribo file
+ribo <- setClass(
+    "ribo",
+    slots =      c(path = "character",
+                   experiments = "character",
+                   format.version = "integer",
+                   reference = "character",
+                   length.min = "integer",
+                   length.max = "integer",
+                   left.span = "integer",
+                   right.span = "integer",
+                   metagene.radius = "integer",
+                   length.offset = "numeric",
+                   has.metadata = "logical",
+                   experiment.info = "data.frame",
+                   transcript.info = "hash",
+                   transcript.alias = "hash",
+                   transcript.original = "hash"))
+
+# validity method 
+setValidity("ribo", function(object) {
     # The validity method is to protect against function calls with ribo
     # objects that have been modified in a way that could generate incorrect
     # output
@@ -27,7 +67,7 @@ validate_ribo <- function(object) {
         msg <- paste("File appears to have no experiments.")
         errors <- c(errors, msg)
     }
-
+    
     if (!all(file_info[file_info$group == "/experiments",]$name == object@experiments)) {
         msg <- paste("Experiments are different from the .ribo file.")
         errors <- c(errors, msg)
@@ -74,47 +114,4 @@ validate_ribo <- function(object) {
     }
     
     if (length(errors) == 0) TRUE else errors
-}
-
-#' Class "ribo"
-#' 
-#' An S4 class to be used with the ribor package
-#' 
-#' @param object A 'ribo' object
-#' @slot path A path to the ribo file of interest
-#' @slot experiments A character vector of experiment names in the file 
-#' @slot format.version The format version of the ribo file 
-#' @slot reference The reference transcriptome used in the ribo file 
-#' @slot length.min The minimum read length of the data in the file 
-#' @slot length.max The maximum read length of the data in the file 
-#' @slot left.span Left span of the junction regions
-#' @slot right.span Right span of the junction regions
-#' @slot length.offset Length offset of all transcripts 
-#' @slot has.metadata Value denoting whether the root ribo file has metadata 
-#' @slot experiment.info data.frame of information on the experiments 
-#' @slot transcript.info Hash of the lengths and offsets of each transcript
-#' @slot transcript.alias Hash that goes from alias to original transcript name
-#' @slot transcript.original Hash that goes from original to alias transcript 
-#' @return A 'ribo' object
-#' @seealso \code{\link{create_ribo}} to create a ribo file
-ribo <- setClass(
-    "ribo",
-    
-    representation(path = "character",
-                   experiments = "character",
-                   format.version = "integer",
-                   reference = "character",
-                   length.min = "integer",
-                   length.max = "integer",
-                   left.span = "integer",
-                   right.span = "integer",
-                   metagene.radius = "integer",
-                   length.offset = "numeric",
-                   has.metadata = "logical",
-                   experiment.info = "data.frame",
-                   transcript.info = "hash",
-                   transcript.alias = "hash",
-                   transcript.original = "hash"),
-    
-    validity = validate_ribo
-)
+})
