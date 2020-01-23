@@ -199,7 +199,7 @@ retrieve_transcript_info <- function(ribo.object,
     }
 
     #generate offsets
-    info <- as.vector(unlist(ribo.object@transcript.info[[name]]))
+    info <- as.vector(unlist(transcript_info(ribo.object)[[name]]))
     if (is.null(info)) {
         stop("Transcript name was not found. Check name and 'alias' parameter.",
              call. = FALSE)

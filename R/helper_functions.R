@@ -190,7 +190,7 @@ make_dataframe <- function(ribo.object,
         original <- ref.names
         ref.names <- vector(mode = "character", length = length(original))
         for (i in seq(length(ref.names))) {
-            ref.names[i] <- ribo.object@transcript.original[[original[[i]]]]
+            ref.names[i] <- original_hash(ribo.object)[[original[[i]]]]
         }
     }
     return(help_make_dataframe(ref.names,

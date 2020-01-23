@@ -29,7 +29,7 @@ references with the 'alias' parameter.
 
 This object is required as an argument for almost all of the functions in this package, and all of the
 functions in this package can accept the returned object of this function. This object is not meant to
-be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file and
+be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file adevnd
 an R environment by creating an object that holds pertinent information.
 
 The information stored in this object include the .ribo file path, the list of experiments,

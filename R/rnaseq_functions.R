@@ -103,7 +103,7 @@ change_reference_names <- function(ribo.object,
         original <- ref.names
         ref.names <- vector(mode = "character", length = length(original))
         for (i in seq_len(length(original))) {
-            ref.names[i] <- ribo.object@transcript.original[[original[i]]]
+            ref.names[i] <- original_hash(ribo.object)[[original[i]]]
         }
     }
     return(ref.names)

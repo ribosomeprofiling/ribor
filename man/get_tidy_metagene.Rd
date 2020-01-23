@@ -73,7 +73,7 @@ metagene_info <- get_tidy_metagene(ribo.object = sample,
                                    range.lower = 2,
                                    range.upper = 5,
                                    length = TRUE,
-                                   experiments = experiments(sample))
+                                   experiment = experiments(sample))
 
 #Note that length and experiments in this case are the
 #default values and can be left out. The following generates the same output.

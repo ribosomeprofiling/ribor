@@ -1,8 +1,8 @@
 check_alias <- function(ribo.object,
                         alias) {
     validObject(ribo.object)
-    has.alias <- !is.empty(ribo.object@transcript.alias) &&
-                 !is.empty(ribo.object@transcript.original)
+    has.alias <- !is.empty(alias_hash(ribo.object)) &&
+                 !is.empty(original_hash(ribo.object))
     if (alias && !has.alias) {
         stop("Transcripts do not have any aliases.", call. = FALSE)
     }
@@ -22,8 +22,8 @@ check_lengths <- function(ribo.object, range.lower, range.upper) {
     # Return:
     # none
 
-    min.length <- get_attributes(ribo.object)$length_min
-    max.length <- get_attributes(ribo.object)$length_max
+    min.length <- length_min(ribo.object)
+    max.length <- length_max(ribo.object)
 
     if ((range.lower < min.length | range.lower > range.upper)) {
         stop(

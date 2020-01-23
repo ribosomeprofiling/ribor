@@ -63,7 +63,7 @@
 #'                               range.upper = 5,
 #'                               length = TRUE,
 #'                               transcript = TRUE,
-#'                               experiments = experiments(sample))
+#'                               experiment = experiments(sample))
 #'
 #'
 #' #Note that length, transcript, and experiments in this case are the
@@ -194,7 +194,7 @@ get_metagene_path <- function(experiment, site) {
 #'                                    range.lower = 2,
 #'                                    range.upper = 5,
 #'                                    length = TRUE,
-#'                                    experiments = experiments(sample))
+#'                                    experiment = experiments(sample))
 #'
 #' #Note that length and experiments in this case are the
 #' #default values and can be left out. The following generates the same output.

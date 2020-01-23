@@ -93,7 +93,7 @@ metagene_info <- get_metagene(ribo.object = sample,
                               range.upper = 5,
                               length = TRUE,
                               transcript = TRUE,
-                              experiments = experiments(sample))
+                              experiment = experiments(sample))
 
 
 #Note that length, transcript, and experiments in this case are the

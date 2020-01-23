@@ -60,19 +60,19 @@ initialize_transcript_info <- function(transcript.names,
 #' sample <- set_aliases(ribo.object = sample,
 #'                       rename = rename_default)
 set_aliases <- function(ribo.object, rename) {
-    if (!is.empty(ribo.object@transcript.alias) ||
-        !is.empty(ribo.object@transcript.original)) {
+    if (!is.empty(alias_hash(ribo.object)) ||
+        !is.empty(original_hash(ribo.object))) {
         warning("Ribo object already has a naming convention. Aliases will be overriden.",
                 call. = FALSE)
     }
-    path <- ribo.object@path
+    path <- path(ribo.object)
     original   <- h5read(path,
                          name = "reference/reference_names")
     
     num.transcripts <- length(original)
     alias <- rename_transcripts(path, rename)
-    ribo.object@transcript.alias    <- hash(keys = alias, values = original)
-    ribo.object@transcript.original <- hash(keys = original, values = alias)
+    ribo.object@alias.hash    <- hash(keys = alias, values = original)
+    ribo.object@original.hash <- hash(keys = original, values = alias)
     return(ribo.object)
 }
 
@@ -88,7 +88,7 @@ set_aliases <- function(ribo.object, rename) {
 #'
 #' This object is required as an argument for almost all of the functions in this package, and all of the
 #' functions in this package can accept the returned object of this function. This object is not meant to
-#' be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file and
+#' be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file adevnd
 #' an R environment by creating an object that holds pertinent information.
 #'
 #' The information stored in this object include the .ribo file path, the list of experiments,
