@@ -7,15 +7,13 @@
 get_coverage(
   ribo.object,
   name,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
   length = TRUE,
   tidy = FALSE,
   alias = FALSE,
   compact = TRUE,
-
-
-  experiments = get_experiments(ribo.object)
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
@@ -35,7 +33,7 @@ get_coverage(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiments to obtain coverage information on}
+\item{experiment}{List of experiments to obtain coverage information on}
 }
 \value{
 A data table containing the coverage data
@@ -76,7 +74,7 @@ coverage.data <- get_coverage(ribo.object = sample,
                               range.lower = 2,
                               range.upper = 5,
                               length = TRUE,
-                              experiments = experiments)
+                              experiment = experiments)
 
 }
 \seealso{

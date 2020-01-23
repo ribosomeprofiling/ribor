@@ -9,21 +9,21 @@ tidy_cov_1 <- get_coverage(ribo.object,
                            range.lower = 2,
                            range.upper = 5,
                            tidy = TRUE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 tidy_cov_2   <- get_coverage(ribo.object,
                         name = "VEGFA",
                         range.lower = 2,
                         range.upper = 5,
                         tidy = TRUE,
-                        experiments = "Hela_1")
+                        experiment = "Hela_1")
 
 tidy_cov_3   <- get_coverage(ribo.object,
                         name = "GAPDH",
                         range.lower = 2,
                         range.upper = 5,
                         tidy = TRUE,
-                        experiments = c("Hela_1"))
+                        experiment = c("Hela_1"))
 
 actual <- sum(tidy_cov_1[, 3]) +
           sum(tidy_cov_2[, 3]) +
@@ -41,7 +41,7 @@ tidy_cov_1 <- get_coverage(ribo.object,
                            range.upper = 5,
                            tidy = TRUE,
                            length = FALSE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 expected <- c(1, 1, 0, 1)
 actual   <- unname(unlist(tidy_cov_1[as.integer(tidy_cov_1$position) == 2, 4]))
@@ -55,7 +55,7 @@ tidy_cov_2 <- get_coverage(ribo.object,
                            range.upper = 5,
                            tidy = TRUE,
                            length = FALSE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 
 actual <- unname(unlist(tidy_cov_2[as.integer(tidy_cov_2$position) == 11, 4]))
@@ -67,19 +67,19 @@ cov_1   <- get_coverage(ribo.object,
                         name = "MYC",
                         range.lower = 2,
                         range.upper = 5,
-                        experiments = "Hela_1")
+                        experiment = "Hela_1")
 
 cov_2   <- get_coverage(ribo.object,
                         name = "VEGFA",
                         range.lower = 2,
                         range.upper = 5,
-                        experiments = "Hela_1")
+                        experiment = "Hela_1")
 
 cov_3   <- get_coverage(ribo.object,
                         name = "GAPDH",
                         range.lower = 2,
                         range.upper = 5,
-                        experiments = c("Hela_1"))
+                        experiment = c("Hela_1"))
 
 actual <- sum(unlist(as.list(cov_1[, -1]))) + 
           sum(unlist(as.list(cov_2[, -1]))) + 
@@ -100,7 +100,7 @@ cov_4   <- get_coverage(ribo.object,
                         name = "GAPDH",
                         range.lower = 2,
                         range.upper = 2,
-                        experiments = c("Hela_1"))
+                        experiment = c("Hela_1"))
 
 actual   <- sum(unlist(as.list(cov_4[, -1])))
 expected <- 14 
@@ -112,7 +112,7 @@ cov_5   <- get_coverage(ribo.object,
                         name = "MYC",
                         range.lower = 3,
                         range.upper = 3,
-                        experiments = c("Hela_2"))
+                        experiment = c("Hela_2"))
 
 actual <- sum(unlist(as.list(cov_5[, -1])))
 expected <- 3 
@@ -139,7 +139,7 @@ tidy_cov_1 <- get_coverage(ribo.object,
                            range.upper = 5,
                            tidy = TRUE,
                            compact = FALSE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 tidy_cov_2   <- get_coverage(ribo.object,
                              name = "VEGFA",
@@ -147,7 +147,7 @@ tidy_cov_2   <- get_coverage(ribo.object,
                              range.upper = 5,
                              tidy = TRUE,
                              compact = FALSE,
-                             experiments = "Hela_1")
+                             experiment = "Hela_1")
 
 tidy_cov_3   <- get_coverage(ribo.object,
                              name = "GAPDH",
@@ -155,7 +155,7 @@ tidy_cov_3   <- get_coverage(ribo.object,
                              range.upper = 5,
                              tidy = TRUE,
                              compact = FALSE,
-                             experiments = c("Hela_1"))
+                             experiment = c("Hela_1"))
 
 actual <- sum(tidy_cov_1[, 3]) +
     sum(tidy_cov_2[, 3]) +
@@ -174,7 +174,7 @@ tidy_cov_1 <- get_coverage(ribo.object,
                            tidy = TRUE,
                            length = FALSE,
                            compact = FALSE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 expected <- c(1, 1, 0, 1)
 actual   <- unname(unlist(tidy_cov_1[as.integer(tidy_cov_1$position) == 2, 4]))
@@ -189,7 +189,7 @@ tidy_cov_2 <- get_coverage(ribo.object,
                            tidy = TRUE,
                            length = FALSE,
                            compact = FALSE,
-                           experiments = "Hela_1")
+                           experiment = "Hela_1")
 
 
 actual <- unname(unlist(tidy_cov_2[as.integer(tidy_cov_2$position) == 11, 4]))
@@ -202,21 +202,21 @@ cov_1   <- get_coverage(ribo.object,
                         range.lower = 2,
                         range.upper = 5,
                         compact = FALSE,
-                        experiments = "Hela_1")
+                        experiment = "Hela_1")
 
 cov_2   <- get_coverage(ribo.object,
                         name = "VEGFA",
                         range.lower = 2,
                         range.upper = 5,
                         compact = FALSE,
-                        experiments = "Hela_1")
+                        experiment = "Hela_1")
 
 cov_3   <- get_coverage(ribo.object,
                         name = "GAPDH",
                         range.lower = 2,
                         range.upper = 5,
                         compact = FALSE,
-                        experiments = c("Hela_1"))
+                        experiment = c("Hela_1"))
 
 actual <- sum(unlist(as.list(cov_1[, -1]))) + 
     sum(unlist(as.list(cov_2[, -1]))) + 
@@ -238,7 +238,7 @@ cov_4   <- get_coverage(ribo.object,
                         range.lower = 2,
                         range.upper = 2,
                         compact = FALSE,
-                        experiments = c("Hela_1"))
+                        experiment = c("Hela_1"))
 
 actual   <- sum(unlist(as.list(cov_4[, -1])))
 expected <- 14 
@@ -251,7 +251,7 @@ cov_5   <- get_coverage(ribo.object,
                         range.lower = 3,
                         range.upper = 3,
                         compact = FALSE,
-                        experiments = c("Hela_2"))
+                        experiment = c("Hela_2"))
 
 actual <- sum(unlist(as.list(cov_5[, -1])))
 expected <- 3 

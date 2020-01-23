@@ -49,20 +49,21 @@
 get_rnaseq <- function(ribo.object,
                        tidy = TRUE,
                        regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-                       experiments = get_experiments(ribo.object),
+                       experiments = experiments(ribo.object),
                        compact = TRUE,
                        alias = FALSE) {
+    validObject(ribo.object)
     rnaseq.experiments <- check_rnaseq(ribo.object, experiments)
     check_alias(ribo.object, alias)
     regions <- check_regions(ribo.object, regions)
-    ribo.experiments <- get_experiments(ribo.object)
+    ribo.experiments <- experiments(ribo.object)
     
     #get just the experiments that exist
     ref.names <- change_reference_names(ribo.object, alias)
     ref.length <- length(ref.names)
     total.experiments <- length(rnaseq.experiments)
     num.regions <- length(regions)
-    path <- ribo.object@path
+    path <- path(ribo.object)
     
     result <- matrix(nrow = ref.length * total.experiments, ncol = num.regions)
     colnames(result) <- regions
@@ -113,7 +114,7 @@ check_rnaseq <- function(ribo.object, experiments) {
     check_experiments(ribo.object, experiments)
     
     #obtain the rnaseq data
-    path <- ribo.object@path
+    path <- path(ribo.object)
     table <- get_content_info(path)
     has.rnaseq <- table[table$rna.seq == TRUE,]$experiment
     

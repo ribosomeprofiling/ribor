@@ -16,7 +16,7 @@ green_meta_alias <- get_metagene(green,
                                  range.upper = 28,
                                  transcript = FALSE,
                                  alias = TRUE,
-                                 experiments = get_experiments(green)[1])
+                                 experiment = experiments(green)[1])
 
 green_meta_original <- get_metagene(green,
                                     "start",
@@ -24,7 +24,7 @@ green_meta_original <- get_metagene(green,
                                     range.upper = 28,
                                     transcript = FALSE,
                                     alias = FALSE,
-                                    experiments = get_experiments(green)[1])
+                                    experiment = experiments(green)[1])
 
 test_that("get_metagene- alias values preserved",
           expect_true(all(green_meta_alias[, 4] == 
@@ -45,7 +45,7 @@ meta_1 <- get_metagene(ribo.object,
                        range.upper = 5,
                        length = TRUE,
                        transcript = TRUE,
-                       experiments = c("Hela_1", "Hela_2"))
+                       experiment = c("Hela_1", "Hela_2"))
 
 actual   <- c(nrow(meta_1), ncol(meta_1)) 
 expected <- c(2, 6)
@@ -65,7 +65,7 @@ meta_2 <- get_metagene(ribo.object,
                        range.upper = 3,
                        length = TRUE,
                        transcript = FALSE,
-                       experiments = c("Hela_1"))
+                       experiment = c("Hela_1"))
 
 actual   <- c(nrow(meta_2), ncol(meta_2)) 
 expected <- c(3, 7)

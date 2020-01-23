@@ -7,10 +7,10 @@
 get_length_distribution(
   ribo.object,
   region,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
@@ -23,8 +23,8 @@ get_length_distribution(
 \item{range.upper}{Upper bound of the read length}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
-  
-\item{experiments}{List of experiment names}
+
+\item{experiment}{List of experiment names}
 }
 \value{
 A DataFrame of the counts at each read length

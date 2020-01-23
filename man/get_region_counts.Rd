@@ -6,16 +6,16 @@
 \usage{
 get_region_counts(
   ribo.object,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  length      = TRUE,
-  transcript  = TRUE,
-  tidy        = TRUE,
-  alias       = FALSE,
-  normalize   = FALSE,
-  region      = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  length = TRUE,
+  transcript = TRUE,
+  tidy = TRUE,
+  alias = FALSE,
+  normalize = FALSE,
+  region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
@@ -39,7 +39,7 @@ get_region_counts(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 }
 \value{
 A DataFrame of the region counts
@@ -49,7 +49,7 @@ A DataFrame of the region counts
 of any subset of regions for a given set of experiments.
 }
 \details{
-This function will return a DataFrame of the counts at each specified region
+This function will return a data frane of the counts at each specified region
 for each specified experiment. The region options are "UTR5", "UTR5J", "CDS",
 "UTR3J", and "UTR3". The user can specify any subset of regions in the form of a vector,
 a list, or a single string if only one region is desired.
@@ -59,7 +59,7 @@ range.lower, range.upper, length, and transcript.
 
 The param 'length' condenses the read lengths together.
 When length is TRUE and transcript is FALSE, the
-DataFrame presents information for each transcript across
+data frame presents information for each transcript across
 all of the read lengths. That is, each transcript has a value
 that is the sum of all of the counts across every read length.
 As a result, information about the transcript at each specific
@@ -112,6 +112,6 @@ region.counts <- get_region_counts(ribo.object = sample,
                                    transcript = TRUE,
                                    tidy = FALSE,
                                    alias = FALSE,
-                                   experiments = experiments)
+                                   experiment = experiments)
 
 }

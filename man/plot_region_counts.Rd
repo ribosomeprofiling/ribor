@@ -6,7 +6,7 @@
 \usage{
 plot_region_counts(
   x,
-  experiments,
+  experiment,
   range.lower,
   range.upper,
   title = "Region Counts"
@@ -15,7 +15,7 @@ plot_region_counts(
 \arguments{
 \item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
 
-\item{experiments}{a list of experiment names}
+\item{experiment}{a list of experiment names}
 
 \item{range.lower}{a lower bounds for a read length range}
 

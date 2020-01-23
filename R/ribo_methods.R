@@ -139,11 +139,5 @@ setMethod("alias_hash", "ribo", function(object) object@transcript.alias)
 setGeneric("transcript_original", function(object) standardGeneric("transcript_original"))
 setMethod("transcript_original", "ribo", function(object) object@transcript.original)
 
-setGeneric("rangeLower", function(object) standardGeneric("rangeLower"))
-setMethod("rangeLower", "ribo", function(object) get_read_lengths(object)[1])
-
-setGeneric("rangeUpper", function(object) standardGeneric("rangeUpper"))
-setMethod("rangeUpper", "ribo", function(object) get_read_lengths(object)[2])
-
 setGeneric("original_hash", function(object) standardGeneric("original_hash"))
 setMethod("original_hash", "ribo", function(object) object@transcript.original)

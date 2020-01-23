@@ -35,10 +35,6 @@ an R environment by creating an object that holds pertinent information.
 The information stored in this object include the .ribo file path, the list of experiments,
 the format version, the reference model, the maximum read length, the minimum read length, the left span,
 the right span, and other information about the transcript information.
-
-Some of the subsequent function calls avoid direct usage of the information stored in the
-.ribo object to prevent any accidental error. However, certain variables in the returned object, such
-as the path, are required to make use of the additional functionality in this package.
 }
 \examples{
 #generate a ribo object with transcript nicknames/aliases

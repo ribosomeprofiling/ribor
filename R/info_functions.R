@@ -27,10 +27,10 @@
 #' @export
 get_info <- function(ribo.object) {
     validObject(ribo.object)
-    path   <- ribo.object@path
+    path   <- path(ribo.object)
     
     #retrieve an experiment list
-    exp.list <- get_experiments(ribo.object)
+    exp.list <- experiments(ribo.object)
     result <- get_attributes(ribo.object)
     has.metadata <- ("metadata" %in% names(result))
     
@@ -79,8 +79,8 @@ get_info <- function(ribo.object) {
 get_metadata <- function(ribo.object,
                          name = NULL,
                          print = TRUE) {
-    path <- ribo.object@path
-    exp.list <- get_experiments(ribo.object)
+    path <- path(ribo.object)
+    exp.list <- experiments(ribo.object)
     file_path = "/"
     
     if (!is.null(name)) {

@@ -50,9 +50,9 @@ An S4 class to be used with the ribor package
 
 \item{\code{transcript.info}}{Hash of the lengths and offsets of each transcript}
 
-\item{\code{transcript.alias}}{Hash that goes from alias to original transcript name}
+\item{\code{alias.hash}}{Hash that goes from alias to original transcript name}
 
-\item{\code{transcript.original}}{Hash that goes from original to alias transcript}
+\item{\code{original.hash}}{Hash that goes from original to alias transcript}
 }}
 
 \examples{

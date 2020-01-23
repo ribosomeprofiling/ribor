@@ -7,13 +7,13 @@
 get_metagene(
   ribo.object,
   site,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  transcript  = TRUE,
-  length      = TRUE,
-  alias       = FALSE,
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  transcript = TRUE,
+  length = TRUE,
+  alias = FALSE,
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ get_metagene(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 }
 \value{
 A DataFrame of the metagene information
@@ -93,7 +93,7 @@ metagene_info <- get_metagene(ribo.object = sample,
                               range.upper = 5,
                               length = TRUE,
                               transcript = TRUE,
-                              experiments = get_experiments(sample))
+                              experiments = experiments(sample))
 
 
 #Note that length, transcript, and experiments in this case are the

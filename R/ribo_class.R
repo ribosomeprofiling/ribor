@@ -15,27 +15,27 @@
 #' @slot has.metadata Value denoting whether the root ribo file has metadata 
 #' @slot experiment.info data.frame of information on the experiments 
 #' @slot transcript.info Hash of the lengths and offsets of each transcript
-#' @slot transcript.alias Hash that goes from alias to original transcript name
-#' @slot transcript.original Hash that goes from original to alias transcript 
+#' @slot alias.hash Hash that goes from alias to original transcript name
+#' @slot original.hash Hash that goes from original to alias transcript 
 #' @return A 'ribo' object
 #' @seealso \code{\link{create_ribo}} to create a ribo file
 ribo <- setClass(
     "ribo",
-    slots =      c(path = "character",
-                   experiments = "character",
-                   format.version = "integer",
-                   reference = "character",
-                   length.min = "integer",
-                   length.max = "integer",
-                   left.span = "integer",
-                   right.span = "integer",
+    slots =      c(path            = "character",
+                   experiments     = "character",
+                   format.version  = "integer",
+                   reference       = "character",
+                   length.min      = "integer",
+                   length.max      = "integer",
+                   left.span       = "integer",
+                   right.span      = "integer",
                    metagene.radius = "integer",
-                   length.offset = "numeric",
-                   has.metadata = "logical",
+                   length.offset   = "numeric",
+                   has.metadata    = "logical",
                    experiment.info = "data.frame",
                    transcript.info = "hash",
-                   transcript.alias = "hash",
-                   transcript.original = "hash"))
+                   alias.hash      = "hash",
+                   original.hash   = "hash"))
 
 # validity method 
 setValidity("ribo", function(object) {

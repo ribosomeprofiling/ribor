@@ -76,10 +76,10 @@ get_region_coordinates <- function(ribo.object, alias=FALSE) {
 
 compute_boundaries <- function(ribo.object) {
     #helper method that computes the boundaries for each region
-    annotation <- t(h5read(ribo.object@path,
+    annotation <- t(h5read(path(ribo.object),
                            name = "/reference/annotation"))
-    left.span <- get_attributes(ribo.object)[['left_span']]
-    right.span <- get_attributes(ribo.object)[['right_span']]
+    left.span <- left_span(ribo.object)
+    right.span <- right_span(ribo.object)
     UTR5_end <- annotation[, 1]
     CDS_end <-  annotation[, 2]
     UTR3_end <- annotation[, 3]

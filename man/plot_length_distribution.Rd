@@ -7,7 +7,7 @@
 plot_length_distribution(
   x,
   region,
-  experiments,
+  experiment,
   range.lower,
   range.upper,
   fraction = FALSE,
@@ -19,7 +19,7 @@ plot_length_distribution(
 
 \item{region}{the region of interest}
 
-\item{experiments}{a list of experiment names}
+\item{experiment}{a list of experiment names}
 
 \item{range.lower}{a lower bounds for a read length range}
 
@@ -71,7 +71,7 @@ plot_length_distribution(x = sample,
                          region = "CDS",
                          range.lower = 2,
                          range.upper = 5,
-                         experiments = experiments,
+                         experiment = experiments,
                          fraction = TRUE)
 
 
@@ -81,7 +81,7 @@ region.counts <- get_length_distribution(ribo.object = sample,
                                          region      = "CDS",
                                          range.lower = 2,
                                          range.upper = 5,
-                                         experiments = experiments)
+                                         experiment  = experiments)
 
 #the param 'length' must be set to FALSE and param 'transcript' must be set
 #to TRUE to use a DataFrame

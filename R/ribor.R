@@ -47,4 +47,5 @@
 #' @docType package
 #' @name ribor
 #' @importFrom methods show setClass setGeneric setMethod is validObject new
+#' @importFrom S4Vectors metadata metadata<-
 NULL

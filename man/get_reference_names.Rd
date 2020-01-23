@@ -7,7 +7,7 @@
 get_reference_names(ribo.object)
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'ribo' object-=09}
 }
 \value{
 a list of the reference names

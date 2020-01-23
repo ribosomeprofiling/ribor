@@ -41,15 +41,15 @@ check_lengths <- function(ribo.object, range.lower, range.upper) {
     }
 }
 
-check_experiments <- function(ribo.object, experiments) {
+check_experiments <- function(ribo.object, experiment) {
     # Helper method that checks if the user-given experiments
     # are present in the current ribo file
     # Args:
     # ribo.object - S3 object of class ribo, contains the handle to the file
     # Return:
     # None
-    ribo.experiments <- get_experiments(ribo.object)
-    matched.experiments <- intersect(experiments, ribo.experiments)
+    ribo.experiments <- experiments(ribo.object)
+    matched.experiments <- intersect(experiment, ribo.experiments)
 
     if (!length(matched.experiments)) {
         stop("Param 'experiments' contained no valid experiments.",
@@ -57,12 +57,12 @@ check_experiments <- function(ribo.object, experiments) {
     }
 
     #deals with missing experiments
-    check <- setdiff(experiments, matched.experiments)
+    check <- setdiff(experiment, matched.experiments)
     if (length(check)) {
-        for (experiment in check) {
-            warning("'", experiment, "'", " was not found.", call. = FALSE)
+        for (exp in check) {
+            warning("'", exp, "'", " was not found.", call. = FALSE)
         }
-        warning("Param 'experiments' contained experiments that were not ", 
+        warning("Param 'experiment' contained experiments that were not ", 
                 "found. The returned data frame ignores these experiments.",
                 call. = FALSE)
     }

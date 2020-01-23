@@ -15,7 +15,7 @@ green_rc_alias <- get_region_counts(green,
                                     transcript = FALSE,
                                     alias = TRUE,
                                     normalize = FALSE,
-                                    experiments = get_experiments(green)[1])
+                                    experiment = experiments(green)[1])
 
 norm.test1 <- 22 * 1000000 / total.reads
 
@@ -25,7 +25,7 @@ green_rc_original <- get_region_counts(green,
                                        range.upper = 28,
                                        transcript = FALSE,
                                        alias = FALSE,
-                                       experiments = get_experiments(green)[1])
+                                       experiment = experiments(green)[1])
 
 
 
@@ -47,7 +47,7 @@ green_rc_alias <- get_region_counts(green,
                                     transcript = FALSE,
                                     alias = FALSE,
                                     normalize = TRUE,
-                                    experiments = get_experiments(green)[1])
+                                    experiment = experiments(green)[1])
 
 actual <- green_rc_alias[5, 4]
 expected <- norm.test1
@@ -63,7 +63,7 @@ green_rc <- get_region_counts(green,
                               transcript = TRUE,
                               alias = FALSE,
                               normalize = FALSE,
-                              experiments = get_experiments(green)[1])
+                              experiment = experiments(green)[1])
 
 green_rc_norm <- get_region_counts(green,
                                    region = "CDS",
@@ -72,7 +72,7 @@ green_rc_norm <- get_region_counts(green,
                                    transcript = TRUE,
                                    alias = FALSE,
                                    normalize = TRUE,
-                                   experiments = get_experiments(green)[1])
+                                   experiment = experiments(green)[1])
 
 expected <- unlist(green_rc[, 3] * 1000000/total.reads)
 
@@ -89,7 +89,7 @@ green_rc_norm <- get_region_counts(green,
                                    transcript = FALSE,
                                    alias = TRUE,
                                    normalize = TRUE,
-                                   experiments = get_experiments(green)[1])
+                                   experiment = experiments(green)[1])
 
 actual <- sum(green_rc_norm[, 4])
 
@@ -104,7 +104,7 @@ green_rc_norm <- get_region_counts(green,
                                    length = FALSE,
                                    alias = FALSE,
                                    normalize = TRUE,
-                                   experiments = get_experiments(green)[1])
+                                   experiment = experiments(green)[1])
 
 actual <- sum(green_rc_norm[, 5])
 test_that("get_region_counts- normalize function",
@@ -115,7 +115,7 @@ rc_1 <- get_region_counts(ribo.object,
                           region = c("UtR5", "cDs", "utr3"),
                           2,
                           5,
-                          experiments = "Hela_1")
+                          experiment = "Hela_1")
 
 actual <- c(nrow(rc_1), ncol(rc_1))
 expected <- c(3, 3)
@@ -128,7 +128,7 @@ rc_all <- get_region_counts(ribo.object,
                             region = c("UtR5", "UTR5j", "cDs", "utr3j", "utr3"),
                              2,
                              5,
-                             experiments = "Hela_1")
+                             experiment = "Hela_1")
 
 actual <- c(nrow(rc_all), ncol(rc_all))
 expected <- c(5, 3)
@@ -148,7 +148,7 @@ rc_3 <- get_region_counts(ribo.object,
                           5,
                           length = TRUE,
                           transcript = FALSE,
-                          experiments = c("Hela_1"))
+                          experiment = c("Hela_1"))
 
 actual <- c(nrow(rc_3), ncol(rc_3))
 expected <- c(3, 4)
@@ -187,7 +187,7 @@ rc_1 <- get_region_counts(ribo.object,
                           2,
                           5,
                           compact = FALSE,
-                          experiments = "Hela_1")
+                          experiment = "Hela_1")
 
 actual <- c(nrow(rc_1), ncol(rc_1))
 expected <- c(3, 3)
@@ -201,7 +201,7 @@ rc_all <- get_region_counts(ribo.object,
                             2,
                             5,
                             compact = FALSE,
-                            experiments = "Hela_1")
+                            experiment = "Hela_1")
 
 actual <- c(nrow(rc_all), ncol(rc_all))
 expected <- c(5, 3)
@@ -222,7 +222,7 @@ rc_3 <- get_region_counts(ribo.object,
                           length = TRUE,
                           transcript = FALSE,
                           compact = FALSE,
-                          experiments = c("Hela_1"))
+                          experiment = c("Hela_1"))
 
 actual <- c(nrow(rc_3), ncol(rc_3))
 expected <- c(3, 4)

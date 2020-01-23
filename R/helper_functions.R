@@ -65,8 +65,9 @@ get_reference_lengths <- function(ribo.object) {
 rename_transcripts <- function(ribo, rename) {
     #ensure that the ribo path is retrieved
     ribo.path <- ribo
-    if (is.ribo(ribo)) {
-        ribo.path <- ribo@path
+    if (is(ribo, "ribo")) {
+        validObject(ribo)
+        ribo.path <- path(ribo)
     }
 
     #handle the function case and the vector case
@@ -113,8 +114,8 @@ rename_default <- function(x) {
 
 get_content_info <- function(ribo.path) {
     file_info     <- h5ls(ribo.path, recursive = TRUE, all = FALSE)
-    experiments   <- file_info[file_info$group == "/experiments", ]$name
-    length <- length(experiments)
+    experiment   <- file_info[file_info$group == "/experiments", ]$name
+    length <- length(experiment)
 
     #creates the separate lists for reads, coverage, rna.seq, and metadata
     #to eventually put in a data frame
@@ -128,11 +129,11 @@ get_content_info <- function(ribo.path) {
 
     #loop over all of the experiments
     for (i in seq(length)) {
-        experiment <- experiments[i]
+        exp <- experiment[i]
         #gathers information on the number of reads for each experiment by looking at
         #the attributes
         name           <-
-            paste("/experiments/", experiment, sep = "")
+            paste("/experiments/", exp, sep = "")
         attribute      <- h5readAttributes(ribo.path, name)
         reads.list[i]     <- attribute[["total_reads"]]
 
@@ -148,7 +149,7 @@ get_content_info <- function(ribo.path) {
     }
 
     experiments.info       <- data.frame(
-        experiment  = experiments,
+        experiment  = experiment,
         total.reads = reads.list,
         coverage    = coverage.list,
         rna.seq     = rna.seq.list,
@@ -161,7 +162,7 @@ get_content_info <- function(ribo.path) {
 
 get_attributes <- function(ribo.object) {
     # Retrieves the attributes of the ribo.object
-    path  <- ribo.object@path
+    path  <- path(ribo.object)
     attribute <- h5readAttributes(path, "/")
     return(attribute[-which(names(attribute) == "time")])
 }

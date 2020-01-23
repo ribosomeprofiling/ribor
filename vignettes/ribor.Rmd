@@ -209,7 +209,7 @@ We can plot the ribosome occupancy around the start or stop sites using `plot_me
 ```{r plot_metagene ribo_start, fig.width = 7}
 plot_metagene(original.ribo,
               site        = "start",
-              experiments = c("GSM1606107"),
+              experiment  = c("GSM1606107"),
               range.lower = 28,
               range.upper = 32)
 ```
@@ -271,7 +271,7 @@ meta.start <- get_metagene(ribo.object = original.ribo,
                            site        = "start",
                            range.lower = 30,
                            range.upper = 30,
-                           experiments = c("GSM1606108"),
+                           experiment  = c("GSM1606108"),
                            length      = FALSE,
                            transcript  = TRUE)
 
@@ -678,7 +678,7 @@ cov <- get_coverage(ribo.object = original.ribo,
                     length      = TRUE,
                     alias       = TRUE,
                     tidy        = TRUE,
-                    experiments = has.coverage)
+                    experiment  = has.coverage)
 cov
 ```
 
@@ -696,7 +696,7 @@ cov <- get_coverage(ribo.object = original.ribo,
                     length      = FALSE,
                     alias       = TRUE,
                     tidy        = TRUE,
-                    experiments = exp.names)
+                    experiment  = exp.names)
 
 cov
 ```
@@ -727,7 +727,7 @@ To get all of the RNA-Seq data in the sample .ribo file in a non-tidy format, se
 rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      tidy        = FALSE,
                      alias       = TRUE,
-                     experiments = has.rnaseq)
+                     experiment  = has.rnaseq)
 
 #print out the first 2 rows of the DataFrame
 head(rnaseq, 2)
@@ -741,7 +741,7 @@ rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      tidy        = TRUE,
                      alias       = TRUE,
                      regions     = c("UTR5J", "CDS", "UTR3J"),
-                     experiments = experiment)
+                     experiment  = experiment)
 head(rnaseq, 2)
 ```
 

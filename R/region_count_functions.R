@@ -3,7 +3,7 @@
 #' \code{\link{get_region_counts}} will return the particular region counts
 #' of any subset of regions for a given set of experiments.
 #'
-#' This function will return a DataFrame of the counts at each specified region
+#' This function will return a data frane of the counts at each specified region
 #' for each specified experiment. The region options are "UTR5", "UTR5J", "CDS",
 #' "UTR3J", and "UTR3". The user can specify any subset of regions in the form of a vector,
 #' a list, or a single string if only one region is desired.
@@ -13,7 +13,7 @@
 #'
 #' The param 'length' condenses the read lengths together.
 #' When length is TRUE and transcript is FALSE, the
-#' DataFrame presents information for each transcript across
+#' data frame presents information for each transcript across
 #' all of the read lengths. That is, each transcript has a value
 #' that is the sum of all of the counts across every read length.
 #' As a result, information about the transcript at each specific
@@ -65,7 +65,7 @@
 #'                                    transcript = TRUE,
 #'                                    tidy = FALSE,
 #'                                    alias = FALSE,
-#'                                    experiments = experiments)
+#'                                    experiment = experiments)
 #'
 #' @param ribo.object A 'ribo' object
 #' @param range.lower Lower bound of the read length
@@ -75,7 +75,7 @@
 #' @param tidy Option to return the DataFrame in a tidy format
 #' @param region Specific region of interest
 #' @param alias Option to report the transcripts as aliases/nicknames
-#' @param experiments List of experiment names
+#' @param experiment List of experiment names
 #' @param normalize Option to normalize the counts as counts per million reads
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return A DataFrame of the region counts
@@ -86,8 +86,8 @@
 #' @importFrom dplyr left_join
 #' @export
 get_region_counts <- function(ribo.object,
-                              range.lower = rangeLower(ribo.object),
-                              range.upper = rangeUpper(ribo.object),
+                              range.lower = length_min(ribo.object),
+                              range.upper = length_max(ribo.object),
                               length = TRUE,
                               transcript = TRUE,
                               tidy = TRUE,
@@ -95,14 +95,15 @@ get_region_counts <- function(ribo.object,
                               normalize = FALSE,
                               region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
                               compact = TRUE, 
-                              experiments = get_experiments(ribo.object)) {
+                              experiment = experiments(ribo.object)) {
+    validObject(ribo.object)
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
-    region     <- check_rc_input(ribo.object, region, range.info, experiments, alias)
+    region     <- check_rc_input(ribo.object, region, range.info, experiment, alias)
     conditions <- c(transcript = transcript, length = length,
                     normalize  = normalize,   alias = alias)
 
-    path              <- ribo.object@path
-    matched.experiments <- intersect(experiments, get_experiments(ribo.object))
+    path                <- path(ribo.object)
+    matched.experiments <- intersect(experiment, experiments(ribo.object))
     total.experiments   <- length(matched.experiments)
     ref.names           <- get_reference_names(ribo.object)
     ref.length          <- length(ref.names)
@@ -110,11 +111,11 @@ get_region_counts <- function(ribo.object,
     values    <- c("UTR5"  = 1, "UTR5J" = 2, "CDS" = 3, "UTR3J" = 4, "UTR3" = 5)
     columns   <- unname(values[region])
     ncol      <- length(region)
-    range.min <- get_read_lengths(ribo.object)[1]
+    range.min <- length_min(ribo.object)
     row.start <- (range.lower - range.min) * ref.length + 1
     row.stop  <- row.start + ref.length* (range.upper - range.lower + 1) - 1
     rows      <- c(row.start:row.stop)
-    matched.experiments <- intersect(experiments, get_experiments(ribo.object))
+    matched.experiments <- intersect(experiment, experiments(ribo.object))
     
     # compute the file paths
     file_paths <- vapply(matched.experiments, get_rc_path, FUN.VALUE = "character")
@@ -160,7 +161,7 @@ get_rc_path <- function(experiment) {
 check_rc_input <- function(ribo.object,
                            region,
                            range.info,
-                           experiments,
+                           experiment,
                            alias) {
     #helper function that checks for valid parameters given by the user
     #calls error messages on any incorrect parameters
@@ -171,7 +172,7 @@ check_rc_input <- function(ribo.object,
 
     check_alias(ribo.object, alias)
     check_lengths(ribo.object, range.lower, range.upper)
-    check_experiments(ribo.object, experiments)
+    check_experiments(ribo.object, experiment)
     return(region)
 }
 
@@ -231,10 +232,10 @@ check_regions <- function(ribo.object,
 #' A DataFrame of the counts at each read length
 get_length_distribution <- function(ribo.object,
                                     region,
-                                    range.lower = rangeLower(ribo.object),
-                                    range.upper = rangeUpper(ribo.object),
+                                    range.lower = length_min(ribo.object),
+                                    range.upper = length_max(ribo.object),
                                     compact = TRUE,
-                                    experiments = get_experiments(ribo.object)) {
+                                    experiment = experiments(ribo.object)) {
   if (length(region) != 1) {
     stop("Please provide only one region.")
   }
@@ -247,7 +248,7 @@ get_length_distribution <- function(ribo.object,
                               transcript = TRUE,
                               normalize = FALSE,
                               compact = compact,
-                              experiments = experiments)[, -3]
+                              experiment = experiment)[, -3]
   
   # by not using DataFrame, we will need to add total.reads back
   if (!compact) {
@@ -298,7 +299,7 @@ get_length_distribution <- function(ribo.object,
 #'                          region = "CDS",
 #'                          range.lower = 2,
 #'                          range.upper = 5,
-#'                          experiments = experiments,
+#'                          experiment = experiments,
 #'                          fraction = TRUE)
 #'
 #'
@@ -308,7 +309,7 @@ get_length_distribution <- function(ribo.object,
 #'                                          region      = "CDS",
 #'                                          range.lower = 2,
 #'                                          range.upper = 5,
-#'                                          experiments = experiments)
+#'                                          experiment  = experiments)
 #'
 #' #the param 'length' must be set to FALSE and param 'transcript' must be set
 #' #to TRUE to use a DataFrame
@@ -322,7 +323,7 @@ get_length_distribution <- function(ribo.object,
 #' @param region the region of interest
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
-#' @param experiments a list of experiment names
+#' @param experiment a list of experiment names
 #' @param fraction logical value that, if TRUE, presents the count as a fraction of the total reads in the given ranges
 #' @param title a title for the generated plot
 #' @importFrom tidyr gather
@@ -334,12 +335,12 @@ get_length_distribution <- function(ribo.object,
 #' @return A 'ggplot' of the length distribution
 plot_length_distribution <- function(x,
                                      region,
-                                     experiments,
+                                     experiment,
                                      range.lower,
                                      range.upper,
                                      fraction = FALSE,
                                      title = "Length Distribution") {
-    x <- check_ld_input(x, region, range.lower, range.upper, experiments)
+    x <- check_ld_input(x, region, range.lower, range.upper, experiment)
     y.axis <- "Count"
     y.value <- "count"
     
@@ -374,21 +375,21 @@ check_ld_input <- function(x,
                            region,
                            range.lower,
                            range.upper,
-                           experiments) {
-      #check the plot_length_distribution output
+                           experiment) {
+    #check the plot_length_distribution output
     if (is(x, "ribo") && validObject(x)) {
         if (missing(region) || length(region) != 1){
             stop("Please indicate a single region.") 
         } 
-        if (missing(experiments)) experiments = get_experiments(x)
-        if (missing(range.lower)) range.lower <- rangeLower(x)
-        if (missing(range.upper)) range.upper <- rangeUpper(x)
+        if (missing(experiment)) experiment <- experiments(x)
+        if (missing(range.lower)) range.lower <- length_min(x)
+        if (missing(range.upper)) range.upper <- length_max(x)
         
         x <- strip_rlefactor(get_length_distribution(ribo.object = x,
                                                      region      = region,
                                                      range.lower = range.lower,
                                                      range.upper = range.upper,
-                                                     experiments = experiments))
+                                                     experiment  = experiment))
     } else if (is(x, "DataFrame") || is(x, "DFrame")) {
 
         x <- strip_rlefactor(x)
@@ -481,7 +482,7 @@ check_ld_input <- function(x,
 #' @param x A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
-#' @param experiments a list of experiment names
+#' @param experiment a list of experiment names
 #' @param title a title for the generated plot
 #' @importFrom dplyr left_join mutate %>% group_by summarize arrange desc
 #' @importFrom tidyr gather
@@ -491,11 +492,11 @@ check_ld_input <- function(x,
 #' @export
 #' @return A 'ggplot' of the region counts for each of the experiments 
 plot_region_counts <- function(x,
-                               experiments,
+                               experiment,
                                range.lower,
                                range.upper,
                                title = "Region Counts") {
-    rc <- check_plot_rc_input(x, range.lower, range.upper, experiments)
+    rc <- check_plot_rc_input(x, range.lower, range.upper, experiment)
     rc <- as.data.frame(rc)
     
     #prepare data for visualization
@@ -532,16 +533,16 @@ plot_region_counts <- function(x,
 check_plot_rc_input <- function(x,
                                 range.lower,
                                 range.upper,
-                                experiments) {
+                                experiment) {
     #helper method that checks the plot_region_counts input and returns data
     #for plotting
     regions <- c("UTR5", "CDS", "UTR3")
     if (is(x, "ribo") && validObject(x)) {
-        if (missing(experiments) || is.null(experiments)) {
-            experiments <- get_experiments(x)
+        if (missing(experiment) || is.null(experiment)) {
+            experiment <- experiments(x)
         } 
-        if (missing(range.lower)) range.lower <- rangeLower(x)
-        if (missing(range.upper)) range.upper <- rangeUpper(x)
+        if (missing(range.lower)) range.lower <- length_min(x)
+        if (missing(range.upper)) range.upper <- length_max(x)
         check_lengths(x, range.lower, range.upper)
         x <- strip_rlefactor(get_region_counts(ribo.object = x,
                                                 region      = regions,
@@ -549,7 +550,7 @@ check_plot_rc_input <- function(x,
                                                 range.upper = range.upper,
                                                 length      = TRUE,
                                                 transcript  = TRUE,
-                                                experiments = experiments))
+                                                experiment = experiment))
     } else if (is(x, "DataFrame") || is.data.frame(x)) {
         if (is(x, "DataFrame")) x <- strip_rlefactor(x)
 
