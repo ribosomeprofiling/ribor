@@ -7,14 +7,14 @@
 get_length_distribution(
   ribo.object,
   region,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{region}{Specific region of interest}
 
@@ -23,11 +23,11 @@ get_length_distribution(
 \item{range.upper}{Upper bound of the read length}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
-  
-\item{experiments}{List of experiment names}
+
+\item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the counts at each read length
+A data frame of length distribution of a single region in a tidy format for the given list of experiments
 }
 \description{
 The function {\code{\link{get_length_distribution}}} retrieves the raw or normalized
@@ -40,7 +40,7 @@ returned DataFrame is valid input for {\code{\link{plot_length_distribution}}}.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify the experiments of interest
 experiments <- c("Hela_1", "Hela_2", "WT_1")

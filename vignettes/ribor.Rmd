@@ -127,7 +127,7 @@ To interact with a .ribo file, it is necessary to create a ribo object that prov
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 
 #generates the 'ribo' class object 
-original.ribo <- create_ribo(file.path, rename = rename_default )
+original.ribo <- Ribo(file.path, rename = rename_default )
 ```
 
 **Do not modify the values of the returned ribo object.**
@@ -209,7 +209,7 @@ We can plot the ribosome occupancy around the start or stop sites using `plot_me
 ```{r plot_metagene ribo_start, fig.width = 7}
 plot_metagene(original.ribo,
               site        = "start",
-              experiments = c("GSM1606107"),
+              experiment  = c("GSM1606107"),
               range.lower = 28,
               range.upper = 32)
 ```
@@ -271,7 +271,7 @@ meta.start <- get_metagene(ribo.object = original.ribo,
                            site        = "start",
                            range.lower = 30,
                            range.upper = 30,
-                           experiments = c("GSM1606108"),
+                           experiment  = c("GSM1606108"),
                            length      = FALSE,
                            transcript  = TRUE)
 
@@ -481,7 +481,7 @@ If `compact` is FALSE, the called function will return a data.frame instead of a
 In the beginning, when we created the ribo object, we used an optional parameter `rename = rename_default`.
 
 ```{r createRibo_revisited, eval = TRUE}
-original.ribo <- create_ribo(file.path, rename = rename_default )
+original.ribo <- Ribo(file.path, rename = rename_default )
 original.ribo
 ```
 
@@ -524,7 +524,7 @@ rename_default("ENST00000335137.4|ENSG00000186092.6|OTTHUMG00000001094.4|-|OR4F5
 Using the above function, the following code will generate a ribo object and assign an alias to all of the transcripts in a .ribo file.
 
 ``` {r alias}
-alias.ribo    <- create_ribo(file.path, rename = rename_default)
+alias.ribo    <- Ribo(file.path, rename = rename_default)
 alias.ribo
 ```
 
@@ -532,7 +532,7 @@ Notice that when `rename` is not provided, the `alias` attribute will be false.
 
 
 ``` {r noalias}
-noalias.ribo    <- create_ribo(file.path)
+noalias.ribo    <- Ribo(file.path)
 noalias.ribo
 ```
 
@@ -540,7 +540,7 @@ We also provide a second option of supplying a string **vector** containing the 
 
 ``` {r set_aliases}
 #create a ribo file 
-alias.ribo    <- create_ribo(file.path)
+alias.ribo    <- Ribo(file.path)
 
 #generate the vector of aliases
 aliases <- rename_transcripts(ribo = alias.ribo, rename = rename_default)
@@ -678,7 +678,7 @@ cov <- get_coverage(ribo.object = original.ribo,
                     length      = TRUE,
                     alias       = TRUE,
                     tidy        = TRUE,
-                    experiments = has.coverage)
+                    experiment  = has.coverage)
 cov
 ```
 
@@ -696,7 +696,7 @@ cov <- get_coverage(ribo.object = original.ribo,
                     length      = FALSE,
                     alias       = TRUE,
                     tidy        = TRUE,
-                    experiments = exp.names)
+                    experiment  = exp.names)
 
 cov
 ```
@@ -727,7 +727,7 @@ To get all of the RNA-Seq data in the sample .ribo file in a non-tidy format, se
 rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      tidy        = FALSE,
                      alias       = TRUE,
-                     experiments = has.rnaseq)
+                     experiment  = has.rnaseq)
 
 #print out the first 2 rows of the DataFrame
 head(rnaseq, 2)
@@ -741,7 +741,7 @@ rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      tidy        = TRUE,
                      alias       = TRUE,
                      regions     = c("UTR5J", "CDS", "UTR3J"),
-                     experiments = experiment)
+                     experiment  = experiment)
 head(rnaseq, 2)
 ```
 

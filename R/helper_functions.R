@@ -2,27 +2,27 @@
 #'
 #' Gets a list of reference names by reading directly from the .ribo file
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object-=09
 #' @return a list of the reference names
 #' @importFrom rhdf5 h5read
 #' @export
 #' @examples
 #' #generate a ribo object with transcript nicknames/aliases
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #get the reference names
 #' names <- get_reference_names(sample)
 get_reference_names <- function(ribo.object) {
     # Retrieves the reference transcript names
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     return(h5read(ribo.object@path,
                   name = "reference/reference_names"))
 }
 
 get_reference_lengths <- function(ribo.object) {
     # Retrieves the reference transcript lengths
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     row.names <- h5read(ribo.object@path,
                         name = "reference/reference_names")
     lengths   <- h5read(ribo.object@path,
@@ -48,16 +48,16 @@ get_reference_lengths <- function(ribo.object) {
 #' transcripts in the ribo file. This character vector would provide aliases that match the order
 #' of the original reference names returned by the {\code{\link{get_reference_names}}} function.
 #'
-#' @param ribo a path to the ribo file or a 'ribo' object
+#' @param ribo a path to the ribo file or a 'Ribo' object
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases
 #' @importFrom rhdf5 h5read
 #' @seealso
 #' {\code{\link{rename_default}}} to view expected input and output of a 'rename' function
-#' {\code{\link{create_ribo}}} to generate a ribo object
+#' {\code{\link{Ribo}}} to generate a ribo object
 #' @examples
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
+#' sample <- Ribo(file.path, rename = rename_default)
 #'
 #' aliases <- rename_transcripts(sample, rename = rename_default)
 #' @export
@@ -65,8 +65,9 @@ get_reference_lengths <- function(ribo.object) {
 rename_transcripts <- function(ribo, rename) {
     #ensure that the ribo path is retrieved
     ribo.path <- ribo
-    if (is.ribo(ribo)) {
-        ribo.path <- ribo@path
+    if (is(ribo, "Ribo")) {
+        validObject(ribo)
+        ribo.path <- path(ribo)
     }
 
     #handle the function case and the vector case
@@ -113,8 +114,8 @@ rename_default <- function(x) {
 
 get_content_info <- function(ribo.path) {
     file_info     <- h5ls(ribo.path, recursive = TRUE, all = FALSE)
-    experiments   <- file_info[file_info$group == "/experiments", ]$name
-    length <- length(experiments)
+    experiment   <- file_info[file_info$group == "/experiments", ]$name
+    length <- length(experiment)
 
     #creates the separate lists for reads, coverage, rna.seq, and metadata
     #to eventually put in a data frame
@@ -128,11 +129,11 @@ get_content_info <- function(ribo.path) {
 
     #loop over all of the experiments
     for (i in seq(length)) {
-        experiment <- experiments[i]
+        exp <- experiment[i]
         #gathers information on the number of reads for each experiment by looking at
         #the attributes
         name           <-
-            paste("/experiments/", experiment, sep = "")
+            paste("/experiments/", exp, sep = "")
         attribute      <- h5readAttributes(ribo.path, name)
         reads.list[i]     <- attribute[["total_reads"]]
 
@@ -148,7 +149,7 @@ get_content_info <- function(ribo.path) {
     }
 
     experiments.info       <- data.frame(
-        experiment  = experiments,
+        experiment  = experiment,
         total.reads = reads.list,
         coverage    = coverage.list,
         rna.seq     = rna.seq.list,
@@ -161,7 +162,7 @@ get_content_info <- function(ribo.path) {
 
 get_attributes <- function(ribo.object) {
     # Retrieves the attributes of the ribo.object
-    path  <- ribo.object@path
+    path  <- path(ribo.object)
     attribute <- h5readAttributes(path, "/")
     return(attribute[-which(names(attribute) == "time")])
 }
@@ -189,7 +190,7 @@ make_dataframe <- function(ribo.object,
         original <- ref.names
         ref.names <- vector(mode = "character", length = length(original))
         for (i in seq(length(ref.names))) {
-            ref.names[i] <- ribo.object@transcript.original[[original[[i]]]]
+            ref.names[i] <- original_hash(ribo.object)[[original[[i]]]]
         }
     }
     return(help_make_dataframe(ref.names,
@@ -329,7 +330,7 @@ prepare_DataFrame <- function(ribo.object, DF) {
   DF$experiment = Rle(factor(DF$experiment))
   
   # add the metadata
-  DF@metadata[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", 
+  metadata(DF)[[1]] <- get_info(ribo.object)$experiment.info[, c("experiment", 
                                                                 "total.reads")]
   return(DF)
 }

@@ -1,7 +1,7 @@
 context("file info functions")
 library(ribor)
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object   <- create_ribo(file.path)
+ribo.object   <- Ribo(file.path)
 expected.exp <- c("Hela_1", "Hela_2", "WT_1", "WT_2", "WT_3")
 
 #test get_experiments

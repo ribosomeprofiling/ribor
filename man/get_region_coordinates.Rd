@@ -7,7 +7,7 @@
 get_region_coordinates(ribo.object, alias = FALSE)
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{alias}{Option to return the transcript names as aliases}
 }
@@ -33,7 +33,7 @@ of the UTR5 and UTR3 junction.
 \examples{
 # generate a ribo object 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- create_ribo(file.path, rename = rename_default)
+sample <- Ribo(file.path, rename = rename_default)
 
 # get the region coordinates
 coord <- get_region_coordinates(sample, alias = TRUE)

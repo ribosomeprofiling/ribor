@@ -7,7 +7,7 @@
 plot_length_distribution(
   x,
   region,
-  experiments,
+  experiment,
   range.lower,
   range.upper,
   fraction = FALSE,
@@ -15,11 +15,11 @@ plot_length_distribution(
 )
 }
 \arguments{
-\item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
+\item{x}{A 'Ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
 
 \item{region}{the region of interest}
 
-\item{experiments}{a list of experiment names}
+\item{experiment}{a list of experiment names}
 
 \item{range.lower}{a lower bounds for a read length range}
 
@@ -34,7 +34,7 @@ A 'ggplot' of the length distribution
 }
 \description{
 The function \code{\link{plot_length_distribution}} can take either a DataFrame
-or a "ribo" object to generate a line graph of the length distributions from
+or a "Ribo" object to generate a line graph of the length distributions from
 range.lower to range.upper.
 }
 \details{
@@ -43,7 +43,7 @@ to the total sum of the read length range provided by param 'range.lower'
 and 'range.upper'. When fraction is set to FALSE, the total count of each
 read length is plotted.
 
-When given a "ribo" object, \code{\link{plot_length_distribution}} calls
+When given a "Ribo" object, \code{\link{plot_length_distribution}} calls
 \code{\link{get_region_counts}} to retrieve the necessary information
 for plotting.
 
@@ -62,7 +62,7 @@ and allows for more control.
 
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify experiments of interest
 experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -71,7 +71,7 @@ plot_length_distribution(x = sample,
                          region = "CDS",
                          range.lower = 2,
                          range.upper = 5,
-                         experiments = experiments,
+                         experiment = experiments,
                          fraction = TRUE)
 
 
@@ -81,7 +81,7 @@ region.counts <- get_length_distribution(ribo.object = sample,
                                          region      = "CDS",
                                          range.lower = 2,
                                          range.upper = 5,
-                                         experiments = experiments)
+                                         experiment  = experiments)
 
 #the param 'length' must be set to FALSE and param 'transcript' must be set
 #to TRUE to use a DataFrame
@@ -92,5 +92,5 @@ plot_length_distribution(region.counts)
 \seealso{
 \code{\link{get_region_counts}} to generate a DataFrame that can
 be provided as input,
-\code{\link{ribo}} to create a ribo.object that can be provided as input
+\code{\link{Ribo}} to create a ribo.object that can be provided as input
 }

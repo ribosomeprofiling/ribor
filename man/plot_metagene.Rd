@@ -7,7 +7,7 @@
 plot_metagene(
   x,
   site,
-  experiments,
+  experiment,
   range.lower,
   range.upper,
   normalize = FALSE,
@@ -16,11 +16,11 @@ plot_metagene(
 )
 }
 \arguments{
-\item{x}{A 'ribo' object or a data frame generated from \code{\link{get_metagene}}}
+\item{x}{A 'Ribo' object or a data frame generated from \code{\link{get_metagene}}}
 
 \item{site}{"start" or "stop" site}
 
-\item{experiments}{list of experiments}
+\item{experiment}{list of experiments}
 
 \item{range.lower}{lower bound of the read length, inclusive}
 
@@ -56,7 +56,7 @@ This function uses ggplot in its underlying implementation.
 
 #generate the ribo object to directly use
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify experiments of interest
 experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -67,9 +67,9 @@ plot_metagene(x = sample,
               site = "start",
               range.lower = 2,
               range.upper = 5,
-              experiments = experiments)
+              experiment = experiments)
 
-#Note that the site, range.lower, range.upper, and experiments are only
+#Note that the site, range.lower, range.upper, and experiment parameter are only
 #necessary if a ribo object is being passed in as param 'x'. If a ribo
 #object is passed in, then the param 'experiments' will be set to all of
 #the experiments by default.

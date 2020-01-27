@@ -7,16 +7,16 @@
 get_tidy_metagene(
   ribo.object,
   site,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  length      = TRUE,
-  alias       = FALSE,
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  length = TRUE,
+  alias = FALSE,
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{site}{"start" or "stop" site coverage}
 
@@ -28,20 +28,18 @@ get_tidy_metagene(
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 
-
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 }
 \value{
-A tidy data frame of the metagene information
+A tidy data frame of metagene information with the option of including read length information
 }
 \description{
 The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier
 data cleaning and manipulation. In providing this functionality while reducing the returned data frame
 size, the user must aggregate across the transcripts and is only provided the option to aggregate the 
 read lengths together.
-
 }
 \details{
 The dimensions of the returned data frame depend on the parameters
@@ -62,9 +60,9 @@ the metagene coverage count at each read length.
 The
 }
 \examples{
-#generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function
+#generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #extract the total metagene information in a tidy format
 #for all experiments across the read lengths and transcripts
@@ -75,7 +73,7 @@ metagene_info <- get_tidy_metagene(ribo.object = sample,
                                    range.lower = 2,
                                    range.upper = 5,
                                    length = TRUE,
-                                   experiments = get_experiments(sample))
+                                   experiment = experiments(sample))
 
 #Note that length and experiments in this case are the
 #default values and can be left out. The following generates the same output.
@@ -86,7 +84,7 @@ metagene_info <- get_tidy_metagene(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{create_ribo}} to generate the necessary 'ribo' class object.
+\code{\link{Ribo}} to generate the necessary 'Ribo' class object.
 \code{\link{plot_metagene}} to visualize the metagene data,
 \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 }

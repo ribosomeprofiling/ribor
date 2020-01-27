@@ -16,7 +16,7 @@
 #'
 #' The param 'transcripts' condenses the transcripts together.
 #' When transcript is TRUE and length is FALSE, the data
-#' table presents information at each read length between range.lower and
+#' frame presents information at each read length between range.lower and
 #' range.upper inclusive. That is, each separate read length denotes the
 #' sum of counts from every transcript. As a result, information about the
 #' counts of each individual transcript is lost.
@@ -37,21 +37,21 @@
 #' data frame will contain the aliases rather than the original
 #' reference names of the .ribo file.
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length, inclusive
 #' @param range.upper Upper bound of the read length, inclusive
 #' @param transcript Option to condense the transcripts together, preserving information at each read length
 #' @param length Option to condense the read lengths together, preserving information at each transcript
-#' @param experiments List of experiment names
+#' @param experiment List of experiment names
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A DataFrame of the metagene information
+#' @return A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
 #' @examples
 #'
 #' #generate the ribo object by providing the file.path to the ribo file
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #'
 #' #extract the total metagene information for all experiments
@@ -63,7 +63,7 @@
 #'                               range.upper = 5,
 #'                               length = TRUE,
 #'                               transcript = TRUE,
-#'                               experiments = get_experiments(sample))
+#'                               experiment = experiments(sample))
 #'
 #'
 #' #Note that length, transcript, and experiments in this case are the
@@ -75,7 +75,7 @@
 #'                               range.upper = 5)
 #'
 #' @seealso
-#' \code{\link{create_ribo}} to generate the necessary 'ribo' class object,
+#' \code{\link{Ribo}} to generate the necessary 'Ribo' class object,
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_tidy_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
@@ -85,20 +85,21 @@
 #' @export
 get_metagene <- function(ribo.object,
                          site,
-                         range.lower = rangeLower(ribo.object),
-                         range.upper = rangeUpper(ribo.object),
+                         range.lower = length_min(ribo.object),
+                         range.upper = length_max(ribo.object),
                          transcript = TRUE,
                          length = TRUE,
                          alias = FALSE,
                          compact = TRUE,
-                         experiments = get_experiments(ribo.object)) {
+                         experiment = experiments(ribo.object)) {
+    validObject(ribo.object)
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     conditions <- c(transcript = transcript, length = length, alias = alias)
     site <- tolower(site)
-    check_metagene_input(ribo.object, site, range.info, experiments, alias)
+    check_metagene_input(ribo.object, site, range.info, experiment, alias)
 
-    path              <- ribo.object@path
-    range.min           <- get_read_lengths(ribo.object)[1]
+    path                <- path(ribo.object)
+    range.min           <- length_min(ribo.object)
     metagene.radius     <- h5readAttributes(path, "/")[["metagene_radius"]]
     ncol                <- 2 * metagene.radius + 1
     columns             <- seq(ncol)
@@ -109,7 +110,7 @@ get_metagene <- function(ribo.object,
     rows <- c(row.start:row.stop)
 
     #gather information to use in filling and labeling final data frame
-    matched.experiments <- intersect(experiments, get_experiments(ribo.object))
+    matched.experiments <- intersect(experiment, experiments(ribo.object))
     exp_paths <- vapply(matched.experiments, get_metagene_path, site = site,
                         FUN.VALUE = "character")
     data  <- lapply(exp_paths, generate_matrix,
@@ -169,20 +170,19 @@ get_metagene_path <- function(experiment, site) {
 #' 
 #' The 
 #' 
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length
 #' @param range.upper Upper bound of the read length
 #' @param length Option to condense the read lengths together
 #' @param alias Option to report the transcripts as aliases/nicknames
-#' @param experiments List of experiment names
+#' @param experiment List of experiment names
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return
-#' A tidy data frame of the metagene information
+#' @return A tidy data frame of metagene information with the option of including read length information 
 #' @examples
-#' #generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function
+#' #generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #extract the total metagene information in a tidy format
 #' #for all experiments across the read lengths and transcripts
@@ -193,7 +193,7 @@ get_metagene_path <- function(experiment, site) {
 #'                                    range.lower = 2,
 #'                                    range.upper = 5,
 #'                                    length = TRUE,
-#'                                    experiments = get_experiments(sample))
+#'                                    experiment = experiments(sample))
 #'
 #' #Note that length and experiments in this case are the
 #' #default values and can be left out. The following generates the same output.
@@ -203,7 +203,7 @@ get_metagene_path <- function(experiment, site) {
 #'                                    range.upper = 5)
 #'
 #' @seealso
-#' \code{\link{create_ribo}} to generate the necessary 'ribo' class object.
+#' \code{\link{Ribo}} to generate the necessary 'Ribo' class object.
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
@@ -211,12 +211,12 @@ get_metagene_path <- function(experiment, site) {
 #' @export
 get_tidy_metagene <- function(ribo.object,
                               site,
-                              range.lower = rangeLower(ribo.object),
-                              range.upper = rangeUpper(ribo.object),
+                              range.lower = length_min(ribo.object),
+                              range.upper = length_max(ribo.object),
                               length = TRUE,
                               alias = FALSE,
                               compact = TRUE,
-                              experiments = get_experiments(ribo.object)) {
+                              experiment = experiments(ribo.object)) {
   site <- tolower(site)
   result <- get_metagene(ribo.object,
                          site,
@@ -225,7 +225,7 @@ get_tidy_metagene <- function(ribo.object,
                          length,
                          transcript = TRUE,
                          alias = alias,
-                         experiments = experiments)
+                         experiment = experiment)
   
   result <- strip_rlefactor(result)
   metagene.radius <- as.integer((ncol(result) - 2) / 2)
@@ -251,7 +251,7 @@ get_tidy_metagene <- function(ribo.object,
 check_metagene_input <- function(ribo.object,
                                  site,
                                  range.info,
-                                 experiments,
+                                 experiment,
                                  alias) {
   #check_metagene_input is a helper function that checks the validity of
   #the metagene function parameters
@@ -259,14 +259,13 @@ check_metagene_input <- function(ribo.object,
   if (site != "start" & site != "stop") {
     stop("Please type 'start' or 'stop' to indicate the 'site' parameter value.")
   }
-
+  
   range.lower <- range.info[["range.lower"]]
   range.upper <- range.info[["range.upper"]]
 
   check_alias(ribo.object, alias)
-  check_ribo(ribo.object)
   check_lengths(ribo.object, range.lower, range.upper)
-  check_experiments(ribo.object, experiments)
+  check_experiments(ribo.object, experiment)
 }
 
 #' Plots the metagene coverage data
@@ -285,11 +284,11 @@ check_metagene_input <- function(ribo.object,
 #'
 #' This function uses ggplot in its underlying implementation.
 #'
-#' @param x A 'ribo' object or a data frame generated from \code{\link{get_metagene}}
+#' @param x A 'Ribo' object or a data frame generated from \code{\link{get_metagene}}
 #' @param site "start" or "stop" site
 #' @param range.lower lower bound of the read length, inclusive
 #' @param range.upper upper bound of the read length, inclusive
-#' @param experiments list of experiments
+#' @param experiment list of experiments
 #' @param normalize When TRUE, normalizes the data by the total reads.
 #' @param title title of the generated plot
 #' @param tick x-axis labeling increment
@@ -298,7 +297,7 @@ check_metagene_input <- function(ribo.object,
 #'
 #' #generate the ribo object to directly use
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify experiments of interest
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -309,9 +308,9 @@ check_metagene_input <- function(ribo.object,
 #'               site = "start",
 #'               range.lower = 2,
 #'               range.upper = 5,
-#'               experiments = experiments)
+#'               experiment = experiments)
 #'
-#' #Note that the site, range.lower, range.upper, and experiments are only
+#' #Note that the site, range.lower, range.upper, and experiment parameter are only
 #' #necessary if a ribo object is being passed in as param 'x'. If a ribo
 #' #object is passed in, then the param 'experiments' will be set to all of
 #' #the experiments by default.
@@ -342,7 +341,7 @@ check_metagene_input <- function(ribo.object,
 #' A 'ggplot' of the metagene site coverage
 plot_metagene <- function(x,
                           site,
-                          experiments,
+                          experiment,
                           range.lower,
                           range.upper,
                           normalize = FALSE,
@@ -352,7 +351,7 @@ plot_metagene <- function(x,
                              site,
                              range.lower,
                              range.upper,
-                             experiments)
+                             experiment)
 
     y.value <- "count"
     y.label <- "Count"
@@ -360,7 +359,7 @@ plot_metagene <- function(x,
     if (normalize) {
       per.million <- 1000000
       if (is(x, "DataFrame")) {
-          info <- x@metadata[[1]]
+          info <- metadata(x)[[1]]
           x %>% 
             strip_rlefactor() %>% 
             as.data.frame() %>% 
@@ -392,24 +391,23 @@ check_plot_metagene <- function(x,
                                 site,
                                 range.lower,
                                 range.upper,
-                                experiments) {
-    is.ribo <- check_ribo(x, stop = FALSE)
-
+                                experiment) {
+    
     #x is a ribo object
-    if (is.ribo) {
+    if (is(x, "Ribo") && validObject(x)) {
         if (missing(site)) {
           stop("Please indicate the 'site' parameter with either 'start' or 'stop'",
                call. = FALSE)
         } 
-        if (missing(experiments)) experiments = get_experiments(x)
-        if (missing(range.lower)) range.lower <- rangeLower(x)
-        if (missing(range.upper)) range.upper <- rangeUpper(x)
+        if (missing(experiment)) experiment <- experiments(x)
+        if (missing(range.lower)) range.lower <- length_min(x)
+        if (missing(range.upper)) range.upper <- length_max(x)
         x <- strip_rlefactor(get_tidy_metagene(x,
                                                site,
                                                range.lower,
                                                range.upper,
                                                length = TRUE,
-                                               experiments = experiments))
+                                               experiment = experiment))
     } else if (is(x, "DataFrame") || is(x, "DFrame")) {
 
         x <- strip_rlefactor(x)
@@ -434,7 +432,7 @@ check_plot_metagene <- function(x,
                         typeof(x[, "total.reads"]) %in% types, 
                         ncol(x) == 4)
       if (mismatch) {
-        stop("Please make sure that the data table is of the correct format.",
+        stop("Please make sure that the data frame is of the correct format.",
              call.=FALSE)
       }
     } else{ 

@@ -6,22 +6,21 @@
 \usage{
 get_rnaseq(
   ribo.object,
-  tidy        = TRUE,
-  regions     = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-  experiments = get_experiments(ribo.object),
-  compact     = TRUE,
-  alias       = FALSE
+  tidy = TRUE,
+  regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  experiments = experiments(ribo.object),
+  compact = TRUE,
+  alias = FALSE
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{tidy}{Logical value denoting whether or not the user wants a tidy format}
 
 \item{regions}{Specific region(s) of interest}
 
 \item{experiments}{List of experiment names}
-
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
@@ -54,7 +53,7 @@ file.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #list out the experiments of interest that have RNA-Seq data
 experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -66,5 +65,5 @@ rnaseq.data <- get_rnaseq(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

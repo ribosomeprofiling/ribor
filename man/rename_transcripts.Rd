@@ -7,7 +7,7 @@
 rename_transcripts(ribo, rename)
 }
 \arguments{
-\item{ribo}{a path to the ribo file or a 'ribo' object}
+\item{ribo}{a path to the ribo file or a 'Ribo' object}
 
 \item{rename}{A function that renames the original transcript or an already generated
 character vector of aliases}
@@ -34,11 +34,11 @@ of the original reference names returned by the {\code{\link{get_reference_names
 }
 \examples{
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- create_ribo(file.path, rename = rename_default)
+sample <- Ribo(file.path, rename = rename_default)
 
 aliases <- rename_transcripts(sample, rename = rename_default)
 }
 \seealso{
 {\code{\link{rename_default}}} to view expected input and output of a 'rename' function
-{\code{\link{create_ribo}}} to generate a ribo object
+{\code{\link{Ribo}}} to generate a ribo object
 }

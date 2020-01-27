@@ -6,20 +6,20 @@
 \usage{
 get_region_counts(
   ribo.object,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  length      = TRUE,
-  transcript  = TRUE,
-  tidy        = TRUE,
-  alias       = FALSE,
-  normalize   = FALSE,
-  region      = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  length = TRUE,
+  transcript = TRUE,
+  tidy = TRUE,
+  alias = FALSE,
+  normalize = FALSE,
+  region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{range.lower}{Lower bound of the read length}
 
@@ -39,17 +39,17 @@ get_region_counts(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the region counts
+A data frame of the region counts with the potential addition of the experiment, transcript, and/or read length information in a tidy or non-tidy format
 }
 \description{
 \code{\link{get_region_counts}} will return the particular region counts
 of any subset of regions for a given set of experiments.
 }
 \details{
-This function will return a DataFrame of the counts at each specified region
+This function will return a data frane of the counts at each specified region
 for each specified experiment. The region options are "UTR5", "UTR5J", "CDS",
 "UTR3J", and "UTR3". The user can specify any subset of regions in the form of a vector,
 a list, or a single string if only one region is desired.
@@ -59,7 +59,7 @@ range.lower, range.upper, length, and transcript.
 
 The param 'length' condenses the read lengths together.
 When length is TRUE and transcript is FALSE, the
-DataFrame presents information for each transcript across
+data frame presents information for each transcript across
 all of the read lengths. That is, each transcript has a value
 that is the sum of all of the counts across every read length.
 As a result, information about the transcript at each specific
@@ -67,7 +67,7 @@ read length is lost.
 
 The param 'transcript' condenses the transcripts together.
 When transcript is TRUE and length is FALSE data
-table presents information at each read length between range.lower and
+frame presents information at each read length between range.lower and
 range.upper inclusive. That is, each separate read length denotes the
 sum of counts from every transcript. As a result, information about the
 counts of each individual transcript is lost.
@@ -97,7 +97,7 @@ reference names of the .ribo file.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify the regions and experiments of interest
 regions <- c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3")
@@ -112,6 +112,6 @@ region.counts <- get_region_counts(ribo.object = sample,
                                    transcript = TRUE,
                                    tidy = FALSE,
                                    alias = FALSE,
-                                   experiments = experiments)
+                                   experiment = experiments)
 
 }

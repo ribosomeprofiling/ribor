@@ -7,7 +7,7 @@
 get_experiments(ribo.object)
 }
 \arguments{
-\item{ribo.object}{S4 object of class "ribo"}
+\item{ribo.object}{S4 object of class "Ribo"}
 }
 \value{
 A list of the experiment names
@@ -18,7 +18,7 @@ The function \code{\link{get_experiments}} provides a list of experiment names i
 \details{
 \code{\link{get_experiments}} returns a list of strings denoting the experiments. It obtains this
 by reading directly from the .ribo file through the path of the 'ribo.object' parameter. To generate
-the param 'ribo.object', call the \code{\link{ribo}} function and provide the path to the .ribo file of interest.
+the param 'ribo.object', call the \code{\link{Ribo}} function and provide the path to the .ribo file of interest.
 
 The user can then choose to create a subset from this list for any specific experiments of interest
 for later function calls. Many functions that have the param 'experiment.list'
@@ -28,12 +28,12 @@ for later function calls. Many functions that have the param 'experiment.list'
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #get a list of the experiments
 get_experiments(sample)
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

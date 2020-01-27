@@ -7,7 +7,7 @@
 get_reference_names(ribo.object)
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object-=09}
 }
 \value{
 a list of the reference names
@@ -18,7 +18,7 @@ Gets a list of reference names by reading directly from the .ribo file
 \examples{
 #generate a ribo object with transcript nicknames/aliases
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #get the reference names
 names <- get_reference_names(sample)

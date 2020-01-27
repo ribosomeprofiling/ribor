@@ -3,19 +3,19 @@ library(ribor)
 
 experiments <- c("Hela_1", "Hela_2", "WT_1")
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object <- create_ribo(file.path)
+ribo.object <- Ribo(file.path)
 
 rnaseq_tidy <- get_rnaseq(ribo.object,
-                          experiments = experiments)
+                          experiment = experiments)
 
 rnaseq <- get_rnaseq(ribo.object,
                      tidy = FALSE,
-                     experiments = experiments)
+                     experiment = experiments)
 
 actual <- get_rnaseq(ribo.object,
                      regions = c("UTR3j", "cds"),
                      tidy = FALSE,
-                     experiments = experiments)
+                     experiment = experiments)
 
 
 expected <-rnaseq[, -c(3, 4, 7)]
@@ -26,7 +26,7 @@ test_that("get_rnaseq = non-tidy CDS and UTR3J",
 actual <- get_rnaseq(ribo.object,
                      regions = c("UTR3", "cds", "utR5"),
                      tidy = FALSE,
-                     experiments = experiments)
+                     experiment = experiments)
 
 expected <-rnaseq[, -c(4, 6)]
 
@@ -36,7 +36,7 @@ test_that("get_rnaseq = non-tidy CDS and UTR3J",
 actual   <- get_rnaseq(ribo.object,
                          tidy = TRUE,
                          regions = c("UTR5"),
-                         experiments = experiments)
+                         experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) == "UTR5", ]
 
@@ -47,7 +47,7 @@ test_that("get_rnaseq- tidy UTR5 only",
 actual   <- get_rnaseq(ribo.object,
                        tidy = TRUE,
                        regions = c("CDS", "utR5j"),
-                       experiments = experiments)
+                       experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) %in% c("UTR5J", "CDS"), ]
 
@@ -62,7 +62,7 @@ test_that("get_rnaseq- tidy version size",
 
 hela_1_rnaseq <- get_rnaseq(ribo.object,
                             tidy = FALSE,
-                            experiments = "Hela_1")
+                            experiment = "Hela_1")
 
 actual   <- rnaseq[as.character(rnaseq$experiment) == "Hela_1", ]
 expected <- hela_1_rnaseq
@@ -100,17 +100,17 @@ test_that("get_rnaseq- non-tidy version size",
 
 rnaseq <- get_rnaseq(ribo.object,
                      tidy = FALSE,
-                     experiments = experiments,
+                     experiment = experiments,
                      compact = FALSE)
 
 rnaseq_tidy <- get_rnaseq(ribo.object,
-                          experiments = experiments,
+                          experiment = experiments,
                           compact = FALSE)
 
 actual <- get_rnaseq(ribo.object,
                      regions = c("UTR3j", "cds"),
                      tidy = FALSE,
-                     experiments = experiments)
+                     experiment = experiments)
 
 
 expected <-rnaseq[, -c(3, 4, 7)]

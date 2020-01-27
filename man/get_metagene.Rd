@@ -7,17 +7,17 @@
 get_metagene(
   ribo.object,
   site,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
-  transcript  = TRUE,
-  length      = TRUE,
-  alias       = FALSE,
-  compact     = TRUE,
-  experiments = get_experiments(ribo.object)
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
+  transcript = TRUE,
+  length = TRUE,
+  alias = FALSE,
+  compact = TRUE,
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{site}{"start" or "stop" site coverage}
 
@@ -33,10 +33,10 @@ get_metagene(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the metagene information
+A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
 }
 \description{
 The function \code{\link{get_metagene}} returns a data frame that provides
@@ -56,7 +56,7 @@ read length is lost.
 
 The param 'transcripts' condenses the transcripts together.
 When transcript is TRUE and length is FALSE, the data
-table presents information at each read length between range.lower and
+frame presents information at each read length between range.lower and
 range.upper inclusive. That is, each separate read length denotes the
 sum of counts from every transcript. As a result, information about the
 counts of each individual transcript is lost.
@@ -81,7 +81,7 @@ reference names of the .ribo file.
 
 #generate the ribo object by providing the file.path to the ribo file
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 
 #extract the total metagene information for all experiments
@@ -93,7 +93,7 @@ metagene_info <- get_metagene(ribo.object = sample,
                               range.upper = 5,
                               length = TRUE,
                               transcript = TRUE,
-                              experiments = get_experiments(sample))
+                              experiment = experiments(sample))
 
 
 #Note that length, transcript, and experiments in this case are the
@@ -106,7 +106,7 @@ metagene_info <- get_metagene(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{create_ribo}} to generate the necessary 'ribo' class object,
+\code{\link{Ribo}} to generate the necessary 'Ribo' class object,
 \code{\link{plot_metagene}} to visualize the metagene data,
 \code{\link{get_tidy_metagene}} to obtain tidy metagene data under certain conditions
 }

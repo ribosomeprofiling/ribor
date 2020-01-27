@@ -7,15 +7,13 @@
 get_coverage(
   ribo.object,
   name,
-  range.lower = rangeLower(ribo.object),
-  range.upper = rangeUpper(ribo.object),
+  range.lower = length_min(ribo.object),
+  range.upper = length_max(ribo.object),
   length = TRUE,
   tidy = FALSE,
   alias = FALSE,
   compact = TRUE,
-
-
-  experiments = get_experiments(ribo.object)
+  experiment = experiments(ribo.object)
 )
 }
 \arguments{
@@ -35,10 +33,10 @@ get_coverage(
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
-\item{experiments}{List of experiments to obtain coverage information on}
+\item{experiment}{List of experiments to obtain coverage information on}
 }
 \value{
-A data table containing the coverage data
+A data frame of the coverage information with potential addition of experiment and read length columns in a tidy or non-tidy format
 }
 \description{
 The function \code{\link{get_coverage}} generates a DataFrame of coverage
@@ -65,7 +63,7 @@ the original transcript name.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #get the experiments of interest that also contain coverage data
 experiments <- c("Hela_1", "Hela_2", "Hela_3", "WT_1")
@@ -76,9 +74,9 @@ coverage.data <- get_coverage(ribo.object = sample,
                               range.lower = 2,
                               range.upper = 5,
                               length = TRUE,
-                              experiments = experiments)
+                              experiment = experiments)
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

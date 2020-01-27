@@ -21,7 +21,7 @@
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #list out the experiments of interest that have RNA-Seq data
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -31,7 +31,7 @@
 #'                           regions = regions,
 #'                           experiments = experiments)
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param experiments List of experiment names
 #' @param regions Specific region(s) of interest
@@ -41,7 +41,7 @@
 #' Returns a data frame that contains the transcript name, experiment, and
 #' RNA-seq abundance
 #'
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5ls h5read
 #' @importFrom S4Vectors DataFrame Rle
 #' @importFrom tidyr gather
@@ -49,20 +49,21 @@
 get_rnaseq <- function(ribo.object,
                        tidy = TRUE,
                        regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-                       experiments = get_experiments(ribo.object),
+                       experiments = experiments(ribo.object),
                        compact = TRUE,
                        alias = FALSE) {
+    validObject(ribo.object)
     rnaseq.experiments <- check_rnaseq(ribo.object, experiments)
     check_alias(ribo.object, alias)
     regions <- check_regions(ribo.object, regions)
-    ribo.experiments <- get_experiments(ribo.object)
+    ribo.experiments <- experiments(ribo.object)
     
     #get just the experiments that exist
     ref.names <- change_reference_names(ribo.object, alias)
     ref.length <- length(ref.names)
     total.experiments <- length(rnaseq.experiments)
     num.regions <- length(regions)
-    path <- ribo.object@path
+    path <- path(ribo.object)
     
     result <- matrix(nrow = ref.length * total.experiments, ncol = num.regions)
     colnames(result) <- regions
@@ -102,7 +103,7 @@ change_reference_names <- function(ribo.object,
         original <- ref.names
         ref.names <- vector(mode = "character", length = length(original))
         for (i in seq_len(length(original))) {
-            ref.names[i] <- ribo.object@transcript.original[[original[i]]]
+            ref.names[i] <- original_hash(ribo.object)[[original[i]]]
         }
     }
     return(ref.names)
@@ -113,7 +114,7 @@ check_rnaseq <- function(ribo.object, experiments) {
     check_experiments(ribo.object, experiments)
     
     #obtain the rnaseq data
-    path <- ribo.object@path
+    path <- path(ribo.object)
     table <- get_content_info(path)
     has.rnaseq <- table[table$rna.seq == TRUE,]$experiment
     

@@ -23,7 +23,7 @@
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #get the experiments of interest that also contain coverage data
 #' experiments <- c("Hela_1", "Hela_2", "Hela_3", "WT_1")
@@ -34,19 +34,19 @@
 #'                               range.lower = 2,
 #'                               range.upper = 5,
 #'                               length = TRUE,
-#'                               experiments = experiments)
+#'                               experiment = experiments)
 #'
 #' @param ribo.object A 'ribo' object
 #' @param name Name of the transcript
 #' @param range.lower Lower bound of the read length
 #' @param range.upper Upper bound of the read length
 #' @param length Logical value that denotes if the coverage should be summed across read lengths
-#' @param experiments List of experiments to obtain coverage information on
+#' @param experiment List of experiments to obtain coverage information on
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A data table containing the coverage data
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @return A data frame of the coverage information with potential addition of experiment and read length columns in a tidy or non-tidy format
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
 #' @importFrom tidyr gather
 #' @importFrom S4Vectors Rle DataFrame
@@ -55,20 +55,21 @@
 #' @export
 get_coverage <- function(ribo.object,
                          name,
-                         range.lower = rangeLower(ribo.object),
-                         range.upper = rangeUpper(ribo.object),
+                         range.lower = length_min(ribo.object),
+                         range.upper = length_max(ribo.object),
                          length = TRUE,
                          tidy = FALSE,
                          alias = FALSE,
                          compact = TRUE,
-                         experiments = get_experiments(ribo.object)) {
+                         experiment = experiments(ribo.object)) {
     # check the parameters and prepare parameters for reading from ribo file
     if (missing(name)) stop("Please provide a transcript name.")
+    validObject(ribo.object)
     matched.experiments <- initialize_coverage(ribo.object,
                                                alias,
                                                range.lower,
                                                range.upper,
-                                               experiments)
+                                               experiment)
     
     total.experiments   <- length(matched.experiments)
     info <- retrieve_transcript_info(ribo.object,
@@ -112,8 +113,8 @@ fill_coverage <- function(ribo.object,
                           info) {
     current.offset      <- info[1]
     transcript.length   <- info[2]
-    length.offset       <- ribo.object@length.offset
-    min.length          <- get_read_lengths(ribo.object)[1]
+    length.offset       <- length_offset(ribo.object)
+    min.length          <- length_min(ribo.object)
     read.range          <- range.upper - range.lower + 1
 
     result <- initialize_matrix_coverage(total.experiments,
@@ -130,7 +131,7 @@ fill_coverage <- function(ribo.object,
             correct.length <- 1 + (current.length - min.length) * length.offset
             coverage.start <- correct.length + current.offset
             coverage.stop  <- coverage.start + transcript.length - 1
-            coverage <- t(h5read(ribo.object@path,
+            coverage <- t(h5read(path(ribo.object),
                                  path,
                                  index = list(coverage.start:coverage.stop)))
             coverage <- as.integer(coverage)
@@ -170,15 +171,15 @@ initialize_coverage <- function(ribo.object,
                                 alias,
                                 range.lower,
                                 range.upper,
-                                experiments) {
+                                experiment) {
     #perform checks on the parameters
     check_alias(ribo.object, alias)
     check_lengths(ribo.object, range.lower, range.upper)
-    check_experiments(ribo.object, experiments)
-    ribo.experiments    <- get_experiments(ribo.object)
-
+    # check_experiments(ribo.object, experiments)
+    ribo.experiments    <- experiments(ribo.object)
+    
     #generate list of experiments also present in the ribo file that have coverage data
-    filter.experiments  <- intersect(experiments, ribo.experiments)
+    filter.experiments  <- intersect(experiment, ribo.experiments)
     matched.experiments <- check_coverage(ribo.object, filter.experiments)
     matched.experiments <- intersect(matched.experiments, filter.experiments)
 
@@ -191,14 +192,14 @@ retrieve_transcript_info <- function(ribo.object,
                                      alias) {
     #helper method that checks the alias parameter and retrieves the corresponding information
     if (alias) {
-        if (!has.key(name, ribo.object@transcript.alias)) {
+        if (!has.key(name, alias_hash(ribo.object))) {
             stop("Alias name was not found.", call. = FALSE)
         }
-        name <- ribo.object@transcript.alias[[name]]
+        name <- alias_hash(ribo.object)[[name]]
     }
 
     #generate offsets
-    info <- as.vector(unlist(ribo.object@transcript.info[[name]]))
+    info <- as.vector(unlist(transcript_info(ribo.object)[[name]]))
     if (is.null(info)) {
         stop("Transcript name was not found. Check name and 'alias' parameter.",
              call. = FALSE)
@@ -231,11 +232,11 @@ create_dataframe <- function (length,
                               matched.experiments,
                               compact,
                               matrix) {
-# Given a matrix of coverage data, create_dataframe generates the correct
-# DataFrame based on a set of parameters
-#
-# Returns:
-# Data table that wraps the matrix with the correct and appropriate labels
+    # Given a matrix of coverage data, create_dataframe generates the correct
+    # DataFrame based on a set of parameters
+    #
+    # Returns:
+    # Data table that wraps the matrix with the correct and appropriate labels
 
     matched.size <- length(matched.experiments)
     if (length) {
@@ -251,19 +252,19 @@ create_dataframe <- function (length,
 }
 
 
-check_coverage <- function(ribo.object, experiments) {
+check_coverage <- function(ribo.object, experiment) {
     # helper function that both generates a list of experiments with coverage
     # data using get_info and produces a warning message for each experiment
     # (provided by the user) that does not have coverage data
     #
     # Args:
-    # ribo.object: S3 object of class "ribo"
+    # ribo.object: S3 object of class "Ribo"
     # experiment.list: list of experiments inputted by the user
     #
     # Returns:
     # A list of experiments in the ribo.object that have coverage data
 
-    path <- ribo.object@path
+    path <- path(ribo.object)
     #obtain the coverage data
     table <- get_content_info(path)
     has.coverage <- table[table$coverage == TRUE,]
@@ -271,10 +272,10 @@ check_coverage <- function(ribo.object, experiments) {
 
     #find the experiments in the experiment.list that do not have
     #coverage and print warnings
-    check <- setdiff(experiments, has.coverage)
+    check <- setdiff(experiment, has.coverage)
     if (length(check)) {
-        for (experiment in check) {
-            warning("'", experiment, "'",
+        for (exp in check) {
+            warning("'", exp, "'",
                     " did not have coverage data.",
                     call. = FALSE)
         }

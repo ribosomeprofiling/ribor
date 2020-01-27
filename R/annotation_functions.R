@@ -7,18 +7,18 @@
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
+#' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region coordinates
 #' region_lengths <- get_region_lengths(sample, alias = TRUE)
 #' 
 #' @export
 #' @importFrom rhdf5 h5read
-#' @param ribo.object A 'ribo' object 
+#' @param ribo.object A 'Ribo' object 
 #' @param alias Option to return the transcript names as aliases  
 #' @return A data.frame of the region lengths 
 get_region_lengths <- function(ribo.object, alias = FALSE) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     check_alias(ribo.object, alias)
     #generate the start and stop indices, get the matrix of positions
     start <- seq(1, 10, by = 2)
@@ -59,7 +59,7 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
+#' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region coordinates
 #' coord <- get_region_coordinates(sample, alias = TRUE)
@@ -67,7 +67,7 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' @inheritParams get_region_lengths
 #' @return A data.frame of start and stop coordinates for every region
 get_region_coordinates <- function(ribo.object, alias=FALSE) {
-    check_ribo(ribo.object)
+    validObject(ribo.object)
     check_alias(ribo.object, alias)
     references <- change_reference_names(ribo.object, alias)
     #generate the data.frame from the boundary positions
@@ -76,10 +76,10 @@ get_region_coordinates <- function(ribo.object, alias=FALSE) {
 
 compute_boundaries <- function(ribo.object) {
     #helper method that computes the boundaries for each region
-    annotation <- t(h5read(ribo.object@path,
+    annotation <- t(h5read(path(ribo.object),
                            name = "/reference/annotation"))
-    left.span <- get_attributes(ribo.object)[['left_span']]
-    right.span <- get_attributes(ribo.object)[['right_span']]
+    left.span <- left_span(ribo.object)
+    right.span <- right_span(ribo.object)
     UTR5_end <- annotation[, 1]
     CDS_end <-  annotation[, 2]
     UTR3_end <- annotation[, 3]

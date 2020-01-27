@@ -2,7 +2,7 @@ context("annotation functions")
 library(ribor)
 
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object <- create_ribo(file.path)
+ribo.object <- Ribo(file.path)
 
 lengths <- get_region_lengths(ribo.object)
 
