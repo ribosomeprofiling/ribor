@@ -29,7 +29,7 @@ list of reference names retrieved from \code{\link{get_reference_names}}
 \examples{
 #generate a ribo object with transcript nicknames/aliases
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 sample <- set_aliases(ribo.object = sample,
                       rename = rename_default)
 }

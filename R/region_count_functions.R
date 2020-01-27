@@ -50,7 +50,7 @@
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify the regions and experiments of interest
 #' regions <- c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3")
@@ -67,7 +67,7 @@
 #'                                    alias = FALSE,
 #'                                    experiment = experiments)
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param range.lower Lower bound of the read length
 #' @param range.upper Upper bound of the read length
 #' @param length Option to condense the read lengths together, preserve the transcripts
@@ -211,7 +211,7 @@ check_regions <- function(ribo.object,
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify the experiments of interest
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -263,7 +263,7 @@ get_length_distribution <- function(ribo.object,
 #' Plots the length distribution
 #'
 #' The function \code{\link{plot_length_distribution}} can take either a DataFrame
-#' or a "ribo" object to generate a line graph of the length distributions from
+#' or a "Ribo" object to generate a line graph of the length distributions from
 #' range.lower to range.upper.
 #'
 #' The param 'fraction' will plot the fractions of each length relative
@@ -271,7 +271,7 @@ get_length_distribution <- function(ribo.object,
 #' and 'range.upper'. When fraction is set to FALSE, the total count of each
 #' read length is plotted.
 #'
-#' When given a "ribo" object, \code{\link{plot_length_distribution}} calls
+#' When given a "Ribo" object, \code{\link{plot_length_distribution}} calls
 #' \code{\link{get_region_counts}} to retrieve the necessary information
 #' for plotting.
 #'
@@ -290,7 +290,7 @@ get_length_distribution <- function(ribo.object,
 #'
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify experiments of interest
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -318,8 +318,8 @@ get_length_distribution <- function(ribo.object,
 #'
 #' @seealso \code{\link{get_region_counts}} to generate a DataFrame that can
 #' be provided as input,
-#' \code{\link{ribo}} to create a ribo.object that can be provided as input
-#' @param x A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
+#' \code{\link{Ribo}} to create a ribo.object that can be provided as input
+#' @param x A 'Ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
 #' @param region the region of interest
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
@@ -377,7 +377,7 @@ check_ld_input <- function(x,
                            range.upper,
                            experiment) {
     #check the plot_length_distribution output
-    if (is(x, "ribo") && validObject(x)) {
+    if (is(x, "Ribo") && validObject(x)) {
         if (missing(region) || length(region) != 1){
             stop("Please indicate a single region.") 
         } 
@@ -422,7 +422,7 @@ check_ld_input <- function(x,
         }
     } else {
         stop("Please make sure that param 'x' is either", 
-             "a DataFrame or a ribo object.",
+             "a DataFrame or a Ribo object.",
              call.=FALSE)
     }
     return(x)
@@ -432,10 +432,10 @@ check_ld_input <- function(x,
 #' Plots the region counts of UTR5, CDS, and UTR3
 #'
 #' The function \code{\link{plot_region_counts}} can take either a DataFrame
-#' or a "ribo" object to generate the a stacked bar plot of proportions that
+#' or a "Ribo" object to generate the a stacked bar plot of proportions that
 #' correspond to the "UTR5", "CDS", and "UTR3" regions.
 #'
-#' When given a 'ribo' object, \code{\link{plot_region_counts}} calls
+#' When given a 'Ribo' object, \code{\link{plot_region_counts}} calls
 #' \code{\link{get_region_counts}} to retrieve the necessary information
 #' for plotting. This option is in the case that a DataFrame of the
 #' region count information is not required.
@@ -452,7 +452,7 @@ check_ld_input <- function(x,
 #' #ribo object use case
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify the regions and experiments of interest
 #' regions <- c("UTR5", "CDS", "UTR3")
@@ -477,9 +477,9 @@ check_ld_input <- function(x,
 #' plot_region_counts(region.counts)
 #'
 #' @seealso \code{\link{get_region_counts}} to generate a DataFrame that can be provided as input,
-#' \code{\link{ribo}} to create a ribo.object that can be provided as input
+#' \code{\link{Ribo}} to create a ribo.object that can be provided as input
 #'
-#' @param x A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
+#' @param x A 'Ribo' object or a DataFrame generated from \code{\link{get_region_counts}}
 #' @param range.lower a lower bounds for a read length range
 #' @param range.upper an upper bounds for a read length range
 #' @param experiment a list of experiment names
@@ -537,7 +537,7 @@ check_plot_rc_input <- function(x,
     #helper method that checks the plot_region_counts input and returns data
     #for plotting
     regions <- c("UTR5", "CDS", "UTR3")
-    if (is(x, "ribo") && validObject(x)) {
+    if (is(x, "Ribo") && validObject(x)) {
         if (missing(experiment) || is.null(experiment)) {
             experiment <- experiments(x)
         } 

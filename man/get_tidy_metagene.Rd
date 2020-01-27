@@ -16,7 +16,7 @@ get_tidy_metagene(
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{site}{"start" or "stop" site coverage}
 
@@ -60,9 +60,9 @@ the metagene coverage count at each read length.
 The
 }
 \examples{
-#generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function
+#generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #extract the total metagene information in a tidy format
 #for all experiments across the read lengths and transcripts
@@ -84,7 +84,7 @@ metagene_info <- get_tidy_metagene(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{create_ribo}} to generate the necessary 'ribo' class object.
+\code{\link{Ribo}} to generate the necessary 'Ribo' class object.
 \code{\link{plot_metagene}} to visualize the metagene data,
 \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 }

@@ -8,11 +8,11 @@
 #' returned list contains the information about the presence of coverage and RNA-seq data which are
 #' optional datasets to include in a .ribo file.
 #'
-#' @param ribo.object ribo.object is an S4 object of class "ribo"
+#' @param ribo.object ribo.object is an S4 object of class "Ribo"
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #retrieve information
 #' get_info(sample)
@@ -21,7 +21,7 @@
 #' value denoting whether the root file has additional metadata, and a
 #' data.frame of information on each experiment
 #'
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #'
 #' @importFrom rhdf5 h5ls h5readAttributes
 #' @export
@@ -60,7 +60,7 @@ get_info <- function(ribo.object) {
 #' #ribo object use case
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #the ribo file contains an experiment named 'Hela_1'
 #' get_metadata(sample, "Hela_1")
@@ -72,7 +72,7 @@ get_info <- function(ribo.object) {
 #' If the name is not provided and the root file has metadata, then a list of elements
 #' providing all of the metadata found in the root file is returnend.
 #'
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5readAttributes
 #' @importFrom yaml yaml.load
 #' @export
@@ -127,7 +127,7 @@ print_metadata <- function(metadata, index) {
 #'
 #' \code{\link{get_experiments}} returns a list of strings denoting the experiments. It obtains this
 #' by reading directly from the .ribo file through the path of the 'ribo.object' parameter. To generate
-#' the param 'ribo.object', call the \code{\link{ribo}} function and provide the path to the .ribo file of interest.
+#' the param 'ribo.object', call the \code{\link{Ribo}} function and provide the path to the .ribo file of interest.
 #'
 #' The user can then choose to create a subset from this list for any specific experiments of interest
 #' for later function calls. Many functions that have the param 'experiment.list'
@@ -136,13 +136,13 @@ print_metadata <- function(metadata, index) {
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #get a list of the experiments
 #' get_experiments(sample)
 #'
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
-#' @param ribo.object S4 object of class "ribo"
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
+#' @param ribo.object S4 object of class "Ribo"
 #' @return A list of the experiment names
 #' @importFrom rhdf5 h5ls
 #' @export

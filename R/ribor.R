@@ -21,7 +21,7 @@
 #' 
 #' @section Package Content:
 #' \subsection{Generating a ribo object}{
-#'  \code{\link{create_ribo}} to get started 
+#'  \code{\link{Ribo}} to get started 
 #' }
 #' 
 #' \subsection{Length Distribution}{

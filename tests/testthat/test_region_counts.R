@@ -2,10 +2,10 @@ context("region count functions")
 library(ribor)
 
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object<- create_ribo(file.path)
+ribo.object<- Ribo(file.path)
 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-green <- create_ribo(file.path, rename = rename_default)
+green <- Ribo(file.path, rename = rename_default)
 total.reads <- get_info(green)[["experiment.info"]][,2][1]
 
 green_rc_alias <- get_region_counts(green,
@@ -26,7 +26,6 @@ green_rc_original <- get_region_counts(green,
                                        transcript = FALSE,
                                        alias = FALSE,
                                        experiment = experiments(green)[1])
-
 
 
 test_that("get_region_counts- alias values preserved",

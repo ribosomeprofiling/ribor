@@ -23,7 +23,7 @@
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #get the experiments of interest that also contain coverage data
 #' experiments <- c("Hela_1", "Hela_2", "Hela_3", "WT_1")
@@ -46,7 +46,7 @@
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return A data table containing the coverage data
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
 #' @importFrom tidyr gather
 #' @importFrom S4Vectors Rle DataFrame
@@ -258,7 +258,7 @@ check_coverage <- function(ribo.object, experiment) {
     # (provided by the user) that does not have coverage data
     #
     # Args:
-    # ribo.object: S3 object of class "ribo"
+    # ribo.object: S3 object of class "Ribo"
     # experiment.list: list of experiments inputted by the user
     #
     # Returns:

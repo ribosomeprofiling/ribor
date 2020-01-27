@@ -63,7 +63,7 @@ the original transcript name.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #get the experiments of interest that also contain coverage data
 experiments <- c("Hela_1", "Hela_2", "Hela_3", "WT_1")
@@ -78,5 +78,5 @@ coverage.data <- get_coverage(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

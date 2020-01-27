@@ -13,7 +13,7 @@ plot_region_counts(
 )
 }
 \arguments{
-\item{x}{A 'ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
+\item{x}{A 'Ribo' object or a DataFrame generated from \code{\link{get_region_counts}}}
 
 \item{experiment}{a list of experiment names}
 
@@ -28,11 +28,11 @@ A 'ggplot' of the region counts for each of the experiments
 }
 \description{
 The function \code{\link{plot_region_counts}} can take either a DataFrame
-or a "ribo" object to generate the a stacked bar plot of proportions that
+or a "Ribo" object to generate the a stacked bar plot of proportions that
 correspond to the "UTR5", "CDS", and "UTR3" regions.
 }
 \details{
-When given a 'ribo' object, \code{\link{plot_region_counts}} calls
+When given a 'Ribo' object, \code{\link{plot_region_counts}} calls
 \code{\link{get_region_counts}} to retrieve the necessary information
 for plotting. This option is in the case that a DataFrame of the
 region count information is not required.
@@ -49,7 +49,7 @@ types in the output of the reading functions
 #ribo object use case
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify the regions and experiments of interest
 regions <- c("UTR5", "CDS", "UTR3")
@@ -76,5 +76,5 @@ plot_region_counts(region.counts)
 }
 \seealso{
 \code{\link{get_region_counts}} to generate a DataFrame that can be provided as input,
-\code{\link{ribo}} to create a ribo.object that can be provided as input
+\code{\link{Ribo}} to create a ribo.object that can be provided as input
 }

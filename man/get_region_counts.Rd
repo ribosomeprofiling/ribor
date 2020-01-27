@@ -19,7 +19,7 @@ get_region_counts(
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{range.lower}{Lower bound of the read length}
 
@@ -97,7 +97,7 @@ reference names of the .ribo file.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify the regions and experiments of interest
 regions <- c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3")

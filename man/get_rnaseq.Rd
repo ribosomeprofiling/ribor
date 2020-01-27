@@ -14,7 +14,7 @@ get_rnaseq(
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{tidy}{Logical value denoting whether or not the user wants a tidy format}
 
@@ -53,7 +53,7 @@ file.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #list out the experiments of interest that have RNA-Seq data
 experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -65,5 +65,5 @@ rnaseq.data <- get_rnaseq(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

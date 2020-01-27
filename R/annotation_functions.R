@@ -7,14 +7,14 @@
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
+#' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region coordinates
 #' region_lengths <- get_region_lengths(sample, alias = TRUE)
 #' 
 #' @export
 #' @importFrom rhdf5 h5read
-#' @param ribo.object A 'ribo' object 
+#' @param ribo.object A 'Ribo' object 
 #' @param alias Option to return the transcript names as aliases  
 #' @return A data.frame of the region lengths 
 get_region_lengths <- function(ribo.object, alias = FALSE) {
@@ -59,7 +59,7 @@ get_region_lengths <- function(ribo.object, alias = FALSE) {
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-#' sample <- create_ribo(file.path, rename = rename_default)
+#' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region coordinates
 #' coord <- get_region_coordinates(sample, alias = TRUE)

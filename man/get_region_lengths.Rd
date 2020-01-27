@@ -7,7 +7,7 @@
 get_region_lengths(ribo.object, alias = FALSE)
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{alias}{Option to return the transcript names as aliases}
 }
@@ -22,7 +22,7 @@ and UTR3 regions of every transcript.
 \examples{
 # generate a ribo object 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- create_ribo(file.path, rename = rename_default)
+sample <- Ribo(file.path, rename = rename_default)
 
 # get the region coordinates
 region_lengths <- get_region_lengths(sample, alias = TRUE)

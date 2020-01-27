@@ -37,7 +37,7 @@
 #' data frame will contain the aliases rather than the original
 #' reference names of the .ribo file.
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length, inclusive
 #' @param range.upper Upper bound of the read length, inclusive
@@ -51,7 +51,7 @@
 #'
 #' #generate the ribo object by providing the file.path to the ribo file
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #'
 #' #extract the total metagene information for all experiments
@@ -75,7 +75,7 @@
 #'                               range.upper = 5)
 #'
 #' @seealso
-#' \code{\link{create_ribo}} to generate the necessary 'ribo' class object,
+#' \code{\link{Ribo}} to generate the necessary 'Ribo' class object,
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_tidy_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
@@ -170,7 +170,7 @@ get_metagene_path <- function(experiment, site) {
 #' 
 #' The 
 #' 
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length
 #' @param range.upper Upper bound of the read length
@@ -181,9 +181,9 @@ get_metagene_path <- function(experiment, site) {
 #' @return
 #' A tidy data frame of the metagene information
 #' @examples
-#' #generate the ribo object by loading in a ribo function and calling the \code{\link{ribo}} function
+#' #generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #extract the total metagene information in a tidy format
 #' #for all experiments across the read lengths and transcripts
@@ -204,7 +204,7 @@ get_metagene_path <- function(experiment, site) {
 #'                                    range.upper = 5)
 #'
 #' @seealso
-#' \code{\link{create_ribo}} to generate the necessary 'ribo' class object.
+#' \code{\link{Ribo}} to generate the necessary 'Ribo' class object.
 #' \code{\link{plot_metagene}} to visualize the metagene data,
 #' \code{\link{get_metagene}} to obtain tidy metagene data under certain conditions
 #' @importFrom rhdf5 h5read
@@ -285,7 +285,7 @@ check_metagene_input <- function(ribo.object,
 #'
 #' This function uses ggplot in its underlying implementation.
 #'
-#' @param x A 'ribo' object or a data frame generated from \code{\link{get_metagene}}
+#' @param x A 'Ribo' object or a data frame generated from \code{\link{get_metagene}}
 #' @param site "start" or "stop" site
 #' @param range.lower lower bound of the read length, inclusive
 #' @param range.upper upper bound of the read length, inclusive
@@ -298,7 +298,7 @@ check_metagene_input <- function(ribo.object,
 #'
 #' #generate the ribo object to directly use
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #specify experiments of interest
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -395,7 +395,7 @@ check_plot_metagene <- function(x,
                                 experiment) {
     
     #x is a ribo object
-    if (is(x, "ribo") && validObject(x)) {
+    if (is(x, "Ribo") && validObject(x)) {
         if (missing(site)) {
           stop("Please indicate the 'site' parameter with either 'start' or 'stop'",
                call. = FALSE)

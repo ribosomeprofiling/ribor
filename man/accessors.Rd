@@ -2,52 +2,52 @@
 % Please edit documentation in R/ribo_methods.R
 \name{accessors}
 \alias{accessors}
-\alias{path,ribo-method}
-\alias{experiments,ribo-method}
-\alias{format_version,ribo-method}
-\alias{reference,ribo-method}
-\alias{length_min,ribo-method}
-\alias{length_max,ribo-method}
-\alias{left_span,ribo-method}
-\alias{right_span,ribo-method}
-\alias{metagene_radius,ribo-method}
-\alias{length_offset,ribo-method}
-\alias{has_metadata,ribo-method}
-\alias{experiment_info,ribo-method}
-\alias{transcript_info,ribo-method}
-\alias{alias_hash,ribo-method}
-\alias{original_hash,ribo-method}
+\alias{path,Ribo-method}
+\alias{experiments,Ribo-method}
+\alias{format_version,Ribo-method}
+\alias{reference,Ribo-method}
+\alias{length_min,Ribo-method}
+\alias{length_max,Ribo-method}
+\alias{left_span,Ribo-method}
+\alias{right_span,Ribo-method}
+\alias{metagene_radius,Ribo-method}
+\alias{length_offset,Ribo-method}
+\alias{has_metadata,Ribo-method}
+\alias{experiment_info,Ribo-method}
+\alias{transcript_info,Ribo-method}
+\alias{alias_hash,Ribo-method}
+\alias{original_hash,Ribo-method}
 \title{Ribo Object Accessors}
 \usage{
-\S4method{path}{ribo}(object)
+\S4method{path}{Ribo}(object)
 
-\S4method{experiments}{ribo}(object)
+\S4method{experiments}{Ribo}(object)
 
-\S4method{format_version}{ribo}(object)
+\S4method{format_version}{Ribo}(object)
 
-\S4method{reference}{ribo}(object)
+\S4method{reference}{Ribo}(object)
 
-\S4method{length_min}{ribo}(object)
+\S4method{length_min}{Ribo}(object)
 
-\S4method{length_max}{ribo}(object)
+\S4method{length_max}{Ribo}(object)
 
-\S4method{left_span}{ribo}(object)
+\S4method{left_span}{Ribo}(object)
 
-\S4method{right_span}{ribo}(object)
+\S4method{right_span}{Ribo}(object)
 
-\S4method{metagene_radius}{ribo}(object)
+\S4method{metagene_radius}{Ribo}(object)
 
-\S4method{length_offset}{ribo}(object)
+\S4method{length_offset}{Ribo}(object)
 
-\S4method{has_metadata}{ribo}(object)
+\S4method{has_metadata}{Ribo}(object)
 
-\S4method{experiment_info}{ribo}(object)
+\S4method{experiment_info}{Ribo}(object)
 
-\S4method{transcript_info}{ribo}(object)
+\S4method{transcript_info}{Ribo}(object)
 
-\S4method{alias_hash}{ribo}(object)
+\S4method{alias_hash}{Ribo}(object)
 
-\S4method{original_hash}{ribo}(object)
+\S4method{original_hash}{Ribo}(object)
 }
 \arguments{
 \item{object}{A Ribo Object}

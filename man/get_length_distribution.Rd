@@ -14,7 +14,7 @@ get_length_distribution(
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{region}{Specific region of interest}
 
@@ -40,7 +40,7 @@ returned DataFrame is valid input for {\code{\link{plot_length_distribution}}}.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify the experiments of interest
 experiments <- c("Hela_1", "Hela_2", "WT_1")

@@ -1,9 +1,9 @@
-#' Class "ribo"
+#' Class "Ribo"
 #' 
 #' An S4 class to be used with the ribor package
 #' 
-#' @param object A 'ribo' object
-#' @slot path A path to the ribo file of interest
+#' @param object A 'Ribo' object
+#' @slot path A path to the Ribo file of interest
 #' @slot experiments A character vector of experiment names in the file 
 #' @slot format.version The format version of the ribo file 
 #' @slot reference The reference transcriptome used in the ribo file 
@@ -17,10 +17,10 @@
 #' @slot transcript.info Hash of the lengths and offsets of each transcript
 #' @slot alias.hash Hash that goes from alias to original transcript name
 #' @slot original.hash Hash that goes from original to alias transcript 
-#' @return A 'ribo' object
-#' @seealso \code{\link{create_ribo}} to create a ribo file
-ribo <- setClass(
-    "ribo",
+#' @return A 'Ribo' object
+#' @seealso \code{\link{Ribo}} to create a ribo file
+setClass(
+    "Ribo",
     slots =      c(path            = "character",
                    experiments     = "character",
                    format.version  = "integer",
@@ -38,7 +38,7 @@ ribo <- setClass(
                    original.hash   = "hash"))
 
 # validity method 
-setValidity("ribo", function(object) {
+setValidity("Ribo", function(object) {
     # The validity method is to protect against function calls with ribo
     # objects that have been modified in a way that could generate incorrect
     # output

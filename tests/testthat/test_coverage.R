@@ -2,7 +2,7 @@ context("coverage functions")
 library(ribor)
 
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object <- create_ribo(file.path)
+ribo.object <- Ribo(file.path)
 
 tidy_cov_1 <- get_coverage(ribo.object,
                            name = "MYC",
@@ -121,7 +121,7 @@ test_that("get_coverage- test individual read length",
           expect_equal(actual, expected))
 
 file.path <- system.file("extdata", "CBS.ribo", package = "ribor")
-CBS <- create_ribo(file.path)
+CBS <- Ribo(file.path)
 
 CBS_name <- names(CBS@transcript.info)[1]
 

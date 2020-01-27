@@ -3,7 +3,7 @@ library(ribor)
 
 experiments <- c("Hela_1", "Hela_2", "WT_1")
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object <- create_ribo(file.path)
+ribo.object <- Ribo(file.path)
 
 rnaseq_tidy <- get_rnaseq(ribo.object,
                           experiment = experiments)

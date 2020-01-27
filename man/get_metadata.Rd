@@ -29,12 +29,12 @@ attributes of the root .ribo file is returned instead.
 #ribo object use case
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #the ribo file contains an experiment named 'Hela_1'
 get_metadata(sample, "Hela_1")
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

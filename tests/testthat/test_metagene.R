@@ -1,14 +1,14 @@
 context("metagene functions")
 library(ribor)
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-ribo.object <- create_ribo(file.path)
+ribo.object <- Ribo(file.path)
 
 file.path <- system.file("extdata", "CBS.ribo", package = "ribor")
-CBS         <- create_ribo(file.path)
+CBS         <- Ribo(file.path)
 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 
-green <- create_ribo(file.path, rename = rename_default)
+green <- Ribo(file.path, rename = rename_default)
 
 green_meta_alias <- get_metagene(green,
                                  "start",

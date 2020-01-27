@@ -16,7 +16,7 @@ plot_metagene(
 )
 }
 \arguments{
-\item{x}{A 'ribo' object or a data frame generated from \code{\link{get_metagene}}}
+\item{x}{A 'Ribo' object or a data frame generated from \code{\link{get_metagene}}}
 
 \item{site}{"start" or "stop" site}
 
@@ -56,7 +56,7 @@ This function uses ggplot in its underlying implementation.
 
 #generate the ribo object to directly use
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #specify experiments of interest
 experiments <- c("Hela_1", "Hela_2", "WT_1")

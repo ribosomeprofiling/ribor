@@ -21,7 +21,7 @@
 #' @examples
 #' #generate the ribo object
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #'
 #' #list out the experiments of interest that have RNA-Seq data
 #' experiments <- c("Hela_1", "Hela_2", "WT_1")
@@ -31,7 +31,7 @@
 #'                           regions = regions,
 #'                           experiments = experiments)
 #'
-#' @param ribo.object A 'ribo' object
+#' @param ribo.object A 'Ribo' object
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param experiments List of experiment names
 #' @param regions Specific region(s) of interest
@@ -41,7 +41,7 @@
 #' Returns a data frame that contains the transcript name, experiment, and
 #' RNA-seq abundance
 #'
-#' @seealso \code{\link{ribo}} to generate the necessary ribo.object parameter
+#' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5ls h5read
 #' @importFrom S4Vectors DataFrame Rle
 #' @importFrom tidyr gather

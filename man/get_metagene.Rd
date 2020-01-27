@@ -17,7 +17,7 @@ get_metagene(
 )
 }
 \arguments{
-\item{ribo.object}{A 'ribo' object}
+\item{ribo.object}{A 'Ribo' object}
 
 \item{site}{"start" or "stop" site coverage}
 
@@ -81,7 +81,7 @@ reference names of the .ribo file.
 
 #generate the ribo object by providing the file.path to the ribo file
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 
 #extract the total metagene information for all experiments
@@ -106,7 +106,7 @@ metagene_info <- get_metagene(ribo.object = sample,
 
 }
 \seealso{
-\code{\link{create_ribo}} to generate the necessary 'ribo' class object,
+\code{\link{Ribo}} to generate the necessary 'Ribo' class object,
 \code{\link{plot_metagene}} to visualize the metagene data,
 \code{\link{get_tidy_metagene}} to obtain tidy metagene data under certain conditions
 }

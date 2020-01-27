@@ -7,7 +7,7 @@
 get_info(ribo.object)
 }
 \arguments{
-\item{ribo.object}{ribo.object is an S4 object of class "ribo"}
+\item{ribo.object}{ribo.object is an S4 object of class "Ribo"}
 }
 \value{
 Returns a list containing a nested list of file attributes, a logical
@@ -27,12 +27,12 @@ optional datasets to include in a .ribo file.
 \examples{
 #generate the ribo object
 file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-sample <- create_ribo(file.path)
+sample <- Ribo(file.path)
 
 #retrieve information
 get_info(sample)
 
 }
 \seealso{
-\code{\link{ribo}} to generate the necessary ribo.object parameter
+\code{\link{Ribo}} to generate the necessary ribo.object parameter
 }

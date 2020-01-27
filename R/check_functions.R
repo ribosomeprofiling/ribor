@@ -15,7 +15,7 @@ check_lengths <- function(ribo.object, range.lower, range.upper) {
     # length and compares it to the corresponding parameters
     #
     # Args:
-    # ribo.object S3 object of class "ribo"
+    # ribo.object S3 object of class "Ribo"
     # range.lower lowest read length
     # range.upper highest read length
     #

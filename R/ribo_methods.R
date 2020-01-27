@@ -2,15 +2,15 @@
 #'@include ribo_class.R
 NULL
 
-#' @describeIn ribo Displaying the file contents
+#' @describeIn Ribo Displaying the file contents
 #' @examples 
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
-#' sample <- create_ribo(file.path)
+#' sample <- Ribo(file.path)
 #' 
 #' show(sample)
 #' @export
 setMethod(f = "show",
-          signature = "ribo",
+          signature = "Ribo",
           definition = function(object) {
               file.values <- list("format version"   = format_version(object),
                                   "reference"        = reference(object),
@@ -99,97 +99,98 @@ print_output <- function (file.info,
 #' A list of accessors for the different slots of a `Ribo` object
 #' 
 #' @param object A Ribo Object
+#' @export
 #' @name accessors
 NULL 
 
 setGeneric("path", function(object) standardGeneric("path"))
 
-#' @export
 #' @rdname accessors
-setMethod("path", "ribo", function(object) object@path)
+#' @export
+setMethod("path", "Ribo", function(object) object@path)
 
 setGeneric("experiments", function(object) standardGeneric("experiments"))
 
-#' @export
 #' @rdname accessors
-setMethod("experiments", "ribo", function(object) object@experiments)
+#' @export
+setMethod("experiments", "Ribo", function(object) object@experiments)
 
 setGeneric("format_version", function(object) standardGeneric("format_version"))
 
-#' @export
 #' @rdname accessors
-setMethod("format_version", "ribo", function(object) object@format.version)
+#' @export
+setMethod("format_version", "Ribo", function(object) object@format.version)
 
 setGeneric("reference", function(object) standardGeneric("reference"))
 
-#' @export
 #' @rdname accessors
-setMethod("reference", "ribo", function(object) object@reference)
+#' @export
+setMethod("reference", "Ribo", function(object) object@reference)
 
 setGeneric("length_min", function(object) standardGeneric("length_min"))
 
-#' @export
 #' @rdname accessors
-setMethod("length_min", "ribo", function(object) object@length.min)
+#' @export
+setMethod("length_min", "Ribo", function(object) object@length.min)
 
 setGeneric("length_max", function(object) standardGeneric("length_max"))
 
-#' @export
 #' @rdname accessors
-setMethod("length_max", "ribo", function(object) object@length.max)
+#' @export
+setMethod("length_max", "Ribo", function(object) object@length.max)
 
 setGeneric("left_span", function(object) standardGeneric("left_span"))
 
-#' @export
 #' @rdname accessors
-setMethod("left_span", "ribo", function(object) object@left.span)
+#' @export
+setMethod("left_span", "Ribo", function(object) object@left.span)
 
 setGeneric("right_span", function(object) standardGeneric("right_span"))
 
-#' @export
 #' @rdname accessors
-setMethod("right_span", "ribo", function(object) object@right.span)
+#' @export
+setMethod("right_span", "Ribo", function(object) object@right.span)
 
 setGeneric("metagene_radius", function(object) standardGeneric("metagene_radius"))
 
-#' @export
 #' @rdname accessors
-setMethod("metagene_radius", "ribo", function(object) object@metagene.radius)
+#' @export
+setMethod("metagene_radius", "Ribo", function(object) object@metagene.radius)
 
 setGeneric("length_offset", function(object) standardGeneric("length_offset"))
 
-#' @export
 #' @rdname accessors
-setMethod("length_offset", "ribo", function(object) object@length.offset)
+#' @export
+setMethod("length_offset", "Ribo", function(object) object@length.offset)
 
 setGeneric("has_metadata", function(object) standardGeneric("has_metadata"))
 
-#' @export
 #' @rdname accessors
-setMethod("has_metadata", "ribo", function(object) object@has.metadata)
+#' @export
+setMethod("has_metadata", "Ribo", function(object) object@has.metadata)
 
 setGeneric("experiment_info", function(object) standardGeneric("experiment_info"))
 
-#' @export
 #' @rdname accessors
-setMethod("experiment_info", "ribo", function(object) object@experiment.info)
+#' @export
+setMethod("experiment_info", "Ribo", function(object) object@experiment.info)
 
 setGeneric("transcript_info", function(object) standardGeneric("transcript_info"))
 
-#' @export
 #' @rdname accessors
-setMethod("transcript_info", "ribo", function(object) object@transcript.info)
+#' @export
+setMethod("transcript_info", "Ribo", function(object) object@transcript.info)
 
 
 setGeneric("alias_hash", function(object) standardGeneric("alias_hash"))
-
-#' @export
+ 
 #' @rdname accessors
-setMethod("alias_hash", "ribo", function(object) object@alias.hash)
+#' @export
+setMethod("alias_hash", "Ribo", function(object) object@alias.hash)
 
 
 setGeneric("original_hash", function(object) standardGeneric("original_hash"))
 
-#' @export
 #' @rdname accessors
-setMethod("original_hash", "ribo", function(object) object@original.hash)
+#' @export
+setMethod("original_hash", "Ribo", function(object) object@original.hash)
