@@ -45,7 +45,7 @@
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A data table containing the coverage data
+#' @return A data frame of the coverage information with potential addition of experiment and read length columns in a tidy or non-tidy format
 #' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
 #' @importFrom tidyr gather

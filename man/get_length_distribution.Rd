@@ -27,7 +27,7 @@ get_length_distribution(
 \item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the counts at each read length
+A data frame of length distribution of a single region in a tidy format for the given list of experiments
 }
 \description{
 The function {\code{\link{get_length_distribution}}} retrieves the raw or normalized

@@ -33,7 +33,7 @@ get_tidy_metagene(
 \item{experiment}{List of experiment names}
 }
 \value{
-A tidy data frame of the metagene information
+A tidy data frame of metagene information with the option of including read length information
 }
 \description{
 The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier

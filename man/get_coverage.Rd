@@ -36,7 +36,7 @@ get_coverage(
 \item{experiment}{List of experiments to obtain coverage information on}
 }
 \value{
-A data table containing the coverage data
+A data frame of the coverage information with potential addition of experiment and read length columns in a tidy or non-tidy format
 }
 \description{
 The function \code{\link{get_coverage}} generates a DataFrame of coverage

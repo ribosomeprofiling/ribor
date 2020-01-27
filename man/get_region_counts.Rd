@@ -42,7 +42,7 @@ get_region_counts(
 \item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the region counts
+A data frame of the region counts with the potential addition of the experiment, transcript, and/or read length information in a tidy or non-tidy format
 }
 \description{
 \code{\link{get_region_counts}} will return the particular region counts
@@ -67,7 +67,7 @@ read length is lost.
 
 The param 'transcript' condenses the transcripts together.
 When transcript is TRUE and length is FALSE data
-table presents information at each read length between range.lower and
+frame presents information at each read length between range.lower and
 range.upper inclusive. That is, each separate read length denotes the
 sum of counts from every transcript. As a result, information about the
 counts of each individual transcript is lost.

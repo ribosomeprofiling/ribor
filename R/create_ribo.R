@@ -95,7 +95,8 @@ set_aliases <- function(ribo.object, rename) {
 #' the format version, the reference model, the maximum read length, the minimum read length, the left span,
 #' the right span, and other information about the transcript information.
 #'
-#'
+#' @name Ribo
+#' @rdname Ribo
 #' @param name The path to the .ribo file
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases

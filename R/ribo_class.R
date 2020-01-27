@@ -13,6 +13,7 @@
 #' @slot right.span Right span of the junction regions
 #' @slot length.offset Length offset of all transcripts 
 #' @slot has.metadata Value denoting whether the root ribo file has metadata 
+#' @slot metagene_radius A metagene radius that is the nucleotide distance 5' and 3' of the start site
 #' @slot experiment.info data.frame of information on the experiments 
 #' @slot transcript.info Hash of the lengths and offsets of each transcript
 #' @slot alias.hash Hash that goes from alias to original transcript name

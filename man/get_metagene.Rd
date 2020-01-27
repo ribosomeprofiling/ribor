@@ -36,7 +36,7 @@ get_metagene(
 \item{experiment}{List of experiment names}
 }
 \value{
-A DataFrame of the metagene information
+A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
 }
 \description{
 The function \code{\link{get_metagene}} returns a data frame that provides
@@ -56,7 +56,7 @@ read length is lost.
 
 The param 'transcripts' condenses the transcripts together.
 When transcript is TRUE and length is FALSE, the data
-table presents information at each read length between range.lower and
+frame presents information at each read length between range.lower and
 range.upper inclusive. That is, each separate read length denotes the
 sum of counts from every transcript. As a result, information about the
 counts of each individual transcript is lost.

@@ -2,7 +2,7 @@
 #'@include ribo_class.R
 NULL
 
-#' @describeIn Ribo Displaying the file contents
+#' @describeIn Ribo Displaying the Ribo Object
 #' @examples 
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
 #' sample <- Ribo(file.path)
@@ -99,8 +99,23 @@ print_output <- function (file.info,
 #' A list of accessors for the different slots of a `Ribo` object
 #' 
 #' @param object A Ribo Object
-#' @export
 #' @name accessors
+#' @aliases path
+#' @aliases experiments
+#' @aliases format_version
+#' @aliases reference
+#' @aliases length_min
+#' @aliases length_max
+#' @aliases left_span
+#' @aliases right_span
+#' @aliases metagene_radius
+#' @aliases length_offset
+#' @aliases has_metadata
+#' @aliases experiment_info
+#' @aliases transcript_info
+#' @aliases alias_hash
+#' @aliases original_hash 
+#' @rdname accessors
 NULL 
 
 setGeneric("path", function(object) standardGeneric("path"))

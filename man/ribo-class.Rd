@@ -19,7 +19,7 @@ An S4 class to be used with the ribor package
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{show}: Displaying the file contents
+\item \code{show}: Displaying the Ribo Object
 }}
 
 \section{Slots}{
@@ -44,6 +44,8 @@ An S4 class to be used with the ribor package
 \item{\code{length.offset}}{Length offset of all transcripts}
 
 \item{\code{has.metadata}}{Value denoting whether the root ribo file has metadata}
+
+\item{\code{metagene_radius}}{A metagene radius that is the nucleotide distance 5' and 3' of the start site}
 
 \item{\code{experiment.info}}{data.frame of information on the experiments}
 

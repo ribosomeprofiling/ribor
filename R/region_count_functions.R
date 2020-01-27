@@ -21,7 +21,7 @@
 #'
 #' The param 'transcript' condenses the transcripts together.
 #' When transcript is TRUE and length is FALSE data
-#' table presents information at each read length between range.lower and
+#' frame presents information at each read length between range.lower and
 #' range.upper inclusive. That is, each separate read length denotes the
 #' sum of counts from every transcript. As a result, information about the
 #' counts of each individual transcript is lost.
@@ -78,7 +78,7 @@
 #' @param experiment List of experiment names
 #' @param normalize Option to normalize the counts as counts per million reads
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A DataFrame of the region counts
+#' @return A data frame of the region counts with the potential addition of the experiment, transcript, and/or read length information in a tidy or non-tidy format
 #' @importFrom rhdf5 h5read
 #' @importFrom methods as 
 #' @importFrom S4Vectors DataFrame Rle
@@ -228,8 +228,7 @@ check_regions <- function(ribo.object,
 #' @export
 #' @seealso
 #' {\code{\link{plot_length_distribution}}} to plot the output of this function
-#' @return
-#' A DataFrame of the counts at each read length
+#' @return A data frame of length distribution of a single region in a tidy format for the given list of experiments
 get_length_distribution <- function(ribo.object,
                                     region,
                                     range.lower = length_min(ribo.object),

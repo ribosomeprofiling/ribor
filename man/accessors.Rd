@@ -2,6 +2,21 @@
 % Please edit documentation in R/ribo_methods.R
 \name{accessors}
 \alias{accessors}
+\alias{path}
+\alias{experiments}
+\alias{format_version}
+\alias{reference}
+\alias{length_min}
+\alias{length_max}
+\alias{left_span}
+\alias{right_span}
+\alias{metagene_radius}
+\alias{length_offset}
+\alias{has_metadata}
+\alias{experiment_info}
+\alias{transcript_info}
+\alias{alias_hash}
+\alias{original_hash}
 \alias{path,Ribo-method}
 \alias{experiments,Ribo-method}
 \alias{format_version,Ribo-method}

@@ -16,7 +16,7 @@
 #'
 #' The param 'transcripts' condenses the transcripts together.
 #' When transcript is TRUE and length is FALSE, the data
-#' table presents information at each read length between range.lower and
+#' frame presents information at each read length between range.lower and
 #' range.upper inclusive. That is, each separate read length denotes the
 #' sum of counts from every transcript. As a result, information about the
 #' counts of each individual transcript is lost.
@@ -46,7 +46,7 @@
 #' @param experiment List of experiment names
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A DataFrame of the metagene information
+#' @return A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
 #' @examples
 #'
 #' #generate the ribo object by providing the file.path to the ribo file
@@ -178,8 +178,7 @@ get_metagene_path <- function(experiment, site) {
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param experiment List of experiment names
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return
-#' A tidy data frame of the metagene information
+#' @return A tidy data frame of metagene information with the option of including read length information 
 #' @examples
 #' #generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
@@ -433,7 +432,7 @@ check_plot_metagene <- function(x,
                         typeof(x[, "total.reads"]) %in% types, 
                         ncol(x) == 4)
       if (mismatch) {
-        stop("Please make sure that the data table is of the correct format.",
+        stop("Please make sure that the data frame is of the correct format.",
              call.=FALSE)
       }
     } else{ 
