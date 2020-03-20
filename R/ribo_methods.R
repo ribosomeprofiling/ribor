@@ -9,6 +9,7 @@ NULL
 #' sample <- Ribo(file.path)
 #' 
 #' show(sample)
+#' 
 #' @export
 setMethod(f = "show",
           signature = "Ribo",
