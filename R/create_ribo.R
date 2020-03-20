@@ -76,27 +76,7 @@ set_aliases <- function(ribo.object, rename) {
     return(ribo.object)
 }
 
-#' Creates an S4 object of class "Ribo"
-#'
-#' \code{\link{Ribo}} creates a "Ribo" object. It creates a path, extracts the root folder attributes,
-#' and provides information about the reference transcript names and lengths
-#'
-#' An important option is the param 'rename' which allows the user to nickname long
-#' transcript names. For the appris human transcriptome, a default function \code{\link{rename_default}}
-#' has been provided. In subsequent calls of certain functions, the user can make use of these renamed
-#' references with the 'alias' parameter.
-#'
-#' This object is required as an argument for almost all of the functions in this package, and all of the
-#' functions in this package can accept the returned object of this function. This object is not meant to
-#' be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file adevnd
-#' an R environment by creating an object that holds pertinent information.
-#'
-#' The information stored in this object include the .ribo file path, the list of experiments,
-#' the format version, the reference model, the maximum read length, the minimum read length, the left span,
-#' the right span, and other information about the transcript information.
-#'
-#' @name Ribo
-#' @rdname Ribo
+
 #' @param name The path to the .ribo file
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases
@@ -114,6 +94,7 @@ set_aliases <- function(ribo.object, rename) {
 #' @seealso
 #' If a ribo object is already generated but aliases want to be added or updated, use the
 #' \code{\link{set_aliases}} function.
+#' @rdname Ribo-class
 #' @export
 Ribo <- function(name, rename = NULL) {
     ribo.path   <- file_path_as_absolute(name)

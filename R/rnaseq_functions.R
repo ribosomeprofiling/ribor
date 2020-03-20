@@ -31,16 +31,7 @@
 #'                           regions = regions,
 #'                           experiments = experiments)
 #'
-#' @param ribo.object A 'Ribo' object
-#' @param tidy Logical value denoting whether or not the user wants a tidy format
-#' @param experiments List of experiment names
-#' @param regions Specific region(s) of interest
-#' @param alias Option to report the transcripts as aliases/nicknames
-#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return
-#' Returns a data frame that contains the transcript name, experiment, and
-#' RNA-seq abundance
-#'
+#' @inheritParams get_metagene
 #' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5ls h5read
 #' @importFrom S4Vectors DataFrame Rle
@@ -49,7 +40,7 @@
 get_rnaseq <- function(ribo.object,
                        tidy = TRUE,
                        regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-                       experiments = experiments(ribo.object),
+                       experiment = experiments(ribo.object),
                        compact = TRUE,
                        alias = FALSE) {
     validObject(ribo.object)

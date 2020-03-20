@@ -35,17 +35,19 @@
 #'                               range.upper = 5,
 #'                               length = TRUE,
 #'                               experiment = experiments)
-#'
-#' @param ribo.object A 'ribo' object
-#' @param name Name of the transcript
-#' @param range.lower Lower bound of the read length
-#' @param range.upper Upper bound of the read length
 #' @param length Logical value that denotes if the coverage should be summed across read lengths
 #' @param experiment List of experiments to obtain coverage information on
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
 #' @param alias Option to report the transcripts as aliases/nicknames
-#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A data frame of the coverage information with potential addition of experiment and read length columns in a tidy or non-tidy format
+#' @inheritParams get_metagene
+#' @return An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+#' coverage information for the provided list of 'experiments' in the 'experiment' parameter. The
+#' returned object will have a length column when the 'length' parameter is set to FALSE, indicating
+#' that the user does not want to sum the count information across the range of read lengths. The
+#' returned data frame has the option of being tidy, and if the 'tidy' parameter is set to TRUE,
+#' a position column will be added. Finally, if the 'alias' parameter is set to TRUE, the alias transcript
+#' name must have been provided at the generation of the ribo object, and the function
+#' will accept this aliased name in the 'transcript' parameter.
 #' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5read
 #' @importFrom tidyr gather
@@ -64,7 +66,8 @@ get_coverage <- function(ribo.object,
                          experiment = experiments(ribo.object)) {
     # check the parameters and prepare parameters for reading from ribo file
     if (missing(name)) stop("Please provide a transcript name.")
-    validObject(ribo.object)
+    if (!is(ribo.object, "ribo")) stop("Please provide a ribo object.")
+  
     matched.experiments <- initialize_coverage(ribo.object,
                                                alias,
                                                range.lower,

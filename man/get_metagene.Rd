@@ -25,9 +25,9 @@ get_metagene(
 
 \item{range.upper}{Upper bound of the read length, inclusive}
 
-\item{transcript}{Option to condense the transcripts together, preserving information at each read length}
+\item{transcript}{Logical value that denotes if the metagene information should be summed across transcripts}
 
-\item{length}{Option to condense the read lengths together, preserving information at each transcript}
+\item{length}{Logical value that denotes if the metagene information should be summed across read lengths}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 
@@ -36,7 +36,13 @@ get_metagene(
 \item{experiment}{List of experiment names}
 }
 \value{
-A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
+An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+metagene information for either the 'stop' or 'start' site provided in the 'site' parameter. The
+returned data frame will have a length column when the 'length' parameter is set to FALSE, indicating
+the returned data frame will have a transcript column whe the 'transcript' parameter is set to FALSE,
+indicating that the count information will not be summed across the transcripts.
+In the case that transcript parameter is 'FALSE', the returned data frame will present the transcripts according
+to the aliases specified at the creation of the ribo object if the 'alias' parameter is set to TRUE.
 }
 \description{
 The function \code{\link{get_metagene}} returns a data frame that provides

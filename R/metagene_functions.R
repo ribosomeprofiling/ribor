@@ -41,12 +41,19 @@
 #' @param site "start" or "stop" site coverage
 #' @param range.lower Lower bound of the read length, inclusive
 #' @param range.upper Upper bound of the read length, inclusive
-#' @param transcript Option to condense the transcripts together, preserving information at each read length
-#' @param length Option to condense the read lengths together, preserving information at each transcript
+#' @param transcript Logical value that denotes if the metagene information should be summed across transcripts
+#' @param length Logical value that denotes if the metagene information should be summed across read lengths
 #' @param experiment List of experiment names
 #' @param alias Option to report the transcripts as aliases/nicknames
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A data frame of the metagene information with the potential addition of the experiment, transcript, and/or read length information
+#' @return An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+#' metagene information for either the 'stop' or 'start' site provided in the 'site' parameter. The
+#' returned data frame will have a length column when the 'length' parameter is set to FALSE, indicating
+#" that the count information will not be summed across the provided range of read lengths. Similarly,
+#' the returned data frame will have a transcript column whe the 'transcript' parameter is set to FALSE,
+#' indicating that the count information will not be summed across the transcripts.
+#' In the case that transcript parameter is 'FALSE', the returned data frame will present the transcripts according
+#' to the aliases specified at the creation of the ribo object if the 'alias' parameter is set to TRUE.
 #' @examples
 #'
 #' #generate the ribo object by providing the file.path to the ribo file
@@ -92,7 +99,6 @@ get_metagene <- function(ribo.object,
                          alias = FALSE,
                          compact = TRUE,
                          experiment = experiments(ribo.object)) {
-    validObject(ribo.object)
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     conditions <- c(transcript = transcript, length = length, alias = alias)
     site <- tolower(site)
@@ -168,17 +174,13 @@ get_metagene_path <- function(experiment, site) {
 #' This provides a tidy format of the metagene information across the transcripts, preserving
 #' the metagene coverage count at each read length.
 #' 
-#' The 
-#' 
-#' @param ribo.object A 'Ribo' object
-#' @param site "start" or "stop" site coverage
-#' @param range.lower Lower bound of the read length
-#' @param range.upper Upper bound of the read length
-#' @param length Option to condense the read lengths together
-#' @param alias Option to report the transcripts as aliases/nicknames
-#' @param experiment List of experiment names
-#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A tidy data frame of metagene information with the option of including read length information 
+#' @inheritParams get_metagene
+#' @return An annotated, tidy DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+#' metagene information for either the 'stop' or 'start' site provided in the 'site' parameter. The data frame,
+#' as a result of its tidy property, will have a position column.
+#' The returned data frame will have a length column when the 'length' parameter is set to FALSE, indicating
+#" that the count information will not be summed across the provided range of read lengths. Note that the transcripts
+#' will be automatically aggregated to keep the memory footprint of this function reasonable.
 #' @examples
 #' #generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function
 #' file.path <- system.file("extdata", "sample.ribo", package = "ribor")
@@ -214,7 +216,6 @@ get_tidy_metagene <- function(ribo.object,
                               range.lower = length_min(ribo.object),
                               range.upper = length_max(ribo.object),
                               length = TRUE,
-                              alias = FALSE,
                               compact = TRUE,
                               experiment = experiments(ribo.object)) {
   site <- tolower(site)
@@ -224,7 +225,7 @@ get_tidy_metagene <- function(ribo.object,
                          range.upper,
                          length,
                          transcript = TRUE,
-                         alias = alias,
+                         alias = FALSE,
                          experiment = experiment)
   
   result <- strip_rlefactor(result)
@@ -256,6 +257,7 @@ check_metagene_input <- function(ribo.object,
   #check_metagene_input is a helper function that checks the validity of
   #the metagene function parameters
   #check param validity
+  if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
   if (site != "start" & site != "stop") {
     stop("Please type 'start' or 'stop' to indicate the 'site' parameter value.")
   }

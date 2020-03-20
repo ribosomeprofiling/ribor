@@ -21,15 +21,15 @@ get_region_counts(
 \arguments{
 \item{ribo.object}{A 'Ribo' object}
 
-\item{range.lower}{Lower bound of the read length}
+\item{range.lower}{Lower bound of the read length, inclusive}
 
-\item{range.upper}{Upper bound of the read length}
+\item{range.upper}{Upper bound of the read length, inclusive}
 
-\item{length}{Option to condense the read lengths together, preserve the transcripts}
+\item{length}{Logical value that denotes if the metagene information should be summed across read lengths}
 
-\item{transcript}{Option to condense the transcripts together, preserve the read lengths}
+\item{transcript}{Logical value that denotes if the metagene information should be summed across transcripts}
 
-\item{tidy}{Option to return the DataFrame in a tidy format}
+\item{tidy}{Option to return the data frame in a tidy format}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 
@@ -42,7 +42,14 @@ get_region_counts(
 \item{experiment}{List of experiment names}
 }
 \value{
-A data frame of the region counts with the potential addition of the experiment, transcript, and/or read length information in a tidy or non-tidy format
+An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+region count information for the regions specified in the 'region' parameter. The returned data frame
+will have a length column when the 'length' parameter is set to FALSE, indicating that the count
+information will not be summed across the provided range of read lengths. Similarly, the returned data
+frame will have a transcript column when the 'transcript' parameter is set to FALSE, indicating that the
+count information will not be summed across the transcripts. In the case that transcript parameter is
+'FALSE', the returned data frame will present the transcripts according to the aliases specified at the
+creation of the ribo object if the 'alias' parameter is set to TRUE.
 }
 \description{
 \code{\link{get_region_counts}} will return the particular region counts

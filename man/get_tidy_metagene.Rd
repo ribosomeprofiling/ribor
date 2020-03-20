@@ -10,7 +10,6 @@ get_tidy_metagene(
   range.lower = length_min(ribo.object),
   range.upper = length_max(ribo.object),
   length = TRUE,
-  alias = FALSE,
   compact = TRUE,
   experiment = experiments(ribo.object)
 )
@@ -20,20 +19,22 @@ get_tidy_metagene(
 
 \item{site}{"start" or "stop" site coverage}
 
-\item{range.lower}{Lower bound of the read length}
+\item{range.lower}{Lower bound of the read length, inclusive}
 
-\item{range.upper}{Upper bound of the read length}
+\item{range.upper}{Upper bound of the read length, inclusive}
 
-\item{length}{Option to condense the read lengths together}
-
-\item{alias}{Option to report the transcripts as aliases/nicknames}
+\item{length}{Logical value that denotes if the metagene information should be summed across read lengths}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{experiment}{List of experiment names}
 }
 \value{
-A tidy data frame of metagene information with the option of including read length information
+An annotated, tidy DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+metagene information for either the 'stop' or 'start' site provided in the 'site' parameter. The data frame,
+as a result of its tidy property, will have a position column.
+The returned data frame will have a length column when the 'length' parameter is set to FALSE, indicating
+will be automatically aggregated to keep the memory footprint of this function reasonable.
 }
 \description{
 The function \code{\link{get_tidy_metagene}} provides the user with a tidy data format for easier
@@ -56,8 +57,6 @@ When the param  'length' is FALSE, then the resulting data frame prints out the
 metagene coverage count at each position of the metagene radius for each read length.
 This provides a tidy format of the metagene information across the transcripts, preserving
 the metagene coverage count at each read length.
-
-The
 }
 \examples{
 #generate the ribo object by loading in a ribo function and calling the \code{\link{Ribo}} function

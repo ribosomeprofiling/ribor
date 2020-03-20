@@ -326,7 +326,6 @@ prepare_DataFrame <- function(ribo.object, DF) {
   if (!is.null(DF$region)) DF$region <- Rle(factor(DF$region))
   if (!is.null(DF$transcript)) DF$transcript <- factor(DF$transcript)
   if (!is.null(DF$position)) DF$position <- Rle(DF$position)
-  if (!is.null(DF$length)) DF$length <- Rle(DF$length)
   DF$experiment = Rle(factor(DF$experiment))
   
   # add the metadata
