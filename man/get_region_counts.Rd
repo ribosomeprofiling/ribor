@@ -25,9 +25,9 @@ get_region_counts(
 
 \item{range.upper}{Upper bound of the read length, inclusive}
 
-\item{length}{Logical value that denotes if the metagene information should be summed across read lengths}
+\item{length}{Logical value that denotes if the region count information should be summed across read lengths}
 
-\item{transcript}{Logical value that denotes if the metagene information should be summed across transcripts}
+\item{transcript}{Logical value that denotes if the region count information should be summed across transcripts}
 
 \item{tidy}{Option to return the data frame in a tidy format}
 

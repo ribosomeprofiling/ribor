@@ -5,6 +5,9 @@
 ### The Factor class serves a similar role as factor in base R except that
 ### the levels of a Factor object can be any vector-like object.
 ###
+#' @rdname Ribo-class
+#' @aliases Ribo-class
+#' @export
 setClass(
     "Ribo",
     slots =      c(path            = "character",

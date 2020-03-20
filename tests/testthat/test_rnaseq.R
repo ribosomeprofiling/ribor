@@ -13,7 +13,7 @@ rnaseq <- get_rnaseq(ribo.object,
                      experiment = experiments)
 
 actual <- get_rnaseq(ribo.object,
-                     regions = c("UTR3j", "cds"),
+                     region = c("UTR3j", "cds"),
                      tidy = FALSE,
                      experiment = experiments)
 
@@ -24,7 +24,7 @@ test_that("get_rnaseq = non-tidy CDS and UTR3J",
           expect_true(all(actual$CDS == expected$CDS)))
 
 actual <- get_rnaseq(ribo.object,
-                     regions = c("UTR3", "cds", "utR5"),
+                     region = c("UTR3", "cds", "utR5"),
                      tidy = FALSE,
                      experiment = experiments)
 
@@ -35,7 +35,7 @@ test_that("get_rnaseq = non-tidy CDS and UTR3J",
 
 actual   <- get_rnaseq(ribo.object,
                          tidy = TRUE,
-                         regions = c("UTR5"),
+                         region = c("UTR5"),
                          experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) == "UTR5", ]
@@ -46,7 +46,7 @@ test_that("get_rnaseq- tidy UTR5 only",
 
 actual   <- get_rnaseq(ribo.object,
                        tidy = TRUE,
-                       regions = c("CDS", "utR5j"),
+                       region = c("CDS", "utR5j"),
                        experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) %in% c("UTR5J", "CDS"), ]
@@ -108,7 +108,7 @@ rnaseq_tidy <- get_rnaseq(ribo.object,
                           compact = FALSE)
 
 actual <- get_rnaseq(ribo.object,
-                     regions = c("UTR3j", "cds"),
+                     region = c("UTR3j", "cds"),
                      tidy = FALSE,
                      experiment = experiments)
 
@@ -119,9 +119,9 @@ test_that("get_rnaseq = compact CDS and UTR3J",
           expect_true(all(actual$CDS == expected$CDS)))
 
 actual <- get_rnaseq(ribo.object,
-                     regions = c("UTR3", "cds", "utR5"),
+                     region = c("UTR3", "cds", "utR5"),
                      tidy = FALSE,
-                     experiments = experiments)
+                     experiment = experiments)
 
 expected <-rnaseq[, -c(4, 6)]
 
@@ -130,8 +130,8 @@ test_that("get_rnaseq = non-tidy CDS and UTR3J",
 
 actual   <- get_rnaseq(ribo.object,
                        tidy = TRUE,
-                       regions = c("UTR5"),
-                       experiments = experiments)
+                       region = c("UTR5"),
+                       experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) == "UTR5", ]
 
@@ -141,8 +141,8 @@ test_that("get_rnaseq- compact tidy UTR5 only",
 
 actual   <- get_rnaseq(ribo.object,
                        tidy = TRUE,
-                       regions = c("CDS", "utR5j"),
-                       experiments = experiments)
+                       region = c("CDS", "utR5j"),
+                       experiment = experiments)
 
 expected <- rnaseq_tidy[as.character(rnaseq_tidy$region) %in% c("UTR5J", "CDS"), ]
 

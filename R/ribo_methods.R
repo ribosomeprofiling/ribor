@@ -99,85 +99,131 @@ print_output <- function (file.info,
 setGeneric("path", function(object) standardGeneric("path"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("path", "Ribo", function(object) object@path)
 
 setGeneric("experiments", function(object) standardGeneric("experiments"))
 
 #' @rdname Ribo-class
+#' @aliases Ribo-class
+#' @param object Ribo object
+#' @docType methods
 #' @export
 setMethod("experiments", "Ribo", function(object) object@experiments)
+
 
 setGeneric("format_version", function(object) standardGeneric("format_version"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("format_version", "Ribo", function(object) object@format.version)
+
 
 setGeneric("reference", function(object) standardGeneric("reference"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("reference", "Ribo", function(object) object@reference)
+
 
 setGeneric("length_min", function(object) standardGeneric("length_min"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("length_min", "Ribo", function(object) object@length.min)
 
 setGeneric("length_max", function(object) standardGeneric("length_max"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("length_max", "Ribo", function(object) object@length.max)
 
 setGeneric("left_span", function(object) standardGeneric("left_span"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("left_span", "Ribo", function(object) object@left.span)
 
 setGeneric("right_span", function(object) standardGeneric("right_span"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("right_span", "Ribo", function(object) object@right.span)
 
 setGeneric("metagene_radius", function(object) standardGeneric("metagene_radius"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("metagene_radius", "Ribo", function(object) object@metagene.radius)
+
 
 setGeneric("length_offset", function(object) standardGeneric("length_offset"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("length_offset", "Ribo", function(object) object@length.offset)
 
 setGeneric("has_metadata", function(object) standardGeneric("has_metadata"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("has_metadata", "Ribo", function(object) object@has.metadata)
 
 setGeneric("experiment_info", function(object) standardGeneric("experiment_info"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("experiment_info", "Ribo", function(object) object@experiment.info)
+
 
 setGeneric("transcript_info", function(object) standardGeneric("transcript_info"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("transcript_info", "Ribo", function(object) object@transcript.info)
-
 
 setGeneric("alias_hash", function(object) standardGeneric("alias_hash"))
  
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("alias_hash", "Ribo", function(object) object@alias.hash)
 
@@ -185,5 +231,8 @@ setMethod("alias_hash", "Ribo", function(object) object@alias.hash)
 setGeneric("original_hash", function(object) standardGeneric("original_hash"))
 
 #' @rdname Ribo-class
+#' @param object Ribo object
+#' @aliases Ribo-class
+#' @docType methods
 #' @export
 setMethod("original_hash", "Ribo", function(object) object@original.hash)

@@ -174,7 +174,14 @@ get_metagene_path <- function(experiment, site) {
 #' This provides a tidy format of the metagene information across the transcripts, preserving
 #' the metagene coverage count at each read length.
 #' 
-#' @inheritParams get_metagene
+#'
+#' @param ribo.object A 'Ribo' object
+#' @param site "start" or "stop" site coverage
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
+#' @param length Logical value that denotes if the metagene information should be summed across read lengths
+#' @param experiment List of experiment names
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return An annotated, tidy DataFrame or data.frame (if the compact parameter is set to FALSE) of the
 #' metagene information for either the 'stop' or 'start' site provided in the 'site' parameter. The data frame,
 #' as a result of its tidy property, will have a position column.

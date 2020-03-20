@@ -19,6 +19,8 @@ get_coverage(
 \arguments{
 \item{ribo.object}{A 'Ribo' object}
 
+\item{name}{Transcript Name}
+
 \item{range.lower}{Lower bound of the read length, inclusive}
 
 \item{range.upper}{Upper bound of the read length, inclusive}
@@ -27,7 +29,7 @@ get_coverage(
 
 \item{tidy}{Logical value denoting whether or not the user wants a tidy format}
 
-\item{alias}{Option to report the transcripts as aliases/nicknames}
+\item{alias}{Option to accept the transcript input as aliases/nicknames}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 

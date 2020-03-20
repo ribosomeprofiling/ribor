@@ -67,7 +67,14 @@
 #'                                    alias = FALSE,
 #'                                    experiment = experiments)
 #'
-#' @inheritParams get_metagene
+#' @param ribo.object A 'Ribo' object
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
+#' @param transcript Logical value that denotes if the region count information should be summed across transcripts
+#' @param length Logical value that denotes if the region count information should be summed across read lengths
+#' @param experiment List of experiment names
+#' @param alias Option to report the transcripts as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @param tidy Option to return the data frame in a tidy format
 #' @param region Specific region of interest
 #' @param normalize Option to normalize the counts as counts per million reads
@@ -97,7 +104,7 @@ get_region_counts <- function(ribo.object,
                               region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
                               compact = TRUE, 
                               experiment = experiments(ribo.object)) {
-    validObject(ribo.object)
+    if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     region     <- check_rc_input(ribo.object, region, range.info, experiment, alias)
     conditions <- c(transcript = transcript, length = length,
@@ -223,7 +230,12 @@ check_regions <- function(ribo.object,
 #'                                        range.lower = 2,
 #'                                        range.upper = 5)
 #'
-#' @inheritParams get_region_counts
+#' @param ribo.object A 'Ribo' object
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
+#' @param experiment List of experiment names
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
+#' @param region Specific region of interest
 #' @importFrom methods as
 #' @importFrom S4Vectors DataFrame Rle
 #' @export
@@ -241,7 +253,7 @@ get_length_distribution <- function(ribo.object,
   if (length(region) != 1) {
     stop("Please provide only one region.")
   }
-  
+  if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
   result <- get_region_counts(ribo.object,
                               range.lower = range.lower,
                               range.upper = range.upper,

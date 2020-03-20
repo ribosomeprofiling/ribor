@@ -35,11 +35,15 @@
 #'                               range.upper = 5,
 #'                               length = TRUE,
 #'                               experiment = experiments)
+#' @param ribo.object A 'Ribo' object
+#' @param name Transcript Name
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
 #' @param length Logical value that denotes if the coverage should be summed across read lengths
 #' @param experiment List of experiments to obtain coverage information on
 #' @param tidy Logical value denoting whether or not the user wants a tidy format
-#' @param alias Option to report the transcripts as aliases/nicknames
-#' @inheritParams get_metagene
+#' @param alias Option to accept the transcript input as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @return An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
 #' coverage information for the provided list of 'experiments' in the 'experiment' parameter. The
 #' returned object will have a length column when the 'length' parameter is set to FALSE, indicating
@@ -66,7 +70,7 @@ get_coverage <- function(ribo.object,
                          experiment = experiments(ribo.object)) {
     # check the parameters and prepare parameters for reading from ribo file
     if (missing(name)) stop("Please provide a transcript name.")
-    if (!is(ribo.object, "ribo")) stop("Please provide a ribo object.")
+    if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
   
     matched.experiments <- initialize_coverage(ribo.object,
                                                alias,
