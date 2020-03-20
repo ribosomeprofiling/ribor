@@ -1,6 +1,5 @@
 check_alias <- function(ribo.object,
                         alias) {
-    validObject(ribo.object)
     has.alias <- !is.empty(alias_hash(ribo.object)) &&
                  !is.empty(original_hash(ribo.object))
     if (alias && !has.alias) {
@@ -15,7 +14,7 @@ check_lengths <- function(ribo.object, range.lower, range.upper) {
     # length and compares it to the corresponding parameters
     #
     # Args:
-    # ribo.object S3 object of class "Ribo"
+    # ribo.object 
     # range.lower lowest read length
     # range.upper highest read length
     #
@@ -45,7 +44,7 @@ check_experiments <- function(ribo.object, experiment) {
     # Helper method that checks if the user-given experiments
     # are present in the current ribo file
     # Args:
-    # ribo.object - S3 object of class ribo, contains the handle to the file
+    # ribo.object
     # Return:
     # None
     ribo.experiments <- experiments(ribo.object)

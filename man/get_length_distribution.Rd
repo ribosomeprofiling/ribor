@@ -18,16 +18,18 @@ get_length_distribution(
 
 \item{region}{Specific region of interest}
 
-\item{range.lower}{Lower bound of the read length}
+\item{range.lower}{Lower bound of the read length, inclusive}
 
-\item{range.upper}{Upper bound of the read length}
+\item{range.upper}{Upper bound of the read length, inclusive}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{experiment}{List of experiment names}
 }
 \value{
-A data frame of length distribution of a single region in a tidy format for the given list of experiments
+An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+read-length specific region count information for a single region specified in the 'region' parameter.
+The returned data frame will have a length column, and it will not contain a transcript column.
 }
 \description{
 The function {\code{\link{get_length_distribution}}} retrieves the raw or normalized

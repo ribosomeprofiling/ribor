@@ -68,17 +68,25 @@
 #'                                    experiment = experiments)
 #'
 #' @param ribo.object A 'Ribo' object
-#' @param range.lower Lower bound of the read length
-#' @param range.upper Upper bound of the read length
-#' @param length Option to condense the read lengths together, preserve the transcripts
-#' @param transcript Option to condense the transcripts together, preserve the read lengths
-#' @param tidy Option to return the DataFrame in a tidy format
-#' @param region Specific region of interest
-#' @param alias Option to report the transcripts as aliases/nicknames
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
+#' @param transcript Logical value that denotes if the region count information should be summed across transcripts
+#' @param length Logical value that denotes if the region count information should be summed across read lengths
 #' @param experiment List of experiment names
+#' @param alias Option to report the transcripts as aliases/nicknames
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
+#' @param tidy Option to return the data frame in a tidy format
+#' @param region Specific region of interest
 #' @param normalize Option to normalize the counts as counts per million reads
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return A data frame of the region counts with the potential addition of the experiment, transcript, and/or read length information in a tidy or non-tidy format
+#' @return An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+#' region count information for the regions specified in the 'region' parameter. The returned data frame
+#' will have a length column when the 'length' parameter is set to FALSE, indicating that the count
+#' information will not be summed across the provided range of read lengths. Similarly, the returned data
+#' frame will have a transcript column when the 'transcript' parameter is set to FALSE, indicating that the
+#' count information will not be summed across the transcripts. In the case that transcript parameter is
+#' 'FALSE', the returned data frame will present the transcripts according to the aliases specified at the
+#' creation of the ribo object if the 'alias' parameter is set to TRUE.
 #' @importFrom rhdf5 h5read
 #' @importFrom methods as 
 #' @importFrom S4Vectors DataFrame Rle
@@ -96,7 +104,7 @@ get_region_counts <- function(ribo.object,
                               region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
                               compact = TRUE, 
                               experiment = experiments(ribo.object)) {
-    validObject(ribo.object)
+    if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
     range.info <- c(range.lower = range.lower, range.upper = range.upper)
     region     <- check_rc_input(ribo.object, region, range.info, experiment, alias)
     conditions <- c(transcript = transcript, length = length,
@@ -222,13 +230,20 @@ check_regions <- function(ribo.object,
 #'                                        range.lower = 2,
 #'                                        range.upper = 5)
 #'
-#' @inheritParams get_region_counts
+#' @param ribo.object A 'Ribo' object
+#' @param range.lower Lower bound of the read length, inclusive
+#' @param range.upper Upper bound of the read length, inclusive
+#' @param experiment List of experiment names
+#' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
+#' @param region Specific region of interest
 #' @importFrom methods as
 #' @importFrom S4Vectors DataFrame Rle
 #' @export
 #' @seealso
 #' {\code{\link{plot_length_distribution}}} to plot the output of this function
-#' @return A data frame of length distribution of a single region in a tidy format for the given list of experiments
+#' @return An annotated DataFrame or data.frame (if the compact parameter is set to FALSE) of the
+#' read-length specific region count information for a single region specified in the 'region' parameter.
+#' The returned data frame will have a length column, and it will not contain a transcript column.
 get_length_distribution <- function(ribo.object,
                                     region,
                                     range.lower = length_min(ribo.object),
@@ -238,7 +253,7 @@ get_length_distribution <- function(ribo.object,
   if (length(region) != 1) {
     stop("Please provide only one region.")
   }
-  
+  if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
   result <- get_region_counts(ribo.object,
                               range.lower = range.lower,
                               range.upper = range.upper,

@@ -28,19 +28,16 @@
 #' regions <- c("UTR5", "CDS", "UTR3")
 #' rnaseq.data <- get_rnaseq(ribo.object = sample,
 #'                           tidy = TRUE,
-#'                           regions = regions,
-#'                           experiments = experiments)
+#'                           region = regions,
+#'                           experiment = experiments)
+#'
 #'
 #' @param ribo.object A 'Ribo' object
-#' @param tidy Logical value denoting whether or not the user wants a tidy format
-#' @param experiments List of experiment names
-#' @param regions Specific region(s) of interest
+#' @param experiment List of experiment names
 #' @param alias Option to report the transcripts as aliases/nicknames
+#' @param region Specific region(s) of interest
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
-#' @return
-#' Returns a data frame that contains the transcript name, experiment, and
-#' RNA-seq abundance
-#'
+#' @param tidy Option to return the data frame in a tidy format
 #' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
 #' @importFrom rhdf5 h5ls h5read
 #' @importFrom S4Vectors DataFrame Rle
@@ -48,14 +45,14 @@
 #' @export
 get_rnaseq <- function(ribo.object,
                        tidy = TRUE,
-                       regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-                       experiments = experiments(ribo.object),
+                       region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+                       experiment = experiments(ribo.object),
                        compact = TRUE,
                        alias = FALSE) {
-    validObject(ribo.object)
-    rnaseq.experiments <- check_rnaseq(ribo.object, experiments)
+    if (!is(ribo.object, "Ribo")) stop("Please provide a ribo object.")
+    rnaseq.experiments <- check_rnaseq(ribo.object, experiment)
     check_alias(ribo.object, alias)
-    regions <- check_regions(ribo.object, regions)
+    regions <- check_regions(ribo.object, region)
     ribo.experiments <- experiments(ribo.object)
     
     #get just the experiments that exist

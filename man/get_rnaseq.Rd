@@ -7,8 +7,8 @@
 get_rnaseq(
   ribo.object,
   tidy = TRUE,
-  regions = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
-  experiments = experiments(ribo.object),
+  region = c("UTR5", "UTR5J", "CDS", "UTR3J", "UTR3"),
+  experiment = experiments(ribo.object),
   compact = TRUE,
   alias = FALSE
 )
@@ -16,19 +16,15 @@ get_rnaseq(
 \arguments{
 \item{ribo.object}{A 'Ribo' object}
 
-\item{tidy}{Logical value denoting whether or not the user wants a tidy format}
+\item{tidy}{Option to return the data frame in a tidy format}
 
-\item{regions}{Specific region(s) of interest}
+\item{region}{Specific region(s) of interest}
 
-\item{experiments}{List of experiment names}
+\item{experiment}{List of experiment names}
 
 \item{compact}{Option to return a DataFrame with Rle and factor as opposed to a raw data.frame}
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
-}
-\value{
-Returns a data frame that contains the transcript name, experiment, and
-RNA-seq abundance
 }
 \description{
 \code{\link{get_rnaseq}} returns a DataFrame containing information on the transcript name, experiment, and
@@ -60,8 +56,9 @@ experiments <- c("Hela_1", "Hela_2", "WT_1")
 regions <- c("UTR5", "CDS", "UTR3")
 rnaseq.data <- get_rnaseq(ribo.object = sample,
                           tidy = TRUE,
-                          regions = regions,
-                          experiments = experiments)
+                          region = regions,
+                          experiment = experiments)
+
 
 }
 \seealso{

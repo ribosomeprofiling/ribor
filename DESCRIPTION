@@ -1,6 +1,6 @@
 Package: ribor
 Title: An R Interface for Ribo Files 
-Version: 0.99.6
+Version: 0.99.7
 Authors@R: c(
     person("Michael", "Geng", email = "michaelgeng@utexas.edu", role = "cre"),
     person("Hakan", "Ozadam", email = "hakan.ozadam@gmail.com", role = "aut"),

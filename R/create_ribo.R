@@ -45,7 +45,6 @@ initialize_transcript_info <- function(transcript.names,
 #' (and likely more intricate) functions to generate a list of aliases, and then pass in a character
 #' vector of these aliases. The character vector should match the order of and correspond to the
 #' list of reference names retrieved from \code{\link{get_reference_names}}
-#'
 #' @param ribo.object A 'ribo' object
 #' @param rename A function that renames original transcript name into an alias
 #' @export
@@ -76,28 +75,29 @@ set_aliases <- function(ribo.object, rename) {
     return(ribo.object)
 }
 
-#' Creates an S4 object of class "Ribo"
-#'
-#' \code{\link{Ribo}} creates a "Ribo" object. It creates a path, extracts the root folder attributes,
-#' and provides information about the reference transcript names and lengths
-#'
-#' An important option is the param 'rename' which allows the user to nickname long
-#' transcript names. For the appris human transcriptome, a default function \code{\link{rename_default}}
-#' has been provided. In subsequent calls of certain functions, the user can make use of these renamed
-#' references with the 'alias' parameter.
-#'
-#' This object is required as an argument for almost all of the functions in this package, and all of the
-#' functions in this package can accept the returned object of this function. This object is not meant to
-#' be modified or changed by the user. It is meant to serve as an intermediary between the .ribo file adevnd
-#' an R environment by creating an object that holds pertinent information.
-#'
-#' The information stored in this object include the .ribo file path, the list of experiments,
-#' the format version, the reference model, the maximum read length, the minimum read length, the left span,
-#' the right span, and other information about the transcript information.
-#'
-#' @name Ribo
-#' @rdname Ribo
-#' @param name The path to the .ribo file
+
+#' Ribo Class
+#' 
+#' The Ribo object serves as the main utility vehicle for the ribor package.
+#' Specifically, it allows the user to interface with a .ribo file in the R
+#" environment through the use of the ribor package. Almost all functions in
+#' ribor rely on the Ribo object to read, visualize, and inspect the
+#' contents of the .ribo file. 
+#' The information stored in this object include the .ribo file path, the 
+#' list of experiments, the format version, the reference model, the minimum
+#' read length, maximum read length, the left span, the right span, and 
+#' other transcript information.
+#' 
+#' Note that the path parameter takes in a file path and stores it. While 
+#' using the package, be sure to not to move or change the location of the 
+#' .ribo file. The default names of the transcripts may be difficult to use depending on the 
+#' settings used to generate the .ribo file. As a result, we have provided a 
+#' rename parameter that integrates well with the Appris reference transcriptome.
+#' Users may also define a simple function that processes a given default 
+#' transcript name in a one-to-one manner to another custom alias. 
+#' 
+#' 
+#' @param path The path to the .ribo file
 #' @param rename A function that renames the original transcript or an already generated
 #' character vector of aliases
 #' @return Returns an S4 object of class "Ribo" containing a path to the HDF5 file,
@@ -114,9 +114,13 @@ set_aliases <- function(ribo.object, rename) {
 #' @seealso
 #' If a ribo object is already generated but aliases want to be added or updated, use the
 #' \code{\link{set_aliases}} function.
+#' @rdname Ribo-class
 #' @export
-Ribo <- function(name, rename = NULL) {
-    ribo.path   <- file_path_as_absolute(name)
+#' @aliases experiments alias_hash experiment_info format_version has_metadata
+#' @aliases left_span length_max length_min length_offset metagene_radius
+#' @aliases length_offset metagene_radius original_hash path reference right_span transcript_info
+Ribo <- function(path, rename = NULL) {
+    ribo.path   <- file_path_as_absolute(path)
     attributes <- h5readAttributes(ribo.path, name = "/")
     transcript.names   <- h5read(ribo.path,
                                  name = "reference/reference_names")

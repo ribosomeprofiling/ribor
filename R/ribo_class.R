@@ -1,25 +1,13 @@
-#' Class "Ribo"
-#' 
-#' An S4 class to be used with the ribor package
-#' 
-#' @param object A 'Ribo' object
-#' @slot path A path to the Ribo file of interest
-#' @slot experiments A character vector of experiment names in the file 
-#' @slot format.version The format version of the ribo file 
-#' @slot reference The reference transcriptome used in the ribo file 
-#' @slot length.min The minimum read length of the data in the file 
-#' @slot length.max The maximum read length of the data in the file 
-#' @slot left.span Left span of the junction regions
-#' @slot right.span Right span of the junction regions
-#' @slot length.offset Length offset of all transcripts 
-#' @slot has.metadata Value denoting whether the root ribo file has metadata 
-#' @slot metagene_radius A metagene radius that is the nucleotide distance 5' and 3' of the start site
-#' @slot experiment.info data.frame of information on the experiments 
-#' @slot transcript.info Hash of the lengths and offsets of each transcript
-#' @slot alias.hash Hash that goes from alias to original transcript name
-#' @slot original.hash Hash that goes from original to alias transcript 
-#' @return A 'Ribo' object
-#' @seealso \code{\link{Ribo}} to create a ribo file
+### =========================================================================
+### Factor objects
+### -------------------------------------------------------------------------
+###
+### The Factor class serves a similar role as factor in base R except that
+### the levels of a Factor object can be any vector-like object.
+###
+#' @rdname Ribo-class
+#' @aliases Ribo-class
+#' @export
 setClass(
     "Ribo",
     slots =      c(path            = "character",
@@ -38,7 +26,10 @@ setClass(
                    alias.hash      = "hash",
                    original.hash   = "hash"))
 
-# validity method 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Validity
+###
+
 setValidity("Ribo", function(object) {
     # The validity method is to protect against function calls with ribo
     # objects that have been modified in a way that could generate incorrect

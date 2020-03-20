@@ -740,7 +740,7 @@ experiment <- has.rnaseq[1]
 rnaseq <- get_rnaseq(ribo.object = original.ribo,
                      tidy        = TRUE,
                      alias       = TRUE,
-                     regions     = c("UTR5J", "CDS", "UTR3J"),
+                     region     = c("UTR5J", "CDS", "UTR3J"),
                      experiment  = experiment)
 head(rnaseq, 2)
 ```

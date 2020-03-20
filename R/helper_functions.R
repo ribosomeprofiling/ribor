@@ -15,17 +15,16 @@
 #' names <- get_reference_names(sample)
 get_reference_names <- function(ribo.object) {
     # Retrieves the reference transcript names
-    validObject(ribo.object)
-    return(h5read(ribo.object@path,
+    return(h5read(path(ribo.object),
                   name = "reference/reference_names"))
 }
 
 get_reference_lengths <- function(ribo.object) {
     # Retrieves the reference transcript lengths
     validObject(ribo.object)
-    row.names <- h5read(ribo.object@path,
+    row.names <- h5read(path(ribo.object),
                         name = "reference/reference_names")
-    lengths   <- h5read(ribo.object@path,
+    lengths   <- h5read(path(ribo.object),
                         name = "reference/reference_lengths")
     return(data.frame(transcript = row.names, length = lengths))
 }
@@ -66,7 +65,6 @@ rename_transcripts <- function(ribo, rename) {
     #ensure that the ribo path is retrieved
     ribo.path <- ribo
     if (is(ribo, "Ribo")) {
-        validObject(ribo)
         ribo.path <- path(ribo)
     }
 
@@ -326,7 +324,6 @@ prepare_DataFrame <- function(ribo.object, DF) {
   if (!is.null(DF$region)) DF$region <- Rle(factor(DF$region))
   if (!is.null(DF$transcript)) DF$transcript <- factor(DF$transcript)
   if (!is.null(DF$position)) DF$position <- Rle(DF$position)
-  if (!is.null(DF$length)) DF$length <- Rle(DF$length)
   DF$experiment = Rle(factor(DF$experiment))
   
   # add the metadata
