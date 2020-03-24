@@ -36,9 +36,10 @@ For Ubuntu based distributions, you can use the following command.
 
 ### Note for Bioconductor Installation
 
-For now, RiboR is **NOT** a bioconductor package. Please use the alternative installation instructions given above.
+As it currently stands, this package lives on the `devel` branch, and it is not on the current release (Bioconductor 3.10). Please use the alternative installation instructions given above.
 
-RiboR has been submitted to Bioconductor for evaluation. We hope that RiboR will be available via Bioconductor on the next release cycle.
+RiboR will be available via Bioconductor on the next release cycle (Bioconductor 3.11) which is scheduled for the end of April. 
+
 Once it is available, the download instructions will be as follows.
 
 ### Install Latest Version from Bioconductor (Not Yet Available)
