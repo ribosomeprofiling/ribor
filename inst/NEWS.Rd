@@ -29,4 +29,4 @@
 \item {
   Documentation has been added to be more thorough.
 }
-}
+}}

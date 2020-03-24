@@ -1,6 +1,6 @@
 #' Information on the RNA-Seq data of the experiments, if any
 #'
-#' \code{\link{get_rnaseq}} returns a DataFrame containing information on the transcript name, experiment, and
+#' \code{\link{get_rnaseq}} returns a data frame containing information on the transcript name, experiment, and
 #' sequence abundance
 #'
 #' As a default value, experiment.list is presumed to include all of the
@@ -39,6 +39,9 @@
 #' @param compact Option to return a DataFrame with Rle and factor as opposed to a raw data.frame
 #' @param tidy Option to return the data frame in a tidy format
 #' @seealso \code{\link{Ribo}} to generate the necessary ribo.object parameter
+#' @return An annotated data frame containing the RNA-Seq counts for the regions in specified in the `region` parameter with the option of
+#' presenting the data in a tidy format. Additionally, the function returns a DataFrame with Rle and factor applied if the `compact` parameter
+#' is set to TRUE and a data.frame without any Rle or factor if the `compact` parameter is set to FALSE
 #' @importFrom rhdf5 h5ls h5read
 #' @importFrom S4Vectors DataFrame Rle
 #' @importFrom tidyr gather
