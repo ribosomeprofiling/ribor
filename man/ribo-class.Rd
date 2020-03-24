@@ -108,6 +108,7 @@ file.path <- system.file("extdata", "sample.ribo", package = "ribor")
 sample <- Ribo(file.path)
 
 show(sample)
+
 #generate a ribo object with transcript nicknames/aliases
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 sample <- Ribo(file.path, rename = rename_default )

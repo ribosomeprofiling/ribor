@@ -5,6 +5,9 @@
 # RiboR
 R interface for .ribo files
 
+## Ribo Ecosystem
+The paper associated with this package and its larger ecosystem can be found [here](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btaa028/5701654).
+
 ## Installation
 
 RiboR requires R version **3.6** or higher.

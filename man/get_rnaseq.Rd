@@ -26,8 +26,13 @@ get_rnaseq(
 
 \item{alias}{Option to report the transcripts as aliases/nicknames}
 }
+\value{
+An annotated data frame containing the RNA-Seq counts for the regions in specified in the `region` parameter with the option of
+presenting the data in a tidy format. Additionally, the function returns a DataFrame with Rle and factor applied if the `compact` parameter
+is set to TRUE and a data.frame without any Rle or factor if the `compact` parameter is set to FALSE
+}
 \description{
-\code{\link{get_rnaseq}} returns a DataFrame containing information on the transcript name, experiment, and
+\code{\link{get_rnaseq}} returns a data frame containing information on the transcript name, experiment, and
 sequence abundance
 }
 \details{
