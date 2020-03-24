@@ -36,10 +36,9 @@ Actively translating mRNAs are engaged with ribosomes and protein synthesis rate
 Ribosome profiling employs an RNase digestion step to recover fragments of RNA protected by ribosomes which are called __Ribosome Protected Footprints (RPFs)__.
 
 Ribosome profiling data analyses involve several quantifications for each transcript. Specifically, the lengths of the RPFs provide valuable biological information (see, for example, [Lareau et al.](https://elifesciences.org/articles/01257) and [Wu et al.](https://www.sciencedirect.com/science/article/pii/S1097276518310633?via%3Dihub)). To facilitate ribosome profiling data analyses as a function of RPF length in a highly efficient manner, we implemented a new data format, called [ribo](https://ribopy.readthedocs.io/en/latest/ribo_file_format.html). 
-Files in ribo format are called __.ribo__ files.
+Files in ribo format are called __.ribo__ files. The associated paper for the .ribo file and its larger ecosystem can be found [here](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btaa028/5701654).
 
-
-RiboR package is an R interface for .ribo files. The package offers a suite of reading functions for .ribo files, and provides plotting functions that are most often employed in ribosome profiling analyses. Using RiboR, one can import .ribo files into the R environment, read ribosome profiling data into data frames and generate essential plots in a few lines of R code.
+RiboR package is an R interface for .ribo files. The package offers a suite of reading functions for .ribo files, and provides plotting functions that are most often employed in ribosome profiling analyses. Using RiboR, one can import .ribo files into the R environment, read ribosome profiling data into data frames and generate essential plots in a few lines of R code. 
 
 This document is structured into several sections. First, we give an overview of the 
 [Ribo File format](#ribofileformat) and define [transcript regions](#transcriptregions).

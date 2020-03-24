@@ -9,6 +9,10 @@
 #' \url{https://ribosomeprofiling.github.io/ribor/ribor.html}.
 #' 
 #' @section Related Tools:
+#' 
+#' The paper associated with the Ribo ecosystem can be found at
+#' \url{https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btaa028/5701654}.
+#' 
 #' For more information on the preprocessing pipeline, please see the link to
 #' the source code at \url{https://github.com/ribosomeprofiling/riboflow}.
 #' 
