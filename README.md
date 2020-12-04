@@ -51,3 +51,21 @@ Once it is available, the download instructions will be as follows.
 ## Documentation
 
 [Here](https://ribosomeprofiling.github.io/ribor/ribor.html) is a walk-through of RiboR.
+
+## Citing
+
+[RiboFlow, RiboR and RiboPy: an ecosystem for analyzing ribosome profiling data at read length resolution, H. Ozadam, M. Geng, C. Cenik
+Bioinformatics 36 (9), 2929-2931](https://academic.oup.com/bioinformatics/article/36/9/2929/5701654)
+
+```bibtex
+@article{ozadam2020riboflow,
+  title={RiboFlow, RiboR and RiboPy: an ecosystem for analyzing ribosome profiling data at read length resolution},
+  author={Ozadam, Hakan and Geng, Michael and Cenik, Can},
+  journal={Bioinformatics},
+  volume={36},
+  number={9},
+  pages={2929--2931},
+  year={2020},
+  publisher={Oxford University Press}
+}
+```
