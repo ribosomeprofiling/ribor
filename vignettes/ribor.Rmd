@@ -593,6 +593,34 @@ head(region_lengths, 2)
 ```
 
 
+### Functionality for Multiple Ribo Files
+
+The functions within RiboR take in a single Ribo object. However, the following helper function, `read_multiple_files`, returns an aggregated data frame, given a named list of Ribo objects and any `RiboR` reader function of interest (`get_metagene`, `get_region_counts`, `get_length_distribution`, `get_coverage`, or `get_rnaseq`) with its associated parameters.
+
+
+```{r define_multiple_file_reader}
+# helper function
+read_multiple_files <- function(ribo_list, getter_function, ...) {
+  df_list <- lapply(ribo_list, getter_function, ...)
+  df_list <- mapply(cbind, df_list, "study" = names(df_list), SIMPLIFY=FALSE)
+  df <- dplyr::bind_rows(df_list)
+  return (df)
+}
+```
+
+Note that the `compact` parameter should be set to `FALSE` and that the parameters given will be consistently used across all of the Ribo objects in the given list. This means that lists of Ribo objects containing Ribo files with different properties (e.g. Transcript Aliases, RNA-Seq, Coverage) may need to be filtered for consistency before use.
+
+```{r create_named_ribo_list}
+# create a named Ribo object list of length >= 1
+ribo_file_list <- list(original.ribo)
+names(ribo_file_list) <- c("GSE65778")
+
+# try out a function
+read_multiple_files(ribo_list = ribo_file_list, getter_function = get_region_counts, compact = FALSE, tidy = FALSE)
+```
+
+As seen in the above output, the names of the Ribo object list allow for a new `study` column in the resulting data frame to allow for easier filtering and processing in downstream analyses.
+
 ## Optional Data {#optionaldata}
 
 Length distribution, metagene coverage and region counts are essential to ribosome profiling data analysis and these data exist in every .ribo file. However, for certain types of analysis, additional data might be required.
