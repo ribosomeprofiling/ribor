@@ -579,21 +579,38 @@ Thus, in our modified region definitions,
 the coordinates of these regions are marked as `NA` and their lengths will be 0. 
 
 Region coordinates that include the UTR5 and/or UTR3 junctions can be obtained using `get_internal_region_coordinates`.
-```{r get_region_coordinates}
-region_coord <- get_region_coordinates(ribo.object = alias.ribo , alias = TRUE)
+
+```{r get_internal_region_coordinates}
+region_coord <- get_internal_region_coordinates(ribo.object = alias.ribo , alias = TRUE)
 head(region_coord, 2)
 ```
 
 Length of regions can be useful to normalize data, say by CDS length, or to compare different transcripts.
-The function `get_internal_region_lengths` gives region lengths, including the UTR5 and/or UTR3 junctions, for each transcript. 
+The function `get_internal_region_lengths` gives region lengths, including the UTR5 and/or UTR3 junctions, for each transcript.
 
-```{r get_region_lengths}
-region_lengths <- get_region_lengths(ribo.object = alias.ribo, alias = TRUE)
+```{r get_internal_region_lengths}
+region_lengths <- get_internal_region_lengths(ribo.object = alias.ribo, alias = TRUE)
 head(region_lengths, 2)
 ```
 
-However, there is also functionality in the case that the original region lengths and coordinates without the UTR5 and/or UTR3 junctions are more useful.
-The functions `get_original_region_lengths` and `get_original_region_coordinates` follow similar functionality to `get_internal_region_lengths` and `get_internal_region_coordinates`, respectively, but instead exclude any UTR5 and/or UTR3 junction information. 
+
+However, there is also additional functionality provided by providing the original region lengths and coordinates without the UTR5 and/or UTR3 junctions .
+The functions `get_original_region_lengths` and `get_original_region_coordinates` follow similar use cases to `get_internal_region_lengths` and `get_internal_region_coordinates`, respectively, but instead exclude any UTR5 and/or UTR3 junction information.
+
+The original region coordinates that exclude the UTR5 and/or UTR3 junctions can be obtained using `get_internal_region_coordinates`.
+
+```{r get_original_region_coordinates}
+region_coord <- get_original_region_coordinates(ribo.object = alias.ribo , alias = TRUE)
+head(region_coord, 2)
+```
+
+The function `get_original_region_lengths` gives region lengths, excluding the UTR5 and/or UTR3 junctions, for each transcript.
+
+```{r get_original_region_lengths}
+region_lengths <- get_original_region_lengths(ribo.object = alias.ribo, alias = TRUE)
+head(region_lengths, 2)
+```
+
 
 ### Functionality for Multiple Ribo Files
 
