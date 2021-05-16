@@ -47,13 +47,15 @@ get_internal_region_lengths <- function(ribo.object, alias = FALSE) {
 #' lengths for the UTR5, UTR5 Junction, CDS, UTR3 Junction,
 #' and UTR3 regions of every transcript. 
 #' 
+#' This function is deprecated, and we recommend {\code{\link{get_internal_region_lengths}}}.
+#' 
 #' @examples 
 #' # generate a ribo object 
 #' file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 #' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region lengths
-#' region_lengths <- get_region_lengths(sample, alias = TRUE)
+#' expect_warning(region_lengths <- get_region_lengths(sample, alias = TRUE))
 #' 
 #' @export
 #' @importFrom rhdf5 h5read
@@ -168,7 +170,7 @@ get_internal_region_coordinates <- function(ribo.object, alias=FALSE) {
 #' sample <- Ribo(file.path, rename = rename_default)
 #' 
 #' # get the region coordinates
-#' coord <- get_region_coordinates(sample, alias = TRUE)
+#' expect_warning(coord <- get_region_coordinates(sample, alias = TRUE))
 #' 
 #' @inheritParams get_region_lengths
 #' @return A data.frame of start and stop coordinates for every region
