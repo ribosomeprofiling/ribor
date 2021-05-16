@@ -30,12 +30,3 @@ NA values found in the returned data.frame means that the region has no
 start and stop position and a length of zero after computing the boundaries
 of the UTR5 and UTR3 junction.
 }
-\examples{
-# generate a ribo object 
-file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- Ribo(file.path, rename = rename_default)
-
-# get the region coordinates
-expect_warning(coord <- get_region_coordinates(sample, alias = TRUE))
-
-}

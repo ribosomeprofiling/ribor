@@ -6,8 +6,9 @@
 ### the levels of a Factor object can be any vector-like object.
 ###
 #' @rdname Ribo-class
-#' @aliases Ribo-class
 #' @export
+#' @aliases Ribo-class
+
 setClass(
     "Ribo",
     slots =      c(path            = "character",

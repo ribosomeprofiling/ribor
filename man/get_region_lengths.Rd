@@ -22,12 +22,3 @@ and UTR3 regions of every transcript.
 \details{
 This function is deprecated, and we recommend {\code{\link{get_internal_region_lengths}}}.
 }
-\examples{
-# generate a ribo object 
-file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
-sample <- Ribo(file.path, rename = rename_default)
-
-# get the region lengths
-expect_warning(region_lengths <- get_region_lengths(sample, alias = TRUE))
-
-}
