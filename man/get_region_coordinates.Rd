@@ -36,6 +36,6 @@ file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 sample <- Ribo(file.path, rename = rename_default)
 
 # get the region coordinates
-coord <- get_region_coordinates(sample, alias = TRUE)
+expect_warning(coord <- get_region_coordinates(sample, alias = TRUE))
 
 }

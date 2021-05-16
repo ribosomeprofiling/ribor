@@ -19,12 +19,15 @@ The function {\code{\link{get_region_lengths}}} retrieves the
 lengths for the UTR5, UTR5 Junction, CDS, UTR3 Junction,
 and UTR3 regions of every transcript.
 }
+\details{
+This function is deprecated, and we recommend {\code{\link{get_internal_region_lengths}}}.
+}
 \examples{
 # generate a ribo object 
 file.path <- system.file("extdata", "HEK293_ingolia.ribo", package = "ribor")
 sample <- Ribo(file.path, rename = rename_default)
 
 # get the region lengths
-region_lengths <- get_region_lengths(sample, alias = TRUE)
+expect_warning(region_lengths <- get_region_lengths(sample, alias = TRUE))
 
 }
